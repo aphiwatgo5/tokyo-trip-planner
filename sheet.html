@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="data.js?v=4"></script>
-<script src="app.js?v=3"></script>
+<script src="data.js?v=5"></script>
+<script src="app.js?v=4"></script>
 <style>
   :root{
     --ink:#20242E; --muted:#5A6270; --paper:#ECEEE8;
@@ -212,6 +212,7 @@
 <script>
 // ================= STATE =================
 let S=tpLoad();
+if(!S.parked) S.parked=[];
 const fmt=n=>"¥"+Math.round(n).toLocaleString();
 const CAT_LABEL={food:"อาหาร",entry:"ค่าเข้า",misc:"อื่นๆ","":"—"};
 const CAT_REV={"อาหาร":"food","ค่าเข้า":"entry","อื่นๆ":"misc","":""};
@@ -464,7 +465,21 @@ tbl.addEventListener('click', e=>{
     rows.splice(ri+1,0,JSON.parse(JSON.stringify(rows[ri]))); persist(); renderSheet(); renderSummary(); return; }
   const del=e.target.closest('[data-rdel]');
   if(del){ const [i,ri]=del.dataset.rdel.split(':').map(Number);
-    if(confirm(`ลบ "${rowsOf(S.days[i])[ri].act}"?`)){ rowsOf(S.days[i]).splice(ri,1); persist(); renderSheet(); renderSummary(); } return; }
+    const row=rowsOf(S.days[i])[ri]; if(!row) return;
+    APP.modal({title:'เอาออกจากแผน', body:`<b>${esc(row.act)}</b><br>ต้องการลบทิ้ง หรือย้ายไปคลังไอเดียไว้ใช้ภายหลัง?`,
+      buttons:[{label:'↩ ย้ายไปคลังไอเดีย', cls:'primary', val:'park'},
+               {label:'ลบทิ้งเลย', val:'del'},
+               {label:'ยกเลิก', val:null}]}).then(act=>{
+        if(!act) return;
+        if(act==='park'){
+          S.parked=S.parked||[];
+          S.parked.push({n:row.act, area:row.ft||'', tag:row.tag||deriveTag(row), est:row.cost||0, note:row.note||'', from:S.days[i].d});
+        }
+        rowsOf(S.days[i]).splice(ri,1);
+        persist(); renderSheet(); renderSummary(); renderIdeasPanel();
+        APP.toast(act==='park'?'ย้ายไป 💡 คลังไอเดียแล้ว — หยิบกลับมาได้ที่ด้านล่าง':'ลบแถวแล้ว');
+      });
+    return; }
   const up=e.target.closest('[data-dayup]');
   if(up){ const i=+up.dataset.dayup; if(i>0){ [S.days[i-1],S.days[i]]=[S.days[i],S.days[i-1]]; persist(); renderSheet(); renderSummary(); } return; }
   const dn=e.target.closest('[data-daydown]');
@@ -640,12 +655,14 @@ function wireFiles(){
 function renderIdeasPanel(){
   APP.renderIdeas(document.getElementById('ideas'), {
     getDays: ()=>S.days.map((d,i)=>`${d.d} · ${d.title}`.slice(0,26)),
-    onAdd:(idea,di)=>{
+    getParked: ()=>S.parked||[],
+    onAdd:(idea,di,pi)=>{
       const day=S.days[di]; if(!day) return;
       const rows=rowsOf(day);
-      rows.push({time:'',act:idea.n,tag:idea.tag,ft:idea.area,line:'',dur:'',train:0,
+      rows.push({time:'',act:idea.n,tag:idea.tag,ft:idea.area||'',line:'',dur:'',train:0,
         cost:idea.est||0, type:idea.tag==='food'?'food':(idea.tag==='attraction'&&idea.est?'entry':''),
-        note:idea.note,inc:true,start:null,durMin:null});
+        note:idea.note||'',inc:true,start:null,durMin:null});
+      if(pi>=0 && S.parked) S.parked.splice(pi,1);
       persist(); renderSheet(); renderSummary();
       APP.toast(`เพิ่ม "${idea.n}" ใน ${day.d} — ตั้งเวลา/ลากจัดตำแหน่งต่อได้เลย`);
     }

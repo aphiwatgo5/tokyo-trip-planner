@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="data.js?v=4"></script>
-<script src="app.js?v=3"></script>
+<script src="data.js?v=5"></script>
+<script src="app.js?v=4"></script>
 <style>
   :root{
     --ink:#20242E; --muted:#5A6270; --paper:#ECEEE8; --card:#FFFFFF;
@@ -301,7 +301,7 @@
   <div class="wrap">
     <div class="sec-eyebrow">💡 คลังไอเดีย</div>
     <h2 class="sec-title">ยังไม่อยู่ในแผน — attraction / food / shopping</h2>
-    <p class="sec-note">กด ＋ เพื่อใส่ไอเดียลงวันที่เลือก แล้วเข้าไปตั้งเวลา/ปรับราคาในแผนต่อได้เลย</p>
+    <p class="sec-note">กด ＋ เพื่อใส่ไอเดียลงวันที่เลือก · กด 🗑 ที่แถวในแผนแล้วเลือก "ย้ายไปคลังไอเดีย" เพื่อเก็บกิจกรรมที่ยังไม่อยากทำออกจากตาราง — ย้ายกลับได้ตลอด</p>
     <div id="ideas"></div>
   </div>
 </section>
@@ -316,6 +316,7 @@
 <script>
 // ================= STATE =================
 let S = tpLoad();
+if(!S.parked) S.parked=[];
 let ui = { day: 0, editing: null };   // editing: {kind:'row'|'day', d, r?}
 const fmt = n => "¥" + Math.round(n).toLocaleString();
 const paceCls = {big:"tag-big",med:"tag-med",light:"tag-light",rest:"tag-rest"};
@@ -566,7 +567,20 @@ function wire(){
   q('[data-rdel]').forEach(el=>el.onclick=()=>{
     const [i,ri]=el.dataset.rdel.split(':').map(Number);
     const rows=S.days[i].variants[S.days[i].activeVariant].rows;
-    if(confirm(`ลบ "${rows[ri].act}"?`)){rows.splice(ri,1); ui.editing=null; persist(); buildPlan();}
+    const row=rows[ri]; if(!row) return;
+    APP.modal({title:'เอาออกจากแผน', body:`<b>${row.act}</b><br>ต้องการลบทิ้ง หรือย้ายไปคลังไอเดียไว้ใช้ภายหลัง?`,
+      buttons:[{label:'↩ ย้ายไปคลังไอเดีย', cls:'primary', val:'park'},
+               {label:'ลบทิ้งเลย', val:'del'},
+               {label:'ยกเลิก', val:null}]}).then(act=>{
+        if(!act) return;
+        if(act==='park'){
+          S.parked=S.parked||[];
+          S.parked.push({n:row.act, area:row.ft||'', tag:row.tag||deriveTag(row), est:row.cost||0, note:row.note||'', from:S.days[i].d});
+        }
+        rows.splice(ri,1); ui.editing=null;
+        persist(); buildPlan(); renderIdeasPanel();
+        APP.toast(act==='park'?'ย้ายไป 💡 คลังไอเดียแล้ว — หยิบกลับมาได้ที่คลังด้านล่าง':'ลบแถวแล้ว');
+      });
   });
   q('[data-addrow]').forEach(el=>el.onclick=()=>{
     const i=+el.dataset.addrow;
@@ -699,12 +713,14 @@ renderIdeasPanel();
 function renderIdeasPanel(){
   APP.renderIdeas(document.getElementById('ideas'), {
     getDays: ()=>S.days.map((d,i)=>(d.d+' · '+d.title).slice(0,26)),
-    onAdd:(idea,di)=>{
+    getParked: ()=>S.parked||[],
+    onAdd:(idea,di,pi)=>{
       const day=S.days[di]; if(!day) return;
-      const nr={time:'',act:idea.n,tag:idea.tag,ft:idea.area,line:'',dur:'',train:0,
+      const nr={time:'',act:idea.n,tag:idea.tag,ft:idea.area||'',line:'',dur:'',train:0,
         cost:idea.est||0, type:idea.tag==='food'?'food':(idea.tag==='attraction'&&idea.est?'entry':''),
-        note:idea.note,inc:true,start:null,durMin:null};
+        note:idea.note||'',inc:true,start:null,durMin:null};
       day.variants[day.activeVariant].rows.push(nr);
+      if(pi>=0 && S.parked) S.parked.splice(pi,1);
       persist(); buildPlan();
       APP.toast(`เพิ่ม "${idea.n}" ใน ${day.d} — ตั้งเวลาต่อได้เลย`);
     }

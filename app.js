@@ -2,6 +2,53 @@
 // Requires data.js (SEED, Trips, migrate, normalizeTimes, time utils) loaded first.
 window.APP = (function(){
 
+// ---------- password gate (runs immediately on script load) ----------
+const LOCK_PASS = 'hoogaati';
+(function gate(){
+  let unlocked=false;
+  try{ unlocked = sessionStorage.getItem('tp-unlocked')==='1'; }catch(e){}
+  if(unlocked) return;
+  const st=document.createElement('style');
+  st.textContent='body{display:none!important}'
+    +'.tp-gate{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;background:linear-gradient(155deg,#21433A 0%,#2C5648 60%,#1C3A31 100%);font-family:"Sarabun",system-ui,sans-serif;}'
+    +'.tp-gate .card{background:#fff;border-radius:18px;padding:30px 26px 24px;width:min(92vw,360px);box-shadow:0 18px 60px rgba(0,0,0,.35);text-align:center;}'
+    +'.tp-gate h2{font-family:"Mitr",sans-serif;margin:6px 0 4px;font-size:20px;color:#275145;}'
+    +'.tp-gate p{font-size:12.5px;color:#5A6270;margin:0 0 16px;}'
+    +'.tp-gate input{width:100%;border:1.5px solid #DCDDD4;border-radius:10px;padding:11px 13px;font-size:15px;text-align:center;letter-spacing:.12em;font-family:"Sarabun";}'
+    +'.tp-gate input:focus{outline:none;border-color:#2F5E50;}'
+    +'.tp-gate button{margin-top:12px;width:100%;border:none;background:#2F5E50;color:#fff;font-family:"Mitr",sans-serif;font-size:14px;border-radius:10px;padding:11px;cursor:pointer;}'
+    +'.tp-gate button:hover{background:#244a3f;}'
+    +'.tp-gate .err{color:#CE4A2B;font-size:12px;margin-top:8px;min-height:16px;font-family:"Sarabun";}'
+    +'.tp-gate.shake .card{animation:tpsh .38s;}'
+    +'@keyframes tpsh{0%,100%{transform:none}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}';
+  document.head.appendChild(st);
+  const show=()=>{
+    const g=document.createElement('div'); g.className='tp-gate';
+    g.innerHTML=`<div class="card"><div style="font-size:36px">🔐</div><h2>Tokyo Trip Planner</h2>
+      <p>ใส่รหัสผ่านเพื่อเข้าใช้งาน</p>
+      <input type="password" id="tp-pass" placeholder="รหัสผ่าน" autofocus>
+      <div class="err" id="tp-err"></div>
+      <button id="tp-go">เข้าสู่ระบบ</button></div>`;
+    document.documentElement.appendChild(g);   // child of <html> so it shows while body is hidden
+    const inp=g.querySelector('#tp-pass'), err=g.querySelector('#tp-err');
+    const unlock=()=>{
+      if(inp.value===LOCK_PASS){
+        try{ sessionStorage.setItem('tp-unlocked','1'); }catch(e){}
+        g.remove(); st.remove();
+      }else{
+        err.textContent='รหัสผ่านไม่ถูกต้อง — ลองอีกครั้ง';
+        g.classList.remove('shake'); void g.offsetWidth; g.classList.add('shake');
+        inp.select();
+      }
+    };
+    g.querySelector('#tp-go').onclick=unlock;
+    inp.onkeydown=e=>{ if(e.key==='Enter'){ e.preventDefault(); unlock(); } };
+    setTimeout(()=>inp.focus(),50);
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',show); else show();
+})();
+
+
 // ---------- budget math ----------
 const FOOD_MULT = {"ประหยัด":0.8,"กลาง":1.0,"สบาย":1.3};
 function foodMultOf(S){ return FOOD_MULT[S.settings.foodStyle] || 1.0; }
@@ -126,6 +173,8 @@ function buildWorkbook(S){
     ...S.routes.map(r=>[r[0],r[1],r[2],r[3],r[4]?"Kamakura/Shizuoka":""])]),"เส้นทาง");
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([["รายการ","รายละเอียด","ช่วงเวลา","แท็ก","สถานะ"],
     ...S.checks.map(c=>[c[0],c[1],c[2],c[3],c[4]])]),"เช็กลิสต์จอง");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([["ชื่อ","พื้นที่","แท็ก","ราคาประมาณ ¥ (2 คน)","โน้ต","ย้ายออกจากวัน"],
+    ...(S.parked||[]).map(p=>[p.n||'',p.area||'',p.tag||'',p.est||0,p.note||'',p.from||''])]),"คลังไอเดีย");
   return wb;
 }
 function downloadExcel(S){
@@ -250,9 +299,25 @@ function parseExcelState(buf, filename){
       if(items.length) routes=items;
     }
   }
+  // parked ideas (removed from the plan, kept in the library) — Excel round-trip
+  let parked=[];
+  const pkSh=findSheet('คลัง');
+  if(pkSh){
+    const pg=grid(pkSh);
+    const hi=pg.findIndex(r=>String(r[0]||'').trim()==='ชื่อ');
+    if(hi>=0){
+      for(let i=hi+1;i<pg.length;i++){
+        const r=pg[i]||[];
+        const n=String(r[0]||'').trim(); if(!n) continue;
+        const tagStr=String(r[2]||'').trim();
+        parked.push({n, area:String(r[1]||'').trim(), tag:TAGS[tagStr]?tagStr:'other',
+          est:parseFloat(r[3])||0, note:String(r[4]||'').trim(), from:String(r[5]||'').trim()});
+      }
+    }
+  }
   // schema starts at 1 so migrate() can inspect content (Shizuoka → Tokyo-nights) before stamping v2
   const state={meta:{filename:filename||'excel', loadedAt:new Date().toISOString(), source:'excel', schema:1},
-    settings, days, routes:routes||[], checks:checks||[]};
+    settings, days, routes:routes||[], checks:checks||[], parked};
   migrate(state);
   normalizeTimes(state);
   normalizeTags(state);
@@ -261,6 +326,8 @@ function parseExcelState(buf, filename){
 }
 
 // ---------- idea library renderer (shared by index & sheet) ----------
+// opts: {getDays, onAdd(idea, dayIdx, parkedIdx), getParked}
+// parkedIdx >= 0 → the item came from S.parked (removed from the plan); adding it back should splice it out of parked.
 function tagChip(tag){ const t=TAGS[tag]||TAGS.other; return `<span class="tgc tgc-${tag||'other'}">${t.icon} ${t.label}</span>`; }
 function renderIdeas(el, opts){
   _ensureStyle();
@@ -268,24 +335,29 @@ function renderIdeas(el, opts){
   const cats=['attraction','food','shopping'];
   function draw(){
     const days=opts.getDays();
-    const list=IDEAS.filter(i=>filter==='all'||i.tag===filter);
+    const parked=(opts.getParked?opts.getParked():[]);
+    const entries=[...parked.map((p,pi)=>({idea:p,pi})), ...IDEAS.map(i=>({idea:i,pi:-1}))];
+    const list=entries.filter(e=>filter==='all' || (filter==='parked'?e.pi>=0:e.idea.tag===filter));
+    const parkedN=parked.length;
     el.innerHTML=`<div class="ideabar">
-        <button data-f="all" class="${filter==='all'?'on':''}">ทั้งหมด ${IDEAS.length}</button>
+        <button data-f="all" class="${filter==='all'?'on':''}">ทั้งหมด ${entries.length}</button>
         ${cats.map(c=>`<button data-f="${c}" class="${filter===c?'on':''}">${TAGS[c].icon} ${TAGS[c].label} ${IDEAS.filter(i=>i.tag===c).length}</button>`).join('')}
+        ${parkedN?`<button data-f="parked" class="${filter==='parked'?'on':''}">↩ ย้ายออกจากแผน ${parkedN}</button>`:''}
       </div>
-      <div class="ideagrid">${list.map((i,ix)=>`
+      <div class="ideagrid">${list.map((e,ix)=>`
         <div class="ideacard">
-          <div class="ic-name">${i.n} ${tagChip(i.tag)}</div>
-          <div class="ic-meta">📍 ${i.area} · ${i.est?('≈¥'+i.est.toLocaleString()+' (2 คน)'):'ฟรี/จ่ายตามจริง'}</div>
-          <div class="ic-note">${i.note}</div>
-          <div class="ic-ops"><select data-dayfor="${ix}">${days.map((d,di)=>`<option value="${di}">${d.label}</option>`).join('')}</select>
-            <button data-add="${ix}">＋ ใส่ในแผน</button></div>
+          <div class="ic-name">${e.idea.n} ${tagChip(e.idea.tag)}</div>
+          <div class="ic-meta">📍 ${e.idea.area||'—'} · ${e.idea.est?('≈¥'+(+e.idea.est||0).toLocaleString()+' (2 คน)'):'ฟรี/จ่ายตามจริง'}</div>
+          <div class="ic-note">${e.idea.note||''}</div>
+          <div class="ic-ops"><select data-dayfor="${ix}">${days.map((d,di)=>`<option value="${di}">${d}</option>`).join('')}</select>
+            <button data-add="${ix}" data-pi="${e.pi}">＋ ใส่ในแผน</button></div>
         </div>`).join('')}</div>`;
     el.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f; draw();});
     el.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{
-      const ix=+b.dataset.add;
+      const ix=+b.dataset.add, pi=+b.dataset.pi;
       const sel=el.querySelector(`select[data-dayfor="${ix}"]`);
-      opts.onAdd(list[ix], sel?Math.max(0,+sel.value):0);
+      opts.onAdd(list[ix].idea, sel?Math.max(0,+sel.value):0, pi);
+      draw();
     });
   }
   draw();
