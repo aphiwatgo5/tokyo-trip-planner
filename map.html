@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kid-Friendly Map · Tokyo + Kamakura + Shizuoka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root{
+    --ink:#20242E; --muted:#5A6270; --paper:#ECEEE8;
+    --momiji:#CE4A2B; --momiji-soft:#F3D9CF; --pine:#275145; --pine2:#2F5E50;
+    --straw:#D79A35; --straw-soft:#F3E2BE; --line:#DCDDD4;
+    --train:#33506F; --train-soft:#E6EDF5;
+    --shadow:0 1px 2px rgba(32,36,46,.06),0 8px 24px rgba(32,36,46,.07);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:"Sarabun",system-ui,sans-serif; font-size:15px; line-height:1.55;}
+  h1,h2,h3{font-family:"Mitr",sans-serif; font-weight:500; margin:0;}
+  .topbar{background:linear-gradient(155deg,#21433A 0%,#2C5648 60%,#1C3A31 100%); color:#F4F1E9; padding:18px 16px 14px;}
+  .topbar .eyebrow{font-family:"Mitr"; letter-spacing:.16em; text-transform:uppercase; font-size:11px; color:var(--straw);}
+  .topbar h1{font-family:"Chonburi"; font-weight:400; font-size:26px; color:#fff; margin:4px 0 2px;}
+  .topbar .sub{font-size:13px; color:#CFE0D8;}
+  .topbar a.back{display:inline-block; margin-top:8px; font-family:"Mitr"; font-size:12px; color:var(--straw); text-decoration:none; border:1px solid rgba(255,255,255,.25); padding:3px 12px; border-radius:16px;}
+  .topbar a.back:hover{background:rgba(255,255,255,.1);}
+
+  .filters{position:sticky; top:0; z-index:500; background:#fff; border-bottom:1px solid var(--line); padding:8px 16px; display:flex; gap:6px; flex-wrap:wrap; align-items:center; box-shadow:0 2px 12px rgba(32,36,46,.05);}
+  .fbtn{font-family:"Mitr"; font-size:12.5px; border:1px solid var(--line); background:#F4F5F2; border-radius:20px; padding:5px 13px; cursor:pointer; transition:.15s;}
+  .fbtn.on{background:var(--pine2); color:#fff; border-color:var(--pine2);}
+  .fbtn .cnt{opacity:.7; font-size:11px;}
+  .fcount{margin-left:auto; font-size:11.5px; color:var(--muted); font-family:"Mitr";}
+
+  .layout{display:grid; grid-template-columns:1fr; }
+  @media(min-width:900px){ .layout{grid-template-columns:340px 1fr;} .sidebar{max-height:calc(100vh - 130px); overflow-y:auto;} }
+  .sidebar{padding:12px 14px; }
+  .spot{background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 12px; margin-bottom:8px; cursor:pointer; box-shadow:var(--shadow); transition:.15s;}
+  .spot:hover{border-color:var(--pine2); transform:translateY(-1px);}
+  .spot .nm{font-weight:600; font-size:14px;}
+  .spot .meta{font-size:11.5px; color:var(--muted); margin-top:2px;}
+  .spot .kid{font-size:11.5px; color:var(--pine2); margin-top:3px;}
+  .tagchip{font-family:"Mitr"; font-size:10px; padding:1px 8px; border-radius:12px; margin-right:4px; display:inline-block;}
+  .tc-plan{background:var(--momiji-soft); color:var(--momiji);}
+  .tc-idea{background:var(--straw-soft); color:#94660c;}
+  .tc-food{background:#DCEAE3; color:#2F5E50;}
+  .tc-base{background:var(--train-soft); color:var(--train);}
+  .daybadge{font-family:"Mitr"; font-size:10px; background:#EEF1ED; color:var(--muted); border-radius:12px; padding:1px 8px;}
+
+  #map{height:62vh; min-height:420px;}
+  @media(min-width:900px){ #map{height:calc(100vh - 130px);} }
+  .leaflet-popup-content{font-family:"Sarabun",sans-serif; font-size:13.5px; line-height:1.5;}
+  .leaflet-popup-content b{font-family:"Mitr"; font-weight:600;}
+  .pp-kid{color:#2F5E50; font-size:12px; margin-top:4px;}
+  .pp-price{font-family:"Mitr"; font-size:12px; color:#CE4A2B; margin-top:3px;}
+  .mk{display:flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50% 50% 50% 4px; transform:rotate(-45deg); border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.35); font-size:15px;}
+  .mk span{transform:rotate(45deg);}
+  .foot{font-size:11.5px; color:var(--muted); padding:14px 16px; text-align:center;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="eyebrow">Nov 28 – Dec 6, 2026 · 2 adults + Hooga (1–2 yrs)</div>
+  <h1>🗺️ Kid-Friendly Map</h1>
+  <div class="sub">Toddler-friendly attractions & food — Tokyo base + Kamakura day trip · day labels follow your live plan (Shizuoka spots kept as next-trip ideas)</div>
+  <a class="back" href="index.html">← Back to planner (edit plan & budget)</a>
+</div>
+
+<div class="filters" id="filters"></div>
+
+<div class="layout">
+  <div class="sidebar" id="sidebar"></div>
+  <div id="map"></div>
+</div>
+
+<div class="foot">Prices/times are estimates (Aug 2026) — always check official sites before booking · Map © OpenStreetMap contributors</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data.js?v=4"></script>
+<script>
+// cat: plan(ในแผน) | idea(ไอเดียเพิ่ม) | food(อาหารเด็ก) | base(ฐาน/ขนส่ง)
+// [name, lat, lng, cat, dayRef("D3" = day index 3 → live label), price, kid, note]
+const spots=[
+["🏨 Ueno hotel base",35.7121,139.7780,"base","all","~¥13,000/night","Walk to Ueno Park · trains to everywhere","Trip home base — Ginza Line / JR Yamanote / Keisei"],
+["✈️ Haneda Airport (T3)",35.5494,139.7798,"base","D1","—","Family restaurants + baby rooms after immigration","TG682 arrives 06:55 / TG683 departs 10:35"],
+
+["Ueno Zoo 🐼",35.7165,139.7713,"plan","D2","Adult ¥600 · kids <12 free","Japan's oldest zoo, ~300 species · wide paths, stroller-friendly, petting zone","Mornings = active animals, fewer crowds"],
+["National Museum of Nature & Science 🦖",35.7164,139.7765,"plan","D2","Adult ¥630 · kids <18 free","12 m T-Rex skeleton + Parent & Child Discovery room","Closed Mondays — our trip visits Sunday"],
+["Ueno Park + Shinobazu Pond 🦢",35.7148,139.7734,"plan","D1","Free (swan boats ~¥800/30 min)","Big park for picnics, walks, letting the toddler run","Day 1: light stroll & fresh air"],
+["Ameyoko + Don Quijote 🛍️",35.7086,139.7747,"plan","D8","—","Cheap street food, market vibe · Donki open very late","Last-chance souvenir run"],
+
+["Tokyo Disneyland 🎢",35.6329,139.8804,"plan","D3","Adult ~¥7,900–10,900 · ≤3 free","Fantasyland + Toontown best for toddlers · Baby Centers in every zone","Rent a stroller in the park"],
+
+["teamLab Planets 🎨",35.6489,139.7897,"plan","D5","Adult ¥3,600+ · ≤3 free","Barefoot wading through water — pack a change of clothes","No strollers inside · book a timed slot"],
+["KidZania Tokyo 👷",35.6555,139.7917,"idea","D5","Kids ~¥5,000–6,000","Mini role-play city (best 3+ yrs)","Inside LaLaport Toyosu — rainy-day alternative"],
+["Legoland Discovery 🧱",35.6282,139.7755,"plan","D5","~¥2,000–3,300 (online cheaper)","MINILAND Tokyo + 4D cinema","Adults must come with a child · book ahead"],
+["Gundam Unicorn 🤖",35.6248,139.7750,"plan","D5","Free","Life-size 19.7 m Gundam, transforms on schedule","DiverCity"],
+["Unko Museum 💩",35.6239,139.7765,"idea","D5","~¥1,800–2,000","Pastel poop museum — kids laugh nonstop","~1 hr · weekends crowded"],
+
+["Warner Bros Studio Tour ⚡",35.7419,139.6480,"plan","D6","Adult ¥7,000 · ≤3 free (email infant ticket!)","Stroller rental + nursing rooms · Butterbeer","3–4 hr walk, take turns carrying"],
+
+["Senso-ji + Nakamise ⛩️",35.7148,139.7967,"plan","D2","Free (snacks ~¥300–500)","Ningyo-yaki & kibi dango snacks while walking","Free rooftop temple view at Tourist Center"],
+["Hanayashiki 🎡",35.7155,139.7947,"plan","D8","Entry ¥1,600 · ≤4 free · rides ~¥100–200","Japan's oldest amusement park (1853), perfect under-5s","Now in the plan (D8 morning) — beside the temple"],
+["Tokyo Skytree 🗼",35.7101,139.8107,"plan","D8","Tembo Deck ¥1,800+ · ≤5 free","Glass floor 350 m up · Solamachi kid rest spots","Evening vibe is great"],
+["Sumida Aquarium 🐧",35.7100,139.8098,"plan","D8","Adult ¥2,500 · ≤2 free","Glowing jellyfish + penguins up close","Online ~¥200/person cheaper"],
+["Akachan Honpo 👶",35.6964,139.8137,"plan","D8","—","Japan's biggest baby store — one-stop toddler souvenirs","Kinshicho branch (1 stop from Skytree)"],
+["Tokyo Character Street 🎌",35.6812,139.7671,"plan","D7","Free","Pokemon shop, Ghibli, Jump stores under Tokyo Station","Next to Pokémon Café day — D7"],
+
+["Kura Sushi Okachimachi 🍣",35.7070,139.7746,"food","D2","~¥150/plate","Conveyor sushi + Bikkura Pon toy game — kids love it","Kids' menu, no-wasabi options"],
+["Marugame Seimen Ueno 🍜",35.7092,139.7735,"food","D1","~¥400–800/bowl","Fresh udon, soft noodles for toddlers, high chairs","Counter order, fast"],
+["Saizeriya / Gusto (Ueno) 🍝",35.7105,139.7755,"food","D1","~¥500–1,000/person","Family restaurant, okosama kids' menu + drink bar","Stroller-friendly"],
+["Pokémon Café (Nihonbashi) ⚡",35.6800,139.7747,"food","D7","~¥1,500–2,500/person","Pikachu dishes + mascot show","Reservation opens 1st of prior month 18:00 — sells out"],
+["LaLaport Toyosu Food Court 🍱",35.6550,139.7920,"food","D5","~¥800–1,500/person","Next to teamLab · kids' rooms everywhere","Family restaurants floors 1–3"],
+["bills / Sizzler Odaiba 🥞",35.6280,139.7758,"food","D5","~¥1,500–2,500/person","Tokyo Bay views, kids' courses","DECKS seaside floor"],
+["Nakamise Street Food 🍡",35.7135,139.7960,"food","D2","~¥300–500/item","Ningyo-yaki, daifuku — kids pick their own","Shops close ~17:00–18:00"],
+["Shinobazu Pond Swan Boats 🦢",35.7148,139.7710,"plan","D7","~¥800/30 min/boat","Swan pedal boats on the pond — toddler favorite","D7 late afternoon activity"],
+["Tsuribune Chaya Zauo 🎣",35.6337,139.7160,"idea","—","~¥3,000+/person","Catch-your-own-fish restaurant indoors","Save for the next trip"],
+
+["Tsurugaoka Hachimangu ⛩️",35.3259,139.5564,"plan","D4","Free","Kamakura's main shrine, lotus ponds, pigeons","Komachi street food alongside"],
+["Komachi-dori 🍢",35.3197,139.5510,"food","D4","~¥300–800/item","Croquettes, ice cream, Rilakkuma/Snoopy shops","Station → shrine walking street"],
+["Hase-dera 🌸",35.3125,139.5330,"plan","D4","Adult ¥400","Hilltop ocean views + cute Jizo statues","Many stairs — leave stroller below"],
+["Great Buddha (Kotoku-in) 🗿",35.3168,139.5357,"plan","D4","Adult ¥300","11 m outdoor Buddha — can go inside (+¥50)","Hooga free"],
+["Enoshima + beach 🏖️",35.2997,139.4800,"plan","D4","Free","Enoden seaside ride, Slam Dunk photo spot","Stroller nap time around here"],
+["Shirasu-don near Hase 🍚",35.3130,139.5340,"food","D4","~¥1,000–1,500/bowl","Famous whitebait bowl — mild, kid-safe","Shops around Hase Station"],
+
+["Nihondaira Ropeway 🚡",34.9550,138.4680,"idea","—","Ropeway + shrine ~¥1,750/person","Gondola over the valley with Fuji views (if clear)","Removed from this trip (Tokyo-only nights) — save for next trip"],
+["Kunozan Toshogu ⛩️",34.9640,138.4670,"idea","—","In ropeway package","Colorful shrine of Tokugawa Ieyasu","Removed from this trip — save for next trip"],
+["Sumpu Castle Park 🏯",34.9794,138.3836,"idea","—","Free","Castle-ruins park, room to run","Removed from this trip — save for next trip"],
+["Miho no Matsubara 🗻",34.9920,138.5190,"idea","—","Free","7 km pine beach, classic postcard Fuji view","Removed from this trip — save for next trip"],
+["Aoba Oden Alley 🍢",34.9715,138.3865,"idea","—","~¥800–1,500/person","Shizuoka oden alley (dark broth), local vibe","Removed from this trip — save for next trip"],
+["Shizuoka tea experience 🍵",34.9760,138.3840,"idea","—","~¥1,500/person","Brew fresh green tea — Japan's #1 tea region","Removed from this trip — save for next trip"],
+];
+
+const cats={plan:{label:"🎯 On the trip plan",cls:"tc-plan",color:"#CE4A2B"},
+            idea:{label:"💡 Extra ideas / rainy-day",cls:"tc-idea",color:"#D79A35"},
+            food:{label:"🍽️ Kid-friendly food",cls:"tc-food",color:"#2F5E50"},
+            base:{label:"🏨 Base / transport",cls:"tc-base",color:"#33506F"}};
+
+// Live day labels from the shared plan state (same localStorage key as the planner)
+let S; try{ S=tpLoad(); }catch(e){ S=null; }
+const dayInfo={}; // "D3" -> {label:"30 พ.ย. · Tokyo Disneyland 🎢", inc:true}
+if(S && S.days){
+  S.days.forEach((d,i)=>{
+    dayInfo[`D${i+1}`]={label:`${d.d} · ${d.title}`, inc:d.inc};
+  });
+}
+function dayBadge(ref){
+  if(ref==='all') return 'Every day';
+  if(ref==='—'||!ref) return '—';
+  const info=dayInfo[ref];
+  if(info) return `${ref} · ${info.label}${info.inc?'':' (ไม่รวมในงบ)'}`;
+  return ref;
+}
+
+const map=L.map('map').setView([35.70,139.76],11);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
+const bounds=L.latLngBounds(spots.map(s=>[s[1],s[2]]));
+const mkIcon=(emoji,color)=>L.divIcon({className:'',html:`<div class="mk" style="background:${color}"><span>${emoji}</span></div>`,iconSize:[30,30],iconAnchor:[15,28],popupAnchor:[0,-26]});
+const emoji={plan:"🎯",idea:"💡",food:"🍽️",base:"🏨"};
+let markers=[];
+spots.forEach((s,i)=>{
+  const [nm,lat,lng,cat,day,price,kid,note]=s;
+  const m=L.marker([lat,lng],{icon:mkIcon(emoji[cat],cats[cat].color)});
+  m.bindPopup(`<b>${nm}</b><br><span class="daybadge">${dayBadge(day)}</span> <span class="tagchip ${cats[cat].cls}" style="margin-top:4px">${cats[cat].label}</span><div class="pp-price">${price}</div><div class="pp-kid">👶 ${kid}</div><div style="color:#5A6270;font-size:12px;margin-top:3px">${note}</div>`);
+  markers.push(m);
+});
+const fitBtn=L.control({position:'topright'});
+fitBtn.onAdd=()=>{const d=document.createElement('div');
+  d.innerHTML='<button style="font-family:Mitr;font-size:12px;padding:6px 12px;border:1px solid #DCDDD4;border-radius:8px;background:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.15)">🔍 Zoom out (incl. Kamakura/Shizuoka)</button>';
+  d.onclick=()=>map.fitBounds(bounds.pad(0.05)); return d;};
+fitBtn.addTo(map);
+
+let active='all';
+const fEl=document.getElementById('filters');
+const sideEl=document.getElementById('sidebar');
+function render(){
+  fEl.innerHTML='';
+  const allBtn=document.createElement('button'); allBtn.className='fbtn'+(active==='all'?' on':'');
+  allBtn.innerHTML=`All <span class="cnt">${spots.length}</span>`; allBtn.onclick=()=>{active='all';render();}; fEl.appendChild(allBtn);
+  Object.keys(cats).forEach(k=>{
+    const b=document.createElement('button'); b.className='fbtn'+(active===k?' on':'');
+    const n=spots.filter(s=>s[3]===k).length;
+    b.innerHTML=`${cats[k].label} <span class="cnt">${n}</span>`;
+    b.onclick=()=>{active=k;render();}; fEl.appendChild(b);
+  });
+  const cnt=document.createElement('span'); cnt.className='fcount';
+  const show=spots.map((s,i)=>[s,i]).filter(([s])=>active==='all'||s[3]===active);
+  cnt.textContent=`Showing ${show.length} spots`; fEl.appendChild(cnt);
+  sideEl.innerHTML='';
+  markers.forEach(m=>{ m.removeFrom(map); });
+  show.forEach(([s,i])=>{
+    markers[i].addTo(map);
+    const d=document.createElement('div'); d.className='spot';
+    d.innerHTML=`<div class="nm">${s[0]}</div>
+      <div><span class="tagchip ${cats[s[3]].cls}">${cats[s[3]].label}</span><span class="daybadge">${dayBadge(s[4])}</span></div>
+      <div class="meta">${s[5]}</div>
+      <div class="kid">👶 ${s[6]}</div>`;
+    d.onclick=()=>{ map.flyTo([s[1],s[2]],15,{duration:.8}); markers[i].openPopup(); };
+    sideEl.appendChild(d);
+  });
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tokyo Trip Planner · Flexible + Excel Sync</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="data.js?v=4"></script>
+<script src="app.js?v=3"></script>
+<style>
+  :root{
+    --ink:#20242E; --muted:#5A6270; --paper:#ECEEE8; --card:#FFFFFF;
+    --momiji:#CE4A2B; --momiji-soft:#F3D9CF; --pine:#275145; --pine2:#2F5E50;
+    --straw:#D79A35; --straw-soft:#F3E2BE; --line:#DCDDD4; --rest:#9DB5AB;
+    --train:#33506F; --train-soft:#E6EDF5;
+    --shadow:0 1px 2px rgba(32,36,46,.06),0 8px 24px rgba(32,36,46,.07);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Sarabun",system-ui,sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4{font-family:"Mitr",sans-serif; font-weight:500; line-height:1.25; margin:0;}
+  .wrap{max-width:980px; margin:0 auto; padding:0 16px;}
+  .hero{background:linear-gradient(155deg,#21433A 0%,#2C5648 60%,#1C3A31 100%); color:#F4F1E9; position:relative; overflow:hidden;}
+  .hero::after{content:"🍁"; position:absolute; font-size:190px; right:-24px; top:-28px; opacity:.06; transform:rotate(12deg);}
+  .hero .wrap{padding:28px 16px 22px;}
+  .eyebrow{font-family:"Mitr"; letter-spacing:.18em; text-transform:uppercase; font-size:11px; color:var(--straw);}
+  .hero h1{font-family:"Chonburi"; font-weight:400; font-size:clamp(28px,6vw,46px); color:#fff; margin:6px 0 2px; line-height:1.05;}
+  .hero .sub{font-size:14.5px; color:#CFE0D8; max-width:640px;}
+  /* toolbar */
+  .toolbar{background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:60; box-shadow:0 2px 12px rgba(32,36,46,.05);}
+  .toolbar .wrap{display:flex; align-items:center; gap:8px; padding:8px 16px; flex-wrap:wrap;}
+  .tbtn{font-family:"Mitr"; font-size:12.5px; border:1px solid var(--line); background:#F4F5F2; color:var(--ink);
+    border-radius:10px; padding:7px 13px; cursor:pointer; transition:.15s; display:inline-flex; align-items:center; gap:6px;}
+  .tbtn:hover{border-color:var(--pine2); color:var(--pine2);}
+  .tbtn.primary{background:var(--pine2); color:#fff; border-color:var(--pine2);}
+  .tbtn.primary:hover{background:#244a3f;}
+  .tbtn.danger{color:var(--momiji);}
+  .syncinfo{margin-left:auto; font-size:11.5px; color:var(--muted); text-align:right; line-height:1.35;}
+  .syncinfo b{color:var(--pine2);}
+  .syncinfo .warn{color:var(--momiji); font-weight:600;}
+  .livebar{background:#fff; border-bottom:1px solid var(--line);}
+  .livebar .wrap{display:flex; align-items:center; gap:14px; padding:8px 16px; flex-wrap:wrap;}
+  .lb-total{display:flex; align-items:baseline; gap:10px;}
+  .lb-total .yen{font-family:"Chonburi"; font-size:24px; color:var(--pine);}
+  .lb-total .baht{font-family:"Mitr"; font-weight:500; font-size:14px; color:var(--momiji);}
+  .lb-total .lbl{font-family:"Mitr"; font-size:11px; color:var(--muted);}
+  .lb-hint{margin-left:auto; font-size:11.5px; color:var(--muted);}
+  .lb-hint a{color:var(--pine2); cursor:pointer; text-decoration:underline; text-underline-offset:2px;}
+  section{padding:26px 0;}
+  .sec-eyebrow{font-family:"Mitr"; letter-spacing:.14em; text-transform:uppercase; font-size:11px; color:var(--momiji); margin-bottom:4px;}
+  .sec-title{font-size:22px; margin-bottom:4px;}
+  .sec-note{color:var(--muted); font-size:14px; margin-bottom:16px; max-width:680px;}
+  /* day tabs */
+  .daytabs{display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; -webkit-overflow-scrolling:touch; align-items:stretch;}
+  .daytab{flex:0 0 auto; background:#fff; border:1px solid var(--line); border-radius:11px; padding:8px 12px; cursor:pointer; min-width:72px; text-align:center; transition:.15s; position:relative;}
+  .daytab .dd{font-family:"Mitr"; font-size:11.5px; color:var(--muted);}
+  .daytab .dt{font-family:"Mitr"; font-weight:600; font-size:13.5px; color:var(--ink);}
+  .daytab .tg{font-size:10px; margin-top:2px; padding:1px 6px; border-radius:20px; display:inline-block;}
+  .daytab.active{border-color:var(--pine2); box-shadow:var(--shadow); transform:translateY(-1px);}
+  .daytab.off{opacity:.45;}
+  .daytab.off::after{content:"ไม่รวม"; position:absolute; top:-7px; right:-4px; background:#8A93A3; color:#fff; font-size:9px; font-family:"Mitr"; padding:1px 7px; border-radius:12px;}
+  .addtab{flex:0 0 auto; border:1.5px dashed var(--rest); background:transparent; color:var(--pine2); border-radius:11px; padding:8px 14px; cursor:pointer; font-family:"Mitr"; font-size:12.5px;}
+  .tag-big{background:var(--momiji-soft); color:var(--momiji);}
+  .tag-med{background:var(--straw-soft); color:#94660c;}
+  .tag-light{background:#DCEAE3; color:#2F5E50;}
+  .tag-rest{background:#E7EBE8; color:#6f8078;}
+  .pace{font-family:"Mitr"; font-size:11px; padding:3px 10px; border-radius:20px;}
+  .daypanel{display:none; margin-top:16px; animation:fade .3s ease;}
+  .daypanel.show{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  .dhead{display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;}
+  .dhead .bd{font-family:"Chonburi"; font-size:24px; color:var(--pine);}
+  .dhead .ht{font-family:"Mitr"; font-weight:600; font-size:16px;}
+  .dhead .hs{font-size:12.5px; color:var(--muted);}
+  .icobtn{border:1px solid var(--line); background:#fff; border-radius:8px; cursor:pointer; font-size:13px; padding:4px 8px; line-height:1.2; transition:.15s;}
+  .icobtn:hover{border-color:var(--momiji); color:var(--momiji);}
+  /* variant pills */
+  .varbar{display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-bottom:10px;}
+  .varpill{font-family:"Mitr"; font-size:12px; border:1px solid var(--line); background:#fff; border-radius:20px; padding:4px 12px; cursor:pointer;}
+  .varpill.on{background:var(--train); color:#fff; border-color:var(--train);}
+  .varadd{font-family:"Mitr"; font-size:11.5px; border:1px dashed var(--rest); background:transparent; color:var(--pine2); border-radius:20px; padding:4px 10px; cursor:pointer;}
+  .vardel{border:none; background:none; color:var(--muted); cursor:pointer; font-size:12px;}
+  /* activity rows */
+  .row{display:grid; grid-template-columns:70px 1fr auto auto; gap:10px; background:#fff; border:1px solid var(--line); border-radius:13px; padding:11px 13px; margin-bottom:8px; box-shadow:var(--shadow); align-items:start;}
+  .row .time{font-family:"Mitr"; font-weight:500; font-size:12px; color:var(--momiji); line-height:1.35;}
+  .row .act{font-weight:600; font-size:14.5px;}
+  .row.skip .act, .row.skip .time{text-decoration:line-through; opacity:.55;}
+  .row .move{font-size:12.5px; color:var(--muted); margin-top:3px;}
+  .row .move .ft{color:#37564c;}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:7px;}
+  .chip{font-size:11px; padding:2px 8px; border-radius:20px; border:1px solid;}
+  .chip.train{background:var(--train-soft); color:var(--train); border-color:#D3DFEC;}
+  .chip.dur{background:#F1F3F0; color:#4b5a52; border-color:#DEE4DF;}
+  .note{font-size:12px; color:var(--muted); margin-top:6px; line-height:1.45;}
+  .cost{text-align:right; min-width:80px;}
+  .cost .c{font-family:"Mitr"; font-weight:600; font-size:13.5px; white-space:nowrap;}
+  .cost .c.train-c{color:var(--train);}
+  .cost .c.food-c{color:var(--momiji);}
+  .cost .c.entry-c{color:var(--pine);}
+  .cost .clbl{font-size:9.5px; color:var(--muted); font-family:"Mitr"; text-transform:uppercase; letter-spacing:.03em;}
+  .cost .free{color:var(--pine2); font-weight:600; font-size:12px;}
+  .rowops{display:flex; flex-direction:column; gap:4px;}
+  .rowops .icobtn{font-size:11px; padding:3px 7px;}
+  .inctoggle{display:flex; align-items:center; gap:6px; font-family:"Mitr"; font-size:11px; color:var(--muted); cursor:pointer; user-select:none;}
+  .inctoggle .sw{width:34px; height:19px; border-radius:20px; background:#C6CDC9; position:relative; transition:.15s; flex:0 0 auto;}
+  .inctoggle .sw::after{content:""; position:absolute; width:14px; height:14px; border-radius:50%; background:#fff; top:2.5px; left:3px; transition:.15s;}
+  .inctoggle.on .sw{background:var(--pine2);}
+  .inctoggle.on .sw::after{left:17px;}
+  .dsub{display:flex; justify-content:flex-end; gap:20px; align-items:baseline; padding:10px 14px; background:#EAF0EC; border:1px solid #D6E2DA; border-radius:13px; margin-top:4px;}
+  .dsub .lbl{font-family:"Mitr"; font-size:12px; color:var(--pine2);}
+  .dsub .val{font-family:"Mitr"; font-weight:600; font-size:15px; color:var(--pine);}
+  .addrow{width:100%; border:1.5px dashed var(--rest); background:transparent; color:var(--pine2); border-radius:12px; padding:9px; cursor:pointer; font-family:"Mitr"; font-size:13px; margin:4px 0 8px;}
+  .addrow:hover{background:#fff;}
+  /* edit form */
+  .editform{grid-column:1/-1; background:#F4F7F3; border:1px solid #D6E2DA; border-radius:11px; padding:12px;}
+  .editform .fgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; margin-bottom:8px;}
+  .editform label{font-size:11px; color:var(--muted); font-family:"Mitr"; display:block; margin-bottom:3px;}
+  .editform input,.editform select{width:100%; border:1px solid var(--line); border-radius:8px; padding:7px 9px; font-family:"Sarabun"; font-size:13.5px; background:#fff;}
+  .editform input:focus,.editform select:focus{outline:none; border-color:var(--pine2);}
+  .editform .ops{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .editform input.wide{grid-column:1/-1;}
+  /* day edit form */
+  .dayedit{background:#F4F7F3; border:1px solid #D6E2DA; border-radius:13px; padding:14px; margin-bottom:12px;}
+  /* budget calc */
+  .calc{background:#fff; border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); overflow:hidden;}
+  .calc-body{padding:18px 18px 6px;}
+  .ctrl{margin-bottom:16px;}
+  .ctrl > label{font-family:"Mitr"; font-weight:500; font-size:13px; display:block; margin-bottom:7px;}
+  .seg3{display:flex; gap:6px;}
+  .seg3 button{flex:1; background:#F4F5F2; border:1px solid var(--line); border-radius:10px; padding:9px 6px; cursor:pointer; font-family:"Sarabun"; font-size:13px; transition:.15s;}
+  .seg3 button .s{display:block; font-size:10.5px; color:var(--muted);}
+  .seg3 button.on{border-color:var(--momiji); background:#fff; box-shadow:var(--shadow); color:var(--momiji); font-weight:600;}
+  .inrow{display:flex; gap:12px; flex-wrap:wrap;}
+  .inrow .fld{flex:1; min-width:110px;}
+  .fld label{font-size:11.5px; color:var(--muted); font-family:"Mitr"; display:block; margin-bottom:4px;}
+  .fld input{width:100%; border:1px solid var(--line); border-radius:9px; padding:9px 11px; font-family:"Sarabun"; font-size:14px; background:#FBFCFA;}
+  .fld input:focus{outline:none; border-color:var(--pine2); background:#fff;}
+  .breakdown{border-top:1px solid var(--line); padding:14px 18px; background:#F8F9F6;}
+  .brow{display:flex; justify-content:space-between; align-items:baseline; padding:5px 0; font-size:14px;}
+  .brow .k{color:var(--muted);}
+  .brow .k b{font-family:"Mitr"; font-weight:500; color:var(--ink);}
+  .brow .v{font-family:"Mitr"; font-weight:500;}
+  .grand{background:linear-gradient(135deg,#275145,#2F5E50); color:#fff; padding:16px 18px; display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:6px;}
+  .grand .gl{font-family:"Mitr"; font-size:13px; color:#CFE0D8;}
+  .grand .gy{font-family:"Chonburi"; font-size:30px;}
+  .grand .gb{font-family:"Mitr"; font-weight:500; font-size:15px; color:var(--straw);}
+  .grid2{display:grid; gap:14px;}
+  @media(min-width:680px){.grid2{grid-template-columns:1fr 1fr;}}
+  table{width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); border-radius:13px; overflow:hidden; font-size:13px;}
+  th,td{text-align:left; padding:9px 11px; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{background:#F0F2EE; font-family:"Mitr"; font-weight:500; font-size:12px; color:var(--pine2);}
+  tr:last-child td{border-bottom:none;}
+  td .ln{font-size:11.5px; color:var(--train);}
+  .fare{font-family:"Mitr"; font-weight:500; text-align:right; white-space:nowrap;}
+  tr.newrow td{background:var(--train-soft);}
+  /* checklist */
+  .check{background:#fff; border:1px solid var(--line); border-radius:13px; box-shadow:var(--shadow); overflow:hidden;}
+  .ci{display:flex; gap:11px; padding:11px 14px; border-bottom:1px solid var(--line); align-items:flex-start;}
+  .ci:last-child{border-bottom:none;}
+  .cit{font-weight:600; font-size:14px;}
+  .cid{font-size:12px; color:var(--muted);}
+  .wb{flex:0 0 auto; font-family:"Mitr"; font-size:10.5px; font-weight:500; padding:2px 8px; border-radius:20px; margin-top:2px;}
+  .w-now{background:var(--momiji-soft); color:var(--momiji);}
+  .w-soon{background:var(--straw-soft); color:#94660c;}
+  .w-pre{background:#DCEAE3; color:#2F5E50;}
+  .statussel{border:1px solid var(--line); border-radius:8px; font-family:"Mitr"; font-size:11.5px; padding:4px 6px; background:#FBFCFA; cursor:pointer; margin-top:4px;}
+  .st-done{background:#E3EFE7 !important; color:var(--pine2) !important; text-decoration:line-through;}
+  .st-maybe{background:var(--straw-soft) !important;}
+  .callout{background:#FBEEE8; border:1px solid #F2D9CD; border-left:4px solid var(--momiji); border-radius:10px; padding:12px 15px; font-size:13px; margin-top:14px;}
+  .callout b{color:var(--momiji); font-family:"Mitr"; font-weight:500;}
+  .tinynote{font-size:11.5px; color:var(--muted); margin-top:10px;}
+  /* drop overlay + toast */
+  .dropzone{position:fixed; inset:0; background:rgba(33,67,58,.88); z-index:999; display:none; align-items:center; justify-content:center; color:#fff; font-family:"Mitr"; font-size:22px; text-align:center;}
+  .dropzone.show{display:flex;}
+  .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; font-family:"Mitr"; font-size:13px; padding:10px 18px; border-radius:12px; z-index:1000; opacity:0; transition:.25s; pointer-events:none; max-width:90vw;}
+  .toast.show{opacity:1;}
+  footer{background:#21433A; color:#9FBEB2; padding:24px 0; margin-top:16px; font-size:12px; text-align:center;}
+  footer b{color:#F4F1E9; font-family:"Mitr"; font-weight:400;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important; scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">28 พ.ย. – 6 ธ.ค. 2026 · โตเกียว 8 คืน (Ueno) + Kamakura · 2 ผู้ใหญ่ + Hooga</div>
+    <h1>Tokyo Trip Planner</h1>
+    <p class="sub">แผนแก้ได้ทุกจุด — ค้างโตเกียวทุกคืน (ไม่มี Shizuoka แล้ว) · เพิ่ม/ลบ/สลับกิจกรรมและทั้งวัน · แก้แบบตาราง Excel ได้ที่หน้า <a href="sheet.html" style="color:var(--straw)">Sheet</a> และ <b>sync สองทางกับไฟล์ Excel</b></p>
+    <div class="pills">
+      <span class="pill">✈️ <b>TG682</b> ถึง Haneda 28 พ.ย. 06:55</span>
+      <span class="pill">✈️ <b>TG683</b> กลับ 6 ธ.ค. 10:35</span>
+      <span class="pill">🎢 Disney</span><span class="pill">🎨 teamLab</span><span class="pill">🧱 Lego</span>
+      <span class="pill">⚡ Harry Potter</span><span class="pill">🗿 Kamakura</span>
+      <span class="pill">🐾 Pokémon Café</span><span class="pill">🎡 Hanayashiki</span><span class="pill">🗼 Skytree</span>
+      <span class="pill">🏨 ค้าง Ueno ทุกคืน</span>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <button class="tbtn primary" id="btn-excel">💾 บันทึกลง Excel</button>
+    <button class="tbtn" id="btn-upload">📂 โหลดจาก Excel</button>
+    <input type="file" id="file-xlsx" accept=".xlsx,.xlsm" hidden>
+    <button class="tbtn" id="btn-json">⬇︎ JSON</button>
+    <button class="tbtn" id="btn-jsonin">⬆︎ JSON</button>
+    <input type="file" id="file-json" accept=".json" hidden>
+    <button class="tbtn danger" id="btn-reset">↺ รีเซ็ต</button>
+    <select id="trip-sel" class="tbtn" style="max-width:200px;"></select>
+    <a class="tbtn" href="sheet.html" title="แก้แบบตาราง Excel ลากได้">📊 Sheet</a>
+    <a class="tbtn" href="map.html" title="แผนที่ kid-friendly">🗺️ แผนที่</a>
+    <div class="syncinfo" id="syncinfo"></div>
+  </div>
+</div>
+
+<div class="livebar">
+  <div class="wrap">
+    <div class="lb-total">
+      <span class="lbl">งบรวม (ไม่รวมตั๋วเครื่องบิน)</span>
+      <span class="yen" id="lb-yen">—</span>
+      <span class="baht" id="lb-baht">—</span>
+    </div>
+    <span class="lb-hint">แก้ตัวเลขได้ที่ <a onclick="document.getElementById('budget').scrollIntoView()">เครื่องคิดงบ ↓</a> · <a onclick="document.getElementById('checklist').scrollIntoView()">เช็กลิสต์ ↓</a></span>
+  </div>
+</div>
+
+<section id="plan">
+  <div class="wrap">
+    <div class="sec-eyebrow">แผนละเอียดรายชั่วโมง — แก้ไขได้</div>
+    <h2 class="sec-title">แตะ ✎ เพื่อแก้ · เพิ่ม/ลบ/เลื่อนแถวและทั้งวันได้อิสระ</h2>
+    <p class="sec-note">สวิตช์ "รวม" ต่อแถวและต่อวัน = นับ/ไม่นับในงบ · วันที่มีหลายตัวเลือก (เช่น Shizuoka ค้างคืน vs Day Trip) กดสลับ pill A/B ได้ งบจะเดินตามตัวเลือกที่เลือก</p>
+    <div class="daytabs" id="daytabs"></div>
+    <div id="daypanels"></div>
+  </div>
+</section>
+
+<section id="budget" style="background:#E7EAE3;">
+  <div class="wrap">
+    <div class="sec-eyebrow">Live</div>
+    <h2 class="sec-title">เครื่องคิดงบ</h2>
+    <p class="sec-note">ปรับค่าด้านล่าง ทุกอย่างคำนวณใหม่ทันที — ค่าเหล่านี้จะถูกบันทึกลงชีต "ตั้งค่า" ตอน Export Excel ด้วย</p>
+    <div class="calc">
+      <div class="calc-body">
+        <div class="ctrl">
+          <label>สไตล์อาหาร</label>
+          <div class="seg3" id="foodseg">
+            <button data-m="0.8" data-s="ประหยัด">ประหยัด<span class="s">กินโรงอาหาร/เชน</span></button>
+            <button data-m="1.0" data-s="กลาง">กลาง<span class="s">ผสมร้าน local</span></button>
+            <button data-m="1.3" data-s="สบาย">สบาย<span class="s">มีมื้อพิเศษ</span></button>
+          </div>
+        </div>
+        <div class="ctrl">
+          <div class="inrow">
+            <div class="fld"><label>ที่พักโตเกียว (¥/คืน)</label><input id="in-hotel" type="number" min="0" step="500"></div>
+            <div class="fld"><label>คืนโตเกียว</label><input id="in-nights" type="number" min="0" step="1"></div>
+            <div class="fld"><label>ที่พัก Shizuoka (¥/คืน)</label><input id="in-hotel-s" type="number" min="0" step="500"></div>
+            <div class="fld"><label>คืน Shizuoka</label><input id="in-nights-s" type="number" min="0" step="1"></div>
+            <div class="fld"><label>อัตราแลก (¥ → ฿)</label><input id="in-fx" type="number" min="0" step="0.005"></div>
+          </div>
+        </div>
+      </div>
+      <div class="breakdown">
+        <div class="brow"><span class="k"><b>🚆 เดินทางในเมือง + ชินคันเซ็น</b></span><span class="v" id="b-train">—</span></div>
+        <div class="brow"><span class="k"><b>🎟️ ค่าเข้าชม / กิจกรรม</b></span><span class="v" id="b-entry">—</span></div>
+        <div class="brow"><span class="k"><b>🍽️ อาหาร</b> <span id="b-foodmult" style="font-size:11px;color:var(--momiji)"></span></span><span class="v" id="b-food">—</span></div>
+        <div class="brow"><span class="k"><b>🏨 ที่พัก</b> <span id="b-hoteldesc" style="font-size:11px;color:var(--muted)"></span></span><span class="v" id="b-hotel">—</span></div>
+      </div>
+      <div class="grand">
+        <div><div class="gl">รวมทั้งหมด เฉพาะวันที่เปิด "รวม" (ไม่รวมตั๋วเครื่องบิน + ของฝาก)</div></div>
+        <div style="text-align:right;"><span class="gy" id="g-yen">—</span><br><span class="gb" id="g-baht">—</span></div>
+      </div>
+    </div>
+    <p class="tinynote">ตัวเลขในแผนเป็นของ 2 ผู้ใหญ่รวมกัน (Hooga &lt;6 ขวบ ฟรีส่วนใหญ่) · ราคาเป็นประมาณการ ตรวจสอบเว็บทางการก่อนจองทุกครั้ง</p>
+  </div>
+</section>
+
+<section id="ref">
+  <div class="wrap">
+    <div class="grid2">
+      <div>
+        <div class="sec-eyebrow">อ้างอิง</div>
+        <h2 class="sec-title" style="font-size:19px;">เส้นทางหลักจาก Ueno</h2>
+        <table id="tp-table"><thead><tr><th>เส้นทาง</th><th style="text-align:right;">เวลา</th><th style="text-align:right;">¥/คน</th></tr></thead><tbody></tbody></table>
+        <p class="tinynote">Hooga (ต่ำกว่า 6 ขวบ) ขึ้นรถไฟฟรี · แนะนำ Suica/PASMO แตะเข้า-ออก · แถวสีฟ้า = เส้นทาง Kamakura / Shizuoka</p>
+      </div>
+      <div id="checklist">
+        <div class="sec-eyebrow">กันลืม</div>
+        <h2 class="sec-title" style="font-size:19px;">เช็กลิสต์จองล่วงหน้า</h2>
+        <div class="check" id="checklist-el"></div>
+        <div class="callout"><b>ห้ามลืม:</b> ตั๋วทารก Warner Bros (≤3 ขวบ ฟรี) ต้องอีเมลขอแยก ไม่มีขายออนไลน์</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ideas-sec" style="background:#E7EAE3;">
+  <div class="wrap">
+    <div class="sec-eyebrow">💡 คลังไอเดีย</div>
+    <h2 class="sec-title">ยังไม่อยู่ในแผน — attraction / food / shopping</h2>
+    <p class="sec-note">กด ＋ เพื่อใส่ไอเดียลงวันที่เลือก แล้วเข้าไปตั้งเวลา/ปรับราคาในแผนต่อได้เลย</p>
+    <div id="ideas"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap"><b>Tokyo Trip Planner · ค้างโตเกียวทุกคืน · 28 พ.ย. – 6 ธ.ค. 2026 · รวม Kamakura</b><br>แก้ในแอป → 💾 บันทึกลง Excel ไฟล์เดิม · แก้ใน Excel → 📂 ลากไฟล์กลับเข้าแอป · มีทริปอื่นสร้างใหม่ได้ที่ selector ด้านบน</div>
+</footer>
+
+<div class="dropzone" id="dropzone"><div>📥 ปล่อยไฟล์ Excel (.xlsx)<br><span style="font-size:14px;opacity:.8;">เพื่อโหลดแผนจากไฟล์</span></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ================= STATE =================
+let S = tpLoad();
+let ui = { day: 0, editing: null };   // editing: {kind:'row'|'day', d, r?}
+const fmt = n => "¥" + Math.round(n).toLocaleString();
+const paceCls = {big:"tag-big",med:"tag-med",light:"tag-light",rest:"tag-rest"};
+const FOOD_MULT = {"ประหยัด":0.8,"กลาง":1.0,"สบาย":1.3};
+
+function persist(){ tpSave(S); updateSyncInfo(); }
+function updateSyncInfo(){
+  const el = document.getElementById('syncinfo');
+  const reg=Trips.get(), trip=Trips.activeTrip(reg);
+  const isSeed = S.meta.source === 'seed';
+  el.innerHTML = `<b>${trip.name}</b> · ` + (isSeed
+    ? `<span class="warn">ยังไม่เชื่อม Excel — ใช้ข้อมูลตั้งต้น</span>`
+    : `ไฟล์: <b>${S.meta.filename||'excel'}</b> · ${(S.meta.loadedAt||'').replace('T',' ').slice(0,16)}`)
+    + ` · ${S.days.length} วัน · ${S.days.reduce((a,d)=>a+d.variants[d.activeVariant].rows.length,0)} กิจกรรม`;
+}
+function rebuildAll(){
+  S=tpLoad(); ui.day=0; ui.editing=null;
+  buildPlan(); initBudget(); initStatic(); refreshTrips(); updateSyncInfo(); checkMigToast();
+  if(typeof renderIdeasPanel==='function') renderIdeasPanel();
+}
+function checkMigToast(){
+  if(S.__mig){ APP.toast('ปรับแผนแล้ว: ค้างโตเกียวทุกคืน — ไม่มี Shizuoka (D7 Pokémon Café · D8 Hanayashiki + Skytree)', 5200); delete S.__mig; tpSave(S); }
+}
+function refreshTrips(){
+  const sel=document.getElementById('trip-sel');
+  const reg=Trips.get();
+  sel.innerHTML=reg.trips.map(t=>`<option value="${t.id}" ${t.id===reg.activeId?'selected':''}>${t.name}</option>`).join('')
+    +'<option value="__new">＋ ทริปใหม่…</option>';
+}
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// ================= CALC =================
+function foodMult(){ return FOOD_MULT[S.settings.foodStyle] || 1.0; }
+function dayTotals(day){
+  const rows = day.variants[day.activeVariant].rows;
+  const fm = foodMult();
+  let train=0, entry=0, food=0, other=0;
+  rows.forEach(r=>{
+    if(!r.inc || !day.inc) return;
+    const eff = r.type==='food' ? r.cost*fm : r.cost;
+    train+=r.train;
+    if(r.type==='food') food+=eff;
+    else if(r.type==='entry') entry+=r.cost;
+    else if(r.cost) other+=r.cost;
+  });
+  return {train, entry, food, other, sum: train+entry+food+other};
+}
+function recalc(){
+  const fm=foodMult();
+  let train=0, entry=0, food=0, other=0;
+  S.days.forEach(d=>{ const t=dayTotals(d); train+=t.train; entry+=t.entry; food+=t.food; other+=t.other; });
+  const st=S.settings;
+  const hotel = st.hotelTokyo*st.nightsTokyo + st.hotelShizuoka*st.nightsShizuoka;
+  const grand = train+entry+food+other+hotel;
+  document.getElementById('b-train').textContent=fmt(train);
+  document.getElementById('b-entry').textContent=fmt(entry+other);
+  document.getElementById('b-food').textContent=fmt(food);
+  document.getElementById('b-foodmult').textContent=fm!==1?`×${fm}`:'';
+  document.getElementById('b-hotel').textContent=fmt(hotel);
+  let hd=`${fmt(st.hotelTokyo)} × ${st.nightsTokyo} คืน`;
+  if(st.nightsShizuoka>0) hd+=` + Shizuoka ${fmt(st.hotelShizuoka)} × ${st.nightsShizuoka} คืน`;
+  document.getElementById('b-hoteldesc').textContent=hd;
+  document.getElementById('g-yen').textContent=fmt(grand);
+  const baht="≈ ฿"+Math.round(grand*st.fx).toLocaleString();
+  document.getElementById('g-baht').textContent=baht;
+  document.getElementById('lb-yen').textContent=fmt(grand);
+  document.getElementById('lb-baht').textContent=baht;
+  // live day subtotals
+  document.querySelectorAll('[data-daysub]').forEach(el=>{
+    const d=S.days[+el.dataset.daysub];
+    if(d) el.textContent=fmt(dayTotals(d).sum);
+  });
+}
+
+// ================= RENDER PLAN =================
+function rowHtml(r){
+  let move = r.ft?`<div class="move"><span class="ft">${r.ft}</span></div>`:'';
+  let chips=(TAGS[r.tag]?`<span class="tgc tgc-${r.tag}">${TAGS[r.tag].icon} ${TAGS[r.tag].label}</span>`:'');
+  if(r.line && r.line!=='เดิน') chips+=`<span class="chip train">🚆 ${r.line}</span>`;
+  else if(r.line==='เดิน') chips+=`<span class="chip dur">🚶 เดิน</span>`;
+  if(r.dur) chips+=`<span class="chip dur">⏱ ${r.dur}</span>`;
+  chips=chips?`<div class="chips">${chips}</div>`:'';
+  let costHtml='';
+  if(r.train>0) costHtml+=`<div><div class="c train-c">${fmt(r.train)}</div><div class="clbl">เดินทาง</div></div>`;
+  if(r.cost>0){
+    const cls=r.type==='food'?'food-c':(r.type==='entry'?'entry-c':'');
+    const lbl=r.type==='food'?'อาหาร':(r.type==='entry'?'ค่าเข้า':'อื่นๆ');
+    costHtml+=`<div style="margin-top:${r.train>0?'6px':'0'}"><div class="c ${cls}">${fmt(r.cost)}</div><div class="clbl">${lbl}</div></div>`;
+  }
+  if(!r.train && !r.cost) costHtml=`<div class="free">—</div>`;
+  return `${move}${chips}${r.note?`<div class="note">${r.note}</div>`:''}|${costHtml}`;
+}
+
+function buildPlan(){
+  const tabsEl=document.getElementById('daytabs');
+  const panelsEl=document.getElementById('daypanels');
+  tabsEl.innerHTML=''; panelsEl.innerHTML='';
+  S.days.forEach((day,i)=>{
+    const rows=day.variants[day.activeVariant].rows;
+    const t=document.createElement('div');
+    t.className='daytab'+(day.inc?'':' off');
+    t.dataset.i=i;
+    t.innerHTML=`<div class="dd">${day.dow}</div><div class="dt">${day.d}</div><div class="tg ${paceCls[day.pace]||''}">${day.tag}</div>`;
+    t.onclick=()=>{ui.day=i; ui.editing=null; buildPlan();};
+    tabsEl.appendChild(t);
+
+    const p=document.createElement('div');
+    p.className='daypanel'+(i===ui.day?' show':'');
+    p.dataset.i=i;
+    let html=`<div class="dhead">
+      <div class="bd">${day.d}</div>
+      <div><div class="ht">${day.title}</div><div class="hs">${day.sub||''} · ${day.date}</div></div>
+      <div class="pace ${paceCls[day.pace]||''}">${day.tag}</div>
+      <div class="inctoggle ${day.inc?'on':''}" data-dayinc="${i}"><span>รวมงบ</span><div class="sw"></div></div>
+      <span style="margin-left:auto;display:flex;gap:4px;">
+        <button class="icobtn" data-dayedit="${i}" title="แก้หัววัน">✎ หัววัน</button>
+        <button class="icobtn" data-dayup="${i}" title="เลื่อนวันขึ้น">←</button>
+        <button class="icobtn" data-daydown="${i}" title="เลื่อนวันลง">→</button>
+        <button class="icobtn" data-daydel="${i}" title="ลบวันนี้">🗑</button>
+      </span>
+    </div>`;
+    // variant bar
+    if(day.variants.length>1 || true){
+      html+=`<div class="varbar">`;
+      day.variants.forEach((v,vi)=>{
+        html+=`<button class="varpill ${vi===day.activeVariant?'on':''}" data-var="${i}:${vi}">${v.name} · ${v.rows.length} กิจกรรม${vi===day.activeVariant?' ✓':''}</button>`;
+      });
+      html+=`<button class="varadd" data-varadd="${i}">＋ ทำสำเนาเป็นตัวเลือกใหม่</button>`;
+      if(day.variants.length>1) html+=`<button class="vardel" data-vardel="${i}" title="ลบตัวเลือกที่เลือก">✕ ลบตัวเลือกนี้</button>`;
+      html+=`</div>`;
+    }
+    // day edit form
+    if(ui.editing && ui.editing.kind==='day' && ui.editing.d===i){
+      html+=`<div class="dayedit"><div class="fgrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;">
+        ${df('de-date','วันที่ (ISO)',day.date)}${df('de-d','แสดงวันที่',day.d)}${df('de-dow','วัน · D#',day.dow)}
+        ${df('de-tag','ป้าย',day.tag)}${dsel('de-pace','โหมด',day.pace,['big','med','light','rest'])}
+        ${df('de-title','ชื่อวัน',day.title)}${df('de-sub','คำอธิบาย',day.sub)}
+      </div><div class="ops"><button class="tbtn primary" data-desave="${i}">บันทึกหัววัน</button>
+      <button class="tbtn" data-decancel="1">ยกเลิก</button></div></div>`;
+    }
+    // rows
+    rows.forEach((r,ri)=>{
+      if(ui.editing && ui.editing.kind==='row' && ui.editing.d===i && ui.editing.r===ri){
+        html+=rowEditHtml(i,ri,r);
+        return;
+      }
+      const [main,costHtml]=rowHtml(r).split('|');
+      html+=`<div class="row ${r.inc?'':'skip'}">
+        <div class="time">${r.time}</div>
+        <div><div class="act">${r.act}</div>${main}</div>
+        <div class="cost">${costHtml}</div>
+        <div class="rowops">
+          <div class="inctoggle ${r.inc?'on':''}" data-rowinc="${i}:${ri}" title="นับ/ไม่นับในงบ"><span>รวม</span><div class="sw"></div></div>
+          <button class="icobtn" data-edit="${i}:${ri}" title="แก้แถว">✎</button>
+          <button class="icobtn" data-dup="${i}:${ri}" title="ทำสำเนา">⧉</button>
+          <button class="icobtn" data-rup="${i}:${ri}" title="เลื่อนขึ้น">↑</button>
+          <button class="icobtn" data-rdown="${i}:${ri}" title="เลื่อนลง">↓</button>
+          <button class="icobtn" data-rdel="${i}:${ri}" title="ลบ">🗑</button>
+        </div>
+      </div>`;
+    });
+    html+=`<button class="addrow" data-addrow="${i}">＋ เพิ่มกิจกรรมในวันนี้</button>`;
+    html+=`<div class="dsub ${day.inc?'':'off'}"><span class="lbl">รวมวันนี้${day.inc?'':' (ยังไม่นับในงบรวม)'}</span><span class="val" data-daysub="${i}">—</span></div>`;
+    p.innerHTML=html;
+    panelsEl.appendChild(p);
+  });
+  wire();
+  recalc();
+}
+function df(id,label,val){return `<div><label>${label}</label><input id="${id}" value="${(val||'').toString().replace(/"/g,'&quot;')}"></div>`;}
+function dsel(id,label,val,opts){return `<div><label>${label}</label><select id="${id}">${opts.map(o=>`<option ${o===val?'selected':''}>${o}</option>`).join('')}</select></div>`;}
+function rowEditHtml(di,ri,r){
+  return `<div class="row" style="grid-template-columns:1fr;"><div class="editform">
+    <div class="fgrid">
+      ${df('ef-time','เวลา',r.time)}${df('ef-act','กิจกรรม',r.act)}${df('ef-ft','เส้นทาง (จาก → ถึง)',r.ft)}
+      ${df('ef-line','ขนส่ง / สายรถ',r.line)}${df('ef-dur','ระยะเวลา',r.dur)}
+      ${df('ef-train','ค่าเดินทาง ¥ (2 คน)',r.train||'')}${df('ef-cost','ค่าใช้จ่าย ¥',r.cost||'')}
+      ${dsel('ef-tag','แท็กกิจกรรม',r.tag||'other',Object.keys(TAGS))}
+      ${dsel('ef-type','หมวดงบ (food คูณตัวคูณ)',r.type||'',['','food','entry','misc'])}
+    </div>
+    <div class="fgrid"><div style="grid-column:1/-1;"><label>โน้ต</label><input class="wide" id="ef-note" value="${(r.note||'').replace(/"/g,'&quot;')}"></div></div>
+    <div class="ops">
+      <button class="tbtn primary" data-esave="${di}:${ri}">บันทึก</button>
+      <button class="tbtn" data-ecancel="1">ยกเลิก</button>
+      <span style="font-size:11px;color:var(--muted);">หมวด: food=อาหาร (คูณตัวคูณสไตล์อาหาร) · entry=ค่าเข้า · misc=อื่นๆ · เว้นว่าง=ไม่มี</span>
+    </div></div></div>`;
+}
+
+// ================= EVENTS =================
+function wire(){
+  const q=s=>document.querySelectorAll(s);
+  q('[data-dayinc]').forEach(el=>el.onclick=e=>{e.stopPropagation(); const i=+el.dataset.dayinc; S.days[i].inc=!S.days[i].inc; persist(); buildPlan();});
+  q('[data-dayedit]').forEach(el=>el.onclick=()=>{const i=+el.dataset.dayedit; ui.editing=(ui.editing&&ui.editing.kind==='day'&&ui.editing.d===i)?null:{kind:'day',d:i}; buildPlan();});
+  q('[data-desave]').forEach(el=>el.onclick=()=>{
+    const i=+el.dataset.desave, d=S.days[i];
+    d.date=v('de-date'); d.d=v('de-d'); d.dow=v('de-dow'); d.tag=v('de-tag');
+    d.pace=v('de-pace'); d.title=v('de-title'); d.sub=v('de-sub');
+    ui.editing=null; persist(); buildPlan(); toast('บันทึกหัววันแล้ว');
+  });
+  q('[data-decancel]').forEach(el=>el.onclick=()=>{ui.editing=null; buildPlan();});
+  q('[data-dayup]').forEach(el=>el.onclick=()=>{const i=+el.dataset.dayup; if(i>0){[S.days[i-1],S.days[i]]=[S.days[i],S.days[i-1]]; ui.day=i-1; persist(); buildPlan();}});
+  q('[data-daydown]').forEach(el=>el.onclick=()=>{const i=+el.dataset.daydown; if(i<S.days.length-1){[S.days[i+1],S.days[i]]=[S.days[i],S.days[i+1]]; ui.day=i+1; persist(); buildPlan();}});
+  q('[data-daydel]').forEach(el=>el.onclick=()=>{const i=+el.dataset.daydel; if(confirm(`ลบวัน "${S.days[i].d} — ${S.days[i].title}" ทั้งวัน?`)){S.days.splice(i,1); ui.day=Math.max(0,i-1); ui.editing=null; persist(); buildPlan();}});
+
+  q('[data-var]').forEach(el=>el.onclick=()=>{const [i,vi]=el.dataset.var.split(':').map(Number); S.days[i].activeVariant=vi; persist(); buildPlan();});
+  q('[data-varadd]').forEach(el=>el.onclick=()=>{
+    const i=+el.dataset.varadd, d=S.days[i];
+    const copy=JSON.parse(JSON.stringify(d.variants[d.activeVariant]));
+    copy.name=`ตัวเลือก ${String.fromCharCode(65+d.variants.length)} · ${d.variants[d.activeVariant].name}`;
+    d.variants.push(copy); d.activeVariant=d.variants.length-1; persist(); buildPlan(); toast('สร้างตัวเลือกใหม่ — แก้รายการได้เลย');
+  });
+  q('[data-vardel]').forEach(el=>el.onclick=()=>{
+    const i=+el.dataset.vardel, d=S.days[i];
+    if(d.variants.length<2) return;
+    if(confirm(`ลบตัวเลือก "${d.variants[d.activeVariant].name}"?`)){
+      d.variants.splice(d.activeVariant,1); d.activeVariant=0; persist(); buildPlan();
+    }
+  });
+
+  q('[data-rowinc]').forEach(el=>el.onclick=e=>{e.stopPropagation(); const [i,ri]=el.dataset.rowinc.split(':').map(Number); const r=S.days[i].variants[S.days[i].activeVariant].rows[ri]; r.inc=!r.inc; persist(); buildPlan();});
+  q('[data-edit]').forEach(el=>el.onclick=()=>{const [i,ri]=el.dataset.edit.split(':').map(Number); ui.editing={kind:'row',d:i,r:ri}; buildPlan();});
+  q('[data-ecancel]').forEach(el=>el.onclick=()=>{ui.editing=null; buildPlan();});
+  q('[data-esave]').forEach(el=>el.onclick=()=>{
+    const [i,ri]=el.dataset.esave.split(':').map(Number);
+    const r=S.days[i].variants[S.days[i].activeVariant].rows[ri];
+    r.time=v('ef-time'); r.act=v('ef-act'); r.ft=v('ef-ft'); r.line=v('ef-line'); r.dur=v('ef-dur');
+    r.train=num('ef-train'); r.cost=num('ef-cost'); r.type=v('ef-type'); r.note=v('ef-note'); r.tag=v('ef-tag')||'other';
+    ui.editing=null; persist(); buildPlan();
+  });
+  q('[data-dup]').forEach(el=>el.onclick=()=>{
+    const [i,ri]=el.dataset.dup.split(':').map(Number);
+    const rows=S.days[i].variants[S.days[i].activeVariant].rows;
+    rows.splice(ri+1,0,JSON.parse(JSON.stringify(rows[ri]))); persist(); buildPlan();
+  });
+  q('[data-rup]').forEach(el=>el.onclick=()=>{
+    const [i,ri]=el.dataset.rup.split(':').map(Number);
+    const rows=S.days[i].variants[S.days[i].activeVariant].rows;
+    if(ri>0){[rows[ri-1],rows[ri]]=[rows[ri],rows[ri-1]]; persist(); buildPlan();}
+  });
+  q('[data-rdown]').forEach(el=>el.onclick=()=>{
+    const [i,ri]=el.dataset.rdown.split(':').map(Number);
+    const rows=S.days[i].variants[S.days[i].activeVariant].rows;
+    if(ri<rows.length-1){[rows[ri+1],rows[ri]]=[rows[ri],rows[ri+1]]; persist(); buildPlan();}
+  });
+  q('[data-rdel]').forEach(el=>el.onclick=()=>{
+    const [i,ri]=el.dataset.rdel.split(':').map(Number);
+    const rows=S.days[i].variants[S.days[i].activeVariant].rows;
+    if(confirm(`ลบ "${rows[ri].act}"?`)){rows.splice(ri,1); ui.editing=null; persist(); buildPlan();}
+  });
+  q('[data-addrow]').forEach(el=>el.onclick=()=>{
+    const i=+el.dataset.addrow;
+    const nr={time:"",act:"กิจกรรมใหม่",ft:"",line:"",dur:"",train:0,cost:0,type:"",note:"",inc:true}; nr.tag=deriveTag(nr);
+    S.days[i].variants[S.days[i].activeVariant].rows.push(nr);
+    ui.day=i; ui.editing={kind:'row',d:i,r:S.days[i].variants[S.days[i].activeVariant].rows.length-1};
+    persist(); buildPlan();
+    document.querySelector('.daypanel.show')?.scrollIntoView({behavior:'smooth',block:'end'});
+  });
+}
+function v(id){const e=document.getElementById(id); return e?e.value.trim():'';}
+function num(id){return parseFloat(v(id))||0;}
+
+// ================= BUDGET CONTROLS =================
+function initBudget(){
+  const st=S.settings;
+  document.querySelectorAll('#foodseg button').forEach(b=>{
+    b.classList.toggle('on', b.dataset.s===st.foodStyle);
+    b.onclick=()=>{ st.foodStyle=b.dataset.s; document.querySelectorAll('#foodseg button').forEach(x=>x.classList.toggle('on',x===b)); persist(); recalc(); };
+  });
+  const bind=(id,key)=>{const el=document.getElementById(id); el.value=st[key]; el.addEventListener('input',()=>{st[key]=parseFloat(el.value)||0; persist(); recalc();});};
+  bind('in-hotel','hotelTokyo'); bind('in-nights','nightsTokyo');
+  bind('in-hotel-s','hotelShizuoka'); bind('in-nights-s','nightsShizuoka');
+  bind('in-fx','fx');
+}
+
+// ================= ROUTES + CHECKLIST =================
+function initStatic(){
+  const tpb=document.querySelector('#tp-table tbody');
+  tpb.innerHTML='';
+  S.routes.forEach(r=>{
+    tpb.insertAdjacentHTML('beforeend',`<tr${r[4]?' class="newrow"':''}><td><b style="font-family:Mitr;font-weight:500">${r[0]}</b><div class="ln">${r[1]}</div></td><td class="fare" style="color:var(--muted)">${r[2]}</td><td class="fare">¥${(+r[3]).toLocaleString()}</td></tr>`);
+  });
+  const clEl=document.getElementById('checklist-el');
+  clEl.innerHTML='';
+  const STATUSES=['ยังไม่ได้ทำ','จองแล้ว','รอตัดสินใจ'];
+  S.checks.forEach((c,ci)=>{
+    const row=document.createElement('div');
+    row.className='ci'+(c[4]==='จองแล้ว'?' st-done':(c[4]==='รอตัดสินใจ'?' st-maybe':''));
+    row.innerHTML=`<div style="flex:1"><div class="cit">${c[0]}</div><div class="cid">${c[1]}</div></div>
+      <div style="text-align:right;"><div class="wb ${c[3]}">${c[2]}</div>
+      <select class="statussel" data-st="${ci}">${STATUSES.map(s=>`<option ${s===c[4]?'selected':''}>${s}</option>`).join('')}</select></div>`;
+    clEl.appendChild(row);
+  });
+  clEl.querySelectorAll('[data-st]').forEach(sel=>sel.onchange=()=>{
+    S.checks[+sel.dataset.st][4]=sel.value; persist(); initStatic();
+  });
+}
+
+// ================= EXCEL SYNC (via app.js) =================
+async function importExcel(buf,filename){
+  const res=await APP.importFlow(buf,filename);
+  if(!res) return;
+  rebuildAll();
+  APP.toast(`โหลดจาก Excel: ${S.days.length} วัน · ${S.days.reduce((a,d)=>a+d.variants[d.activeVariant].rows.length,0)} กิจกรรม ✓`);
+}
+// ================= FILE WIRING =================
+function wireFiles(){
+  document.getElementById('btn-excel').onclick=()=>APP.downloadExcel(S);
+  document.getElementById('btn-upload').onclick=()=>document.getElementById('file-xlsx').click();
+  document.getElementById('file-xlsx').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    f.arrayBuffer().then(b=>importExcel(b,f.name));
+    e.target.value='';
+  };
+  document.getElementById('btn-json').onclick=()=>{
+    const blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download='trip-backup-'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+  };
+  document.getElementById('btn-jsonin').onclick=()=>document.getElementById('file-json').click();
+  document.getElementById('file-json').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    f.text().then(t=>{
+      try{
+        const j=JSON.parse(t);
+        if(!j.days||!j.settings) throw new Error('โครงสร้างไม่ถูกต้อง');
+        S=j; persist(); buildPlan(); initBudget(); initStatic(); toast('โหลด JSON แล้ว ✓');
+      }catch(err){ toast('ไฟล์ JSON ไม่ถูกต้อง: '+err.message); }
+    });
+    e.target.value='';
+  };
+  document.getElementById('btn-reset').onclick=()=>{
+    if(confirm('รีเซ็ตกลับเป็นข้อมูลตั้งต้น? (ข้อมูลปัจจุบันในเบราว์เซอร์จะหาย — เซฟ Excel/JSON ก่อนถ้ายังต้องการ)')){
+      S=JSON.parse(JSON.stringify(SEED)); S.meta.source='seed';
+      persist(); buildPlan(); initBudget(); initStatic(); toast('รีเซ็ตแล้ว');
+    }
+  };
+  // trip selector
+  const tsel=document.getElementById('trip-sel');
+  tsel.onchange=async ()=>{
+    if(tsel.value==='__new'){
+      tsel.value=Trips.get().activeId;
+      const name=prompt('ชื่อทริปใหม่:','ทริปใหม่');
+      if(!name) return;
+      const id=Trips.create(name);
+      Trips.saveData(id,{meta:{filename:'',loadedAt:new Date().toISOString(),source:'seed',schema:2},
+        settings:JSON.parse(JSON.stringify(SEED.settings)),
+        days:[{date:new Date().toISOString().slice(0,10),d:thaiDate(new Date().toISOString().slice(0,10)),dow:'วันที่ 1',tag:'วันกลาง',pace:'med',inc:true,title:'วันแรกของทริป',sub:'',activeVariant:0,variants:[{name:'แผนหลัก',rows:[]}]}],
+        routes:[],checks:[]});
+      rebuildAll();
+      return;
+    }
+    Trips.setActive(tsel.value);
+    rebuildAll();
+  };
+  // drag & drop anywhere
+  let dragDepth=0;
+  const dz=document.getElementById('dropzone');
+  window.addEventListener('dragenter',e=>{e.preventDefault(); dragDepth++; dz.classList.add('show');});
+  window.addEventListener('dragleave',e=>{e.preventDefault(); if(--dragDepth<=0){dragDepth=0; dz.classList.remove('show');}});
+  window.addEventListener('dragover',e=>e.preventDefault());
+  window.addEventListener('drop',e=>{
+    e.preventDefault(); dragDepth=0; dz.classList.remove('show');
+    const f=[...(e.dataTransfer.files||[])].find(f=>/\.(xlsx|xlsm)$/i.test(f.name));
+    if(f) f.arrayBuffer().then(b=>importExcel(b,f.name));
+  });
+}
+
+// ================= INIT =================
+initBudget();
+initStatic();
+buildPlan();
+wireFiles();
+refreshTrips();
+updateSyncInfo();
+checkMigToast();
+renderIdeasPanel();
+
+function renderIdeasPanel(){
+  APP.renderIdeas(document.getElementById('ideas'), {
+    getDays: ()=>S.days.map((d,i)=>(d.d+' · '+d.title).slice(0,26)),
+    onAdd:(idea,di)=>{
+      const day=S.days[di]; if(!day) return;
+      const nr={time:'',act:idea.n,tag:idea.tag,ft:idea.area,line:'',dur:'',train:0,
+        cost:idea.est||0, type:idea.tag==='food'?'food':(idea.tag==='attraction'&&idea.est?'entry':''),
+        note:idea.note,inc:true,start:null,durMin:null};
+      day.variants[day.activeVariant].rows.push(nr);
+      persist(); buildPlan();
+      APP.toast(`เพิ่ม "${idea.n}" ใน ${day.d} — ตั้งเวลาต่อได้เลย`);
+    }
+  });
+}
+</script>
+</body>
+</html>

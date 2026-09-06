@@ -1,0 +1,62 @@
+# Tokyo Trip Planner 🍁
+
+เว็บแอปวางแผนทริปแบบยืดหยุ่น + **sync สองทางกับไฟล์ Excel** — ทริปตัวอย่าง: โตเกียว 8 คืน (Ueno) + Kamakura, 28 พ.ย. – 6 ธ.ค. 2026, 2 ผู้ใหญ่ + เด็กเล็ก
+
+## เปิดใช้
+
+- **เครื่องตัวเอง:** ดับเบิลคลิก `index.html` (หรือ `python3 -m http.server` แล้วเปิด `http://localhost:8000`)
+- **บนเว็บ (GitHub Pages):** ดูหัวข้อ Deploy ด้านล่าง
+
+## 3 หน้า
+
+| หน้า | ใช้ทำอะไร |
+|---|---|
+| `index.html` 📋 การ์ด | แผนรายชั่วโมงแบบการ์ด · เครื่องคิดงบ live · เช็กลิสต์จอง · ตัวเลือก A/B ต่อวัน |
+| `sheet.html` 📊 ตาราง Excel | ตารางแบนแก้ได้ทุกช่อง · **ลาก ⠿ สลับลำดับ/ย้ายข้ามวัน** · ⛓ แก้เวลาแล้วดันแถวถัดไปอัตโนมัติ · พิมพ์ในแถวว่างเพื่อเพิ่ม · Σ คำนวณสด |
+| `map.html` 🗺️ แผนที่ | จุด kid-friendly + ไอเดีย กรองตามหมวด ป้ายวันตามแผนปัจจุบัน |
+
+## วงจรการใช้งาน
+
+**แก้ในแอป → ลง Excel:** แก้อะไรก็ได้ → **💾 บันทึกลง Excel** → ได้ .xlsx (ชีต: ตั้งค่า / แผนรายวัน / แดชบอร์ด / เส้นทาง / เช็กลิสต์จอง) เอาไปแทนไฟล์เดิม
+
+**แก้ใน Excel → เข้าแอป:** ลากไฟล์ .xlsx วางบนหน้าแอป (หรือกด 📂) → เลือก "ทับทริปปัจจุบัน" หรือ "สร้างทริปใหม่"
+
+**กติกา:** ไม่มี merge — ไฟล์ที่โหลดล่าสุดคือไฟล์ที่ใช้ แถบบนแสดงชื่อไฟล์+เวลาโหลดเสมอ
+
+## ฟีเจอร์หลัก
+
+- **แก้ได้ทุกจุด:** เพิ่ม/ลบ/ทำสำเนา/เลื่อน ทั้งแถวและทั้งวัน · ปิด "รวม" รายแถว/รายวัน เพื่อตัดออกจากงบ
+- **Auto-calculation:** จบ = เริ่ม + ระยะเวลา · Σแถว = เดินทาง + ค่าใช้จ่าย (อาหารคูณตัวคูณสไตล์ ×0.8/1.0/1.3) · แถวรวมวัน · งบรวม ¥/฿
+- **ปรับตาม event ก่อนหน้า (⛓):** แก้เวลาเริ่ม/ระยะเวลา → แถวถัดไปในวันเดียวกันถูกดันตาม delta · เตือนสีเหลืองเมื่อเวลาทับ
+- **แท็กกิจกรรม:** Attraction / Food / Shopping / Rest / Logistic / View / Other — แสดงเป็นชิปสี แก้ได้ในคอลัมน์ "แท็ก" และ sync ลง Excel (คอลัมน์ "แท็ก")
+- **💡 คลังไอเดีย:** attraction/food/shopping ที่ยังไม่อยู่ในแผน (Ghibli, Shibuya Sky, Tsukiji, Ichiran, Kiddy Land ฯลฯ) — เลือกวันแล้วกด ＋ ใส่ในแผนได้ทันที
+- **หลายทริป:** ตัวเลือกทริปบน toolbar — โหลด Excel ใหม่เป็น "ทริปใหม่" ได้เรื่อยๆ ข้อมูลแยกกันตาม trip
+- **สำรอง:** ⬇︎/⬆︎ JSON · ↺ รีเซ็ต
+
+## Deploy ขึ้น GitHub Pages
+
+repo นี้พร้อม deploy แล้ว (มี `.github/workflows/deploy.yml` + `.nojekyll`):
+
+**วิธีที่ 1 — GitHub Actions (แนะนำ):**
+```bash
+cd trip-planner
+git init && git add -A && git commit -m "trip planner"
+gh repo create tokyo-trip-planner --public --source=. --push
+# แล้วเปิด Pages ผ่าน Actions:
+gh api repos/{owner}/tokyo-trip-planner/pages -X POST \
+  -f build_type=workflow -f source='{"branch":"main","path":"/"}'
+```
+พุชทุกครั้ง → Actions deploy ให้อัตโนมัติ → เปิดที่ `https://<user>.github.io/tokyo-trip-planner/`
+
+**วิธีที่ 2 — manual:** สร้าง repo → push → Settings → Pages → Source: *GitHub Actions*
+
+> ⚠️ หมายเหตุความเป็นส่วนตัว: ข้อมูลทริป (ชื่ะ เที่ยวบิน งบ) จะอยู่บน repo สาธารณะ — ถ้าไม่อยากให้คนอื่นเห็น ใช้ repo private (Pages ต้องมี Pro) หรือใช้แค่ในเครื่อง/localhost
+
+## โครงสร้างไฟล์
+
+- `data.js` — ข้อมูลตั้งต้น (seed) + TAGS + IDEAS + Trips registry + migration + time utils
+- `app.js` — logic ใช้ร่วม: ตัวคิดงบ, สร้าง/อ่าน Excel, modal/toast, คลังไอเดีย
+- `index.html` / `sheet.html` / `map.html` — 3 หน้า
+- ข้อมูลผู้ใช้เก็บใน localStorage ตาม origin (ย้ายเครื่อง/เว็บ ใช้ JSON export/import)
+
+ราคา/เวลาเป็นประมาณการ — ตรวจสอบเว็บทางการก่อนจองทุกครั้ง
