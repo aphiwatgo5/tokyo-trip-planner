@@ -325,6 +325,17 @@ function parseExcelState(buf, filename){
   return {ok:true, state, summary:{days:days.length, acts:nAct, migrated: !!state.__mig}};
 }
 
+// ---------- time chaining (shared) ----------
+// shift every following row in the SAME day by deltaMin; returns how many moved
+function shiftFollowing(day, fromIdx, deltaMin){
+  if(!deltaMin) return 0;
+  const rows=day.variants[day.activeVariant].rows; let n=0;
+  for(let i=fromIdx+1;i<rows.length;i++){
+    if(rows[i].start!=null){ rows[i].start+=deltaMin; syncTimeText(rows[i]); n++; }
+  }
+  return n;
+}
+
 // ---------- idea library renderer (shared by index & sheet) ----------
 // opts: {getDays, onAdd(idea, dayIdx, parkedIdx), getParked}
 // parkedIdx >= 0 → the item came from S.parked (removed from the plan); adding it back should splice it out of parked.
@@ -392,5 +403,5 @@ async function importFlow(buf, filename){
 
 return {FOOD_MULT, foodMultOf, dayTotalsOf, totalsOf, toast, modal,
         buildWorkbook, downloadExcel, parseExcelState, importFlow,
-        tagChip, renderIdeas};
+        tagChip, renderIdeas, shiftFollowing};
 })();

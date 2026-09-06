@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="data.js?v=5"></script>
-<script src="app.js?v=4"></script>
+<script src="data.js?v=6"></script>
+<script src="app.js?v=5"></script>
 <style>
   :root{
     --ink:#20242E; --muted:#5A6270; --paper:#ECEEE8; --card:#FFFFFF;
@@ -494,7 +494,7 @@ function dsel(id,label,val,opts){return `<div><label>${label}</label><select id=
 function rowEditHtml(di,ri,r){
   return `<div class="row" style="grid-template-columns:1fr;"><div class="editform">
     <div class="fgrid">
-      ${df('ef-time','เวลา',r.time)}${df('ef-act','กิจกรรม',r.act)}${df('ef-ft','เส้นทาง (จาก → ถึง)',r.ft)}
+      ${df('ef-time','เวลา (แก้แล้วแถวถัดไปเดินตาม)',r.time)}${df('ef-act','กิจกรรม',r.act)}${df('ef-ft','เส้นทาง (จาก → ถึง)',r.ft)}
       ${df('ef-line','ขนส่ง / สายรถ',r.line)}${df('ef-dur','ระยะเวลา',r.dur)}
       ${df('ef-train','ค่าเดินทาง ¥ (2 คน)',r.train||'')}${df('ef-cost','ค่าใช้จ่าย ¥',r.cost||'')}
       ${dsel('ef-tag','แท็กกิจกรรม',r.tag||'other',Object.keys(TAGS))}
@@ -544,10 +544,26 @@ function wire(){
   q('[data-ecancel]').forEach(el=>el.onclick=()=>{ui.editing=null; buildPlan();});
   q('[data-esave]').forEach(el=>el.onclick=()=>{
     const [i,ri]=el.dataset.esave.split(':').map(Number);
-    const r=S.days[i].variants[S.days[i].activeVariant].rows[ri];
-    r.time=v('ef-time'); r.act=v('ef-act'); r.ft=v('ef-ft'); r.line=v('ef-line'); r.dur=v('ef-dur');
+    const day=S.days[i], r=day.variants[day.activeVariant].rows[ri];
+    const timeVal=v('ef-time'), durVal=v('ef-dur');
+    const pr=parseTimeRange(timeVal), nd=parseDurText(durVal);
+    const durEdited = durVal !== (r.dur||'');
+    const oldStart=r.start, oldDur=r.durMin;
+    // canonical time fields + how much the rest of the day must be pushed
+    const newDur = (durEdited && nd!=null) ? nd
+                 : (pr.start!=null && pr.end!=null) ? Math.max(0,pr.end-pr.start)
+                 : (nd!=null ? nd : (r.durMin!=null?r.durMin:null));
+    let delta=0;
+    if(pr.start!=null && oldStart!=null) delta+=pr.start-oldStart;
+    if(newDur!=null && oldDur!=null) delta+=newDur-oldDur;
+    if(pr.start!=null){ r.start=pr.start; r.durMin=newDur; syncTimeText(r); }
+    else { r.start=null; r.durMin=newDur; r.time=timeVal; }
+    r.act=v('ef-act'); r.ft=v('ef-ft'); r.line=v('ef-line'); r.dur=durVal;
     r.train=num('ef-train'); r.cost=num('ef-cost'); r.type=v('ef-type'); r.note=v('ef-note'); r.tag=v('ef-tag')||'other';
+    let chainMsg='';
+    if(delta){ const n=APP.shiftFollowing(day, ri, delta); if(n) chainMsg=`ดันเวลาถัดไป ${n} แถว`; }
     ui.editing=null; persist(); buildPlan();
+    if(chainMsg) APP.toast(chainMsg);
   });
   q('[data-dup]').forEach(el=>el.onclick=()=>{
     const [i,ri]=el.dataset.dup.split(':').map(Number);

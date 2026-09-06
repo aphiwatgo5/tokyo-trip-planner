@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="data.js?v=5"></script>
-<script src="app.js?v=4"></script>
+<script src="data.js?v=6"></script>
+<script src="app.js?v=5"></script>
 <style>
   :root{
     --ink:#20242E; --muted:#5A6270; --paper:#ECEEE8;
@@ -368,14 +368,6 @@ function wireEditor(inp,d,r,k,valFn){
   };
   inp.onblur=()=>finish(false);
 }
-function shiftFollowing(day, fromIdx, deltaMin){
-  if(!deltaMin) return 0;
-  const rows=rowsOf(day); let n=0;
-  for(let i=fromIdx+1;i<rows.length;i++){
-    if(rows[i].start!=null){ rows[i].start+=deltaMin; syncTimeText(rows[i]); n++; }
-  }
-  return n;
-}
 function parseNumLoose(v){ const n=parseFloat(String(v).replace(/[^0-9.\-]/g,'')); return isNaN(n)?null:n; }
 function commitEdit(d,r,k,val){
   const day=S.days[d]; if(!day) return;
@@ -388,7 +380,7 @@ function commitEdit(d,r,k,val){
       if(ns==null){ if(val===''){ row.start=null; row.time=''; } else msg='รูปแบบเวลา เช่น 09:30'; break; }
       const delta=row.start!=null?ns-row.start:0;
       row.start=ns; syncTimeText(row);
-      if(autoChain()){ const n=shiftFollowing(day,r,delta); if(n) msg=`ดันเวลาถัดไป ${n} แถว`; }
+      if(autoChain()){ const n=APP.shiftFollowing(day,r,delta); if(n) msg=`ดันเวลาถัดไป ${n} แถว`; }
       break; }
     case 'end': {
       const ne=parseTimeStr(val);
@@ -396,14 +388,14 @@ function commitEdit(d,r,k,val){
       const nd=Math.max(0,ne-row.start);
       const delta=row.durMin!=null?nd-row.durMin:0;
       row.durMin=nd; row.dur=durStr(nd); syncTimeText(row);
-      if(autoChain()&&delta){ const n=shiftFollowing(day,r,delta); if(n) msg=`ดันเวลาถัดไป ${n} แถว`; }
+      if(autoChain()&&delta){ const n=APP.shiftFollowing(day,r,delta); if(n) msg=`ดันเวลาถัดไป ${n} แถว`; }
       break; }
     case 'dur': {
       const nd=parseDurText(val);
       if(nd!=null){
         const delta=row.durMin!=null?nd-row.durMin:0;
         row.durMin=nd; row.dur=val; syncTimeText(row);
-        if(autoChain()&&delta){ const n=shiftFollowing(day,r,delta); if(n) msg=`ดันเวลาถัดไป ${n} แถว`; }
+        if(autoChain()&&delta){ const n=APP.shiftFollowing(day,r,delta); if(n) msg=`ดันเวลาถัดไป ${n} แถว`; }
       } else row.dur=val;
       break; }
     case 'train': row.train=parseNumLoose(val)||0; break;
