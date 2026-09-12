@@ -1,0 +1,90 @@
+{
+ "Ueno Station Tokyo": {
+  "lat": 35.7117081,
+  "lng": 139.7761542
+ },
+ "Ueno Park Tokyo": {
+  "lat": 35.7161484,
+  "lng": 139.777257
+ },
+ "Ueno Zoo": {
+  "lat": 35.7153426,
+  "lng": 139.768896
+ },
+ "Asakusa": {
+  "lat": 35.7175966,
+  "lng": 139.7975626
+ },
+ "Senso-ji Asakusa": {
+  "lat": 35.7134032,
+  "lng": 139.7955265
+ },
+ "Tokyo Disneyland": {
+  "lat": 35.6364251,
+  "lng": 139.8810001
+ },
+ "Enoshima": {
+  "lat": 35.7155517,
+  "lng": 139.4250583
+ },
+ "teamLab Planets Tokyo": {
+  "lat": 35.64938,
+  "lng": 139.789728
+ },
+ "Odaiba Seaside Park Tokyo": {
+  "lat": 35.631084,
+  "lng": 139.7773535
+ },
+ "Legoland Discovery Center Tokyo": {
+  "lat": 35.6288171,
+  "lng": 139.775669
+ },
+ "Warner Bros Studio Tour Tokyo": {
+  "lat": 35.74562,
+  "lng": 139.645745
+ },
+ "Nihonbashi Tokyo": {
+  "lat": 35.6825055,
+  "lng": 139.7748426
+ },
+ "Pokémon Café": {
+  "lat": 35.6804441,
+  "lng": 139.7743669
+ },
+ "Tokyo Character Street": {
+  "lat": 35.6816079,
+  "lng": 139.7683381
+ },
+ "Shinobazu Pond Tokyo": {
+  "lat": 35.711875,
+  "lng": 139.7708647
+ },
+ "Hanayashiki Asakusa": {
+  "lat": 35.7154975,
+  "lng": 139.7946127
+ },
+ "Tokyo Skytree": {
+  "lat": 35.7100543,
+  "lng": 139.8107141
+ },
+ "Sumida Aquarium Tokyo": {
+  "lat": 35.7101011,
+  "lng": 139.8093338
+ },
+ "Ueno": {
+  "lat": 35.7118212,
+  "lng": 139.7775694
+ },
+ "Tsurugaoka Hachimangu Shrine": {
+  "lat": 35.3251836,
+  "lng": 139.5561787
+ },
+ "Hase Station Kamakura": {
+  "lat": 35.3112923,
+  "lng": 139.5358669
+ },
+ "Hase-dera Temple Kamakura": {
+  "lat": 35.3122687,
+  "lng": 139.5333092
+ }
+}

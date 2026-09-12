@@ -180,6 +180,28 @@
   .toast.show{opacity:1;}
   footer{background:#21433A; color:#9FBEB2; padding:24px 0; margin-top:16px; font-size:12px; text-align:center;}
   footer b{color:#F4F1E9; font-family:"Mitr"; font-weight:400;}
+  /* ---- mobile ---- */
+  .mb-total{display:none;}
+  @media(max-width:680px){
+    body{padding-bottom:58px;}
+    .row{grid-template-columns:54px 1fr; gap:8px; padding:10px 11px;}
+    .row .cost{grid-column:2; text-align:left; display:flex; gap:14px; align-items:baseline; min-width:0; flex-wrap:wrap;}
+    .cost .c{font-size:13px;}
+    .row .rowops{grid-column:2; flex-direction:row; flex-wrap:wrap; gap:6px;}
+    .rowops .icobtn{padding:5px 11px; font-size:12px;}
+    .inctoggle{margin-left:0;}
+    .livebar .lb-hint{display:none;}
+    .syncinfo{display:none;}
+    .toolbar .wrap{gap:6px;}
+    .dhead .bd{font-size:20px;}
+    .hero .wrap{padding:20px 16px 16px;}
+    .mb-total{display:flex; position:fixed; bottom:0; left:0; right:0; z-index:80; background:#fff;
+      border-top:1px solid var(--line); box-shadow:0 -4px 16px rgba(32,36,46,.10); padding:8px 14px;
+      align-items:baseline; gap:10px; font-family:"Mitr";}
+    .mb-total .y{font-family:"Chonburi"; font-size:20px; color:var(--pine);}
+    .mb-total .b{font-size:12px; color:var(--momiji); font-weight:600;}
+    .mb-total .lbl{font-size:10.5px; color:var(--muted); margin-right:auto;}
+  }
   @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important; scroll-behavior:auto;}}
 </style>
 </head>
@@ -212,6 +234,7 @@
     <button class="tbtn danger" id="btn-reset">↺ รีเซ็ต</button>
     <select id="trip-sel" class="tbtn" style="max-width:200px;"></select>
     <a class="tbtn" href="sheet.html" title="แก้แบบตาราง Excel ลากได้">📊 Sheet</a>
+    <a class="tbtn" href="route.html" title="จำลองเส้นทางรายวัน">🧭 Route</a>
     <a class="tbtn" href="map.html" title="แผนที่ kid-friendly">🗺️ แผนที่</a>
     <div class="syncinfo" id="syncinfo"></div>
   </div>
@@ -310,6 +333,7 @@
   <div class="wrap"><b>Tokyo Trip Planner · ค้างโตเกียวทุกคืน · 28 พ.ย. – 6 ธ.ค. 2026 · รวม Kamakura</b><br>แก้ในแอป → 💾 บันทึกลง Excel ไฟล์เดิม · แก้ใน Excel → 📂 ลากไฟล์กลับเข้าแอป · มีทริปอื่นสร้างใหม่ได้ที่ selector ด้านบน</div>
 </footer>
 
+<div class="mb-total"><span class="lbl">งบรวม</span><span class="y" id="mb-yen">—</span><span class="b" id="mb-baht">—</span></div>
 <div class="dropzone" id="dropzone"><div>📥 ปล่อยไฟล์ Excel (.xlsx)<br><span style="font-size:14px;opacity:.8;">เพื่อโหลดแผนจากไฟล์</span></div></div>
 <div class="toast" id="toast"></div>
 
@@ -387,6 +411,8 @@ function recalc(){
   document.getElementById('g-baht').textContent=baht;
   document.getElementById('lb-yen').textContent=fmt(grand);
   document.getElementById('lb-baht').textContent=baht;
+  document.getElementById('mb-yen').textContent=fmt(grand);
+  document.getElementById('mb-baht').textContent=baht;
   // live day subtotals
   document.querySelectorAll('[data-daysub]').forEach(el=>{
     const d=S.days[+el.dataset.daysub];

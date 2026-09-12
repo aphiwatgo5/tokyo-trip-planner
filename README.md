@@ -14,6 +14,7 @@
 | `index.html` 📋 การ์ด | แผนรายชั่วโมงแบบการ์ด · เครื่องคิดงบ live · เช็กลิสต์จอง · ตัวเลือก A/B ต่อวัน |
 | `sheet.html` 📊 ตาราง Excel | ตารางแบนแก้ได้ทุกช่อง · **ลาก ⠿ สลับลำดับ/ย้ายข้ามวัน** · ⛓ แก้เวลาแล้วดันแถวถัดไปอัตโนมัติ · พิมพ์ในแถวว่างเพื่อเพิ่ม · Σ คำนวณสด |
 | `map.html` 🗺️ แผนที่ | จุด kid-friendly + ไอเดีย กรองตามหมวด ป้ายวันตามแผนปัจจุบัน |
+| `route.html` 🧭 Route Sim | **จำลองเส้นทางรายวัน** — markers ลำดับ + เส้นเดินจริง (Valhalla pedestrian) + ช่วงรถไฟ · ▶ เล่น แล้ว avatar เดินตามเส้นทางจริง พร้อม speed 1×/4×/16× + scrub bar |
 
 ## วงจรการใช้งาน
 
@@ -33,6 +34,34 @@
 - **🔐 ล็อกรหัสผ่าน:** เข้าใช้ต้องใส่รหัสผ่านก่อน (ตั้งไว้ที่ `LOCK_PASS` ใน `app.js` — ปัจจุบันคือ `hoogaati`) · ปลดล็อกครั้งเดียวต่อแท็บ (sessionStorage) แล้วสลับหน้าได้ไม่ต้องใส่ซ้ำ — เป็นการบังตาเชิงพื้นฐาน ไม่ได้เข้ารหัสข้อมูล (ดูข้อมูลใน localStorage ได้ถ้ารู้จัก DevTools)
 - **หลายทริป:** ตัวเลือกทริปบน toolbar — โหลด Excel ใหม่เป็น "ทริปใหม่" ได้เรื่อยๆ ข้อมูลแยกกันตาม trip
 - **สำรอง:** ⬇︎/⬆︎ JSON · ↺ รีเซ็ต
+
+## 🧭 Route Simulation — infra & stack
+
+```
+แผน (localStorage)          places.json (baked, offline)      APIs (keyless, online)
+┌────────────────┐   geocode lookup   ┌──────────────┐   miss→live   Nominatim (search?q=…)
+│ rows + base    │ ─────────────────→ │ name → latlng │ ─────────→   Valhalla /route
+└────────────────┘                    └──────────────┘              costing=pedestrian
+        │                                        ↑                        │ polyline
+        └───────────── routing.js (RK) ──────────┴────────────────────────┘
+                          │ buildDayRoute → {stops, legs}
+                          ↓
+                     route.html (Leaflet + playback)
+```
+
+- **เดิน** = เส้นทางคนเดินจริงจาก [Valhalla](https://valhalla1.openstreetmap.de) (OpenStreetMap) · **รถไฟ** = เส้นโค้งสไตล์ + ชื่อสายจากแผน (ไม่มี transit routing ฟรีแบบ keyless — ถ้าต้องการจริง ต่อ NAVITIME/Jorudan API เองได้)
+- พิกัดมี 3 ชั้น: `row.geo` (แก้มือ) → **places.json** (precompute แล้ว ใช้ offline ได้เลย) → live Nominatim (cache ในเครื่อง)
+- **สั่ง run ผ่าน Claude / terminal ได้:** แก้แผนแล้วสั่ง
+  ```bash
+  node scripts/build-places.mjs              # จาก seed ใน data.js
+  node scripts/build-places.mjs plan.json    # หรือจากไฟล์ ⬇︎ JSON ที่ export จากแอป
+  ```
+  สคริปต์จะ geocode เฉพาะชื่อใหม่ (cache ใน `scripts/geo-cache.json`) แล้วเขียน `places.json` ใหม่ → commit/push → เว็บอัปเดต
+- **เรื่อง MCP:** MCP คือ protocol เชื่อม *agent* (เช่น Claude) กับ tools — ใช้กับเว็บ static โดยตรงไม่ได้ บทบาทเดียวกันในโครงนี้คือ "สั่ง Claude run สคริปต์ precompute / แก้แผน / deploy" ตามที่อธิบายไว้ด้านบน (และ Claude ก็เรียก curl/valhalla ตรงๆ ได้เหมือนกัน)
+
+## 📱 Mobile
+
+- ทุกหน้า responsive: การ์ดเรียงแนวตั้ง + แถบงบรวมติดล่างจอ · ตาราง scroll แนวนอน + ปุ่ม ↑↓ จัดลำดับ (drag ใช้ไม่ได้บน touch) + แถบกระโดดข้ามวัน · Route = แผนที่บน + timeline ล่าง
 
 ## Deploy ขึ้น GitHub Pages
 
