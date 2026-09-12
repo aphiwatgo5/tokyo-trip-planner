@@ -84,6 +84,52 @@ window.RK = (function(){
     return null;
   }
 
+  // ---- shared place resolution: row.geo → baked places.json → live Nominatim (aliased) ----
+  let aliasMap=null;
+  async function loadAlias(){
+    if(aliasMap) return aliasMap;
+    try{ const r=await fetch('places-alias.json?v=1',{cache:'force-cache'});
+      aliasMap=r.ok?(await r.json()).aliases||{}:{};
+    }catch(e){ aliasMap={}; }
+    return aliasMap;
+  }
+  function searchQueryOf(act){
+    const clean=String(act||'').replace(/\(.*?\)/g,' ').replace(/（.*?）/g,' ').trim();
+    const low=clean.toLowerCase();
+    const aliases=aliasMap||{};
+    for(const frag of Object.keys(aliases)){
+      const q=aliases[frag];
+      if(q && low.includes(frag)) return q;
+    }
+    const latin=clean.split(/[+/·,]/)[0].trim();
+    return /[A-Za-z]/.test(latin)?latin:null;
+  }
+  async function geocodeRow(row){
+    if(row.geo&&isFinite(row.geo[0])) return {lat:row.geo[0],lng:row.geo[1]};
+    const bakedAll=await loadBaked();
+    const keys=placeKeys(row);
+    for(const k of keys){ if(bakedAll[k]) return bakedAll[k]; }
+    // live Nominatim using the alias-cleaned query; cache under the primary key
+    await loadAlias();
+    const q=searchQueryOf(row.act);
+    if(!q) return null;
+    const cache=lsGet(GEO_KEY);
+    const primaryKey=keys[0];
+    if(cache['q:'+q]!==undefined||cache[primaryKey]!==undefined) return cache[primaryKey]||cache['q:'+q]||null;
+    await new Promise(r=>setTimeout(r,350));   // gentle pacing for Nominatim
+    try{
+      const r=await fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(q)+', Japan&format=json&limit=1');
+      if(r.ok){
+        const j=await r.json();
+        const hit=j&&j[0]?{lat:+j[0].lat,lng:+j[0].lon}:null;
+        cache[primaryKey]=hit; cache['q:'+q]=hit; lsSet(GEO_KEY,cache);
+        return hit;
+      }
+    }catch(e){}
+    cache['q:'+q]=null; lsSet(GEO_KEY,cache);
+    return null;
+  }
+
   // ---- build a day's route model ----
   // base: {name, geo} hotel — prepended as waypoint 0 (or null)
   // classify legs: walk (no line / line 'เดิน') vs transit (has line)
@@ -101,15 +147,10 @@ window.RK = (function(){
   async function buildDayRoute(day, base, onProgress){
     const rows=day.variants[day.activeVariant].rows;
     const bakedAll=await loadBaked();
-    const lookup=(row)=>{
-      if(row.geo&&isFinite(row.geo[0])) return {lat:row.geo[0],lng:row.geo[1]};
-      for(const k of placeKeys(row)){ if(bakedAll[k]) return bakedAll[k]; }
-      return null;
-    };
     const stops=[];
     if(base&&base.geo) stops.push({name:base.name||'โรงแรม (base)', geo:base.geo, row:null});
     for(const r of rows){
-      stops.push({name:r.act, geo:lookup(r), row:r});
+      stops.push({name:r.act, geo:await geocodeRow(r), row:r});
     }
     const resolved=stops.filter(s=>s.geo);
     const legs=[];
@@ -128,5 +169,5 @@ window.RK = (function(){
     return {stops:resolved, legs};
   }
 
-  return {geocode, walkRoute, buildDayRoute, decodePolyline, loadBaked};
+  return {geocode, walkRoute, buildDayRoute, geocodeRow, decodePolyline, loadBaked};
 })();

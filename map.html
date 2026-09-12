@@ -41,6 +41,7 @@
   .spot .kid{font-size:11.5px; color:var(--pine2); margin-top:3px;}
   .tagchip{font-family:"Mitr"; font-size:10px; padding:1px 8px; border-radius:12px; margin-right:4px; display:inline-block;}
   .tc-plan{background:var(--momiji-soft); color:var(--momiji);}
+  .tc-plan2{background:#F6E3DB; color:#B0532F;}
   .tc-idea{background:var(--straw-soft); color:#94660c;}
   .tc-food{background:#DCEAE3; color:#2F5E50;}
   .tc-base{background:var(--train-soft); color:var(--train);}
@@ -76,6 +77,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="data.js?v=6"></script>
+<script src="routing.js?v=3"></script>
 <script src="app.js?v=5"></script>
 <script>
 // cat: plan(ในแผน) | idea(ไอเดียเพิ่ม) | food(อาหารเด็ก) | base(ฐาน/ขนส่ง)
@@ -131,7 +133,8 @@ const spots=[
 ["Shizuoka tea experience 🍵",34.9760,138.3840,"idea","—","~¥1,500/person","Brew fresh green tea — Japan's #1 tea region","Removed from this trip — save for next trip"],
 ];
 
-const cats={plan:{label:"🎯 On the trip plan",cls:"tc-plan",color:"#CE4A2B"},
+const cats={live:{label:"📅 ตามแผน (อัปเดตอัตโนมัติ)",cls:"tc-plan",color:"#CE4A2B"},
+            plan:{label:"🎯 Curated Tokyo spots",cls:"tc-plan2",color:"#B0532F"},
             idea:{label:"💡 Extra ideas / rainy-day",cls:"tc-idea",color:"#D79A35"},
             food:{label:"🍽️ Kid-friendly food",cls:"tc-food",color:"#2F5E50"},
             base:{label:"🏨 Base / transport",cls:"tc-base",color:"#33506F"}};
@@ -156,14 +159,17 @@ const map=L.map('map').setView([35.70,139.76],11);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
 const bounds=L.latLngBounds(spots.map(s=>[s[1],s[2]]));
 const mkIcon=(emoji,color)=>L.divIcon({className:'',html:`<div class="mk" style="background:${color}"><span>${emoji}</span></div>`,iconSize:[30,30],iconAnchor:[15,28],popupAnchor:[0,-26]});
-const emoji={plan:"🎯",idea:"💡",food:"🍽️",base:"🏨"};
+const emoji={live:"📅",plan:"🎯",idea:"💡",food:"🍽️",base:"🏨"};
 let markers=[];
-spots.forEach((s,i)=>{
-  const [nm,lat,lng,cat,day,price,kid,note]=s;
-  const m=L.marker([lat,lng],{icon:mkIcon(emoji[cat],cats[cat].color)});
-  m.bindPopup(`<b>${nm}</b><br><span class="daybadge">${dayBadge(day)}</span> <span class="tagchip ${cats[cat].cls}" style="margin-top:4px">${cats[cat].label}</span><div class="pp-price">${price}</div><div class="pp-kid">👶 ${kid}</div><div style="color:#5A6270;font-size:12px;margin-top:3px">${note}</div>`);
-  markers.push(m);
-});
+function buildMarkers(){
+  markers.forEach(m=>m.removeFrom(map));
+  markers=spots.map((s)=>{
+    const [nm,lat,lng,cat,day,price,kid,note]=s;
+    const m=L.marker([lat,lng],{icon:mkIcon(emoji[cat],cats[cat].color)});
+    m.bindPopup(`<b>${nm}</b><br><span class="daybadge">${dayBadge(day)}</span> <span class="tagchip ${cats[cat].cls}" style="margin-top:4px">${cats[cat].label}</span><div class="pp-price">${price}</div><div class="pp-kid">👶 ${kid}</div><div style="color:#5A6270;font-size:12px;margin-top:3px">${note}</div>`);
+    return m;
+  });
+}
 const fitBtn=L.control({position:'topright'});
 fitBtn.onAdd=()=>{const d=document.createElement('div');
   d.innerHTML='<button style="font-family:Mitr;font-size:12px;padding:6px 12px;border:1px solid #DCDDD4;border-radius:8px;background:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.15)">🔍 Zoom out (incl. Kamakura/Shizuoka)</button>';
@@ -174,6 +180,7 @@ let active='all';
 const fEl=document.getElementById('filters');
 const sideEl=document.getElementById('sidebar');
 function render(){
+  buildMarkers();
   fEl.innerHTML='';
   const allBtn=document.createElement('button'); allBtn.className='fbtn'+(active==='all'?' on':'');
   allBtn.innerHTML=`All <span class="cnt">${spots.length}</span>`; allBtn.onclick=()=>{active='all';render();}; fEl.appendChild(allBtn);
@@ -200,6 +207,35 @@ function render(){
   });
 }
 render();
+
+// ---------- 📅 plan-driven layer: markers from the LIVE plan (updates with edits) ----------
+(async function planLayer(){
+  const mk=[];
+  let live=S;   // S was loaded from shared localStorage at top
+  async function collect(){
+    mk.length=0;
+    for(let i=0;i<live.days.length;i++){
+      const d=live.days[i];
+      for(const r of (d.variants[d.activeVariant]||{}).rows||[]){
+        const geo=await RK.geocodeRow(r);
+        if(geo) mk.push({n:r.act, lat:geo.lat, lng:geo.lng, cat:'live',
+          day:`D${i+1}`, dd:d.d, time:r.time||'', line:r.line||'', cost:r.cost||0, tag:r.tag||''});
+      }
+    }
+  }
+  await collect();
+  const planSpots=mk.map(m=>[ (m.tag&&(TAGS[m.tag]||{}).icon?TAGS[m.tag].icon+' ':'')+m.n, m.lat, m.lng, 'live',
+    m.dd, m.cost?('¥'+m.cost.toLocaleString()):'—',
+    `${m.time}${m.line?' · '+m.line:''}`, 'จากแผนปัจจุบัน — แก้ในหน้าการ์ด/ตารางแล้วแผนที่ตามอัตโนมัติ' ]);
+  // splice into spots AFTER the base category (index 2) so ordering stays sane
+  spots.splice(2, 0, ...planSpots);
+  render();
+})();
+
+// ---------- cross-tab live refresh: plan edited in another tab/page → reload here ----------
+window.addEventListener('storage', e=>{
+  if(e.key && (e.key.startsWith('tp-trip-')||e.key==='tp-trips-v1')) location.reload();
+});
 </script>
 </body>
 </html>

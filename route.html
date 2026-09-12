@@ -109,7 +109,7 @@
   </div>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="routing.js?v=1"></script>
+<script src="routing.js?v=3"></script>
 <script>
 // ================= STATE =================
 let S=tpLoad();
@@ -298,6 +298,15 @@ $('scrub').oninput=e=>{
 // ================= INIT =================
 renderDaybar();
 loadDay();
+// plan edited in another tab/page → reload the current day's route
+window.addEventListener('storage', e=>{
+  if(e.key && (e.key.startsWith('tp-trip-')||e.key==='tp-trips-v1')){
+    S=tpLoad();
+    if(!S.parked) S.parked=[];
+    if(curDay>=S.days.length) curDay=0;
+    loadDay();
+  }
+});
 </script>
 </body>
 </html>
