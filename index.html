@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="data.js?v=11"></script>
-<script src="app.js?v=6"></script>
+<script src="data.js?v=12"></script>
+<script src="app.js?v=7"></script>
 <style>
   :root{
     --ink:#1B2430; --muted:#69758A; --paper:#F5F2EA; --card:#FFFFFF;
@@ -515,6 +515,7 @@ function buildPlan(){
         <div class="rowops">
           <div class="inctoggle ${r.inc?'on':''}" data-rowinc="${i}:${ri}" title="นับ/ไม่นับในงบ"><span>รวม</span><div class="sw"></div></div>
           <button class="icobtn" data-edit="${i}:${ri}" title="แก้แถว">✎</button>
+          ${r.type==='food'?`<button class="icobtn" data-food="${i}:${ri}" title="ตัวเลือกร้านอาหารย่านนี้">🍜</button>`:''}
           <button class="icobtn" data-dup="${i}:${ri}" title="ทำสำเนา">⧉</button>
           <button class="icobtn" data-rup="${i}:${ri}" title="เลื่อนขึ้น">↑</button>
           <button class="icobtn" data-rdown="${i}:${ri}" title="เลื่อนลง">↓</button>
@@ -606,6 +607,10 @@ function wire(){
     if(delta){ const n=APP.shiftFollowing(day, ri, delta); if(n) chainMsg=`ดันเวลาถัดไป ${n} แถว`; }
     ui.editing=null; persist(); buildPlan();
     if(chainMsg) APP.toast(chainMsg);
+  });
+  q('[data-food]').forEach(el=>el.onclick=()=>{
+    const [i,ri]=el.dataset.food.split(':').map(Number);
+    APP.showMealPicks(S,i,ri);
   });
   q('[data-dup]').forEach(el=>el.onclick=()=>{
     const [i,ri]=el.dataset.dup.split(':').map(Number);

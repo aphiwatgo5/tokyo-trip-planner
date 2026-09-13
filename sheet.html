@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="data.js?v=11"></script>
-<script src="app.js?v=6"></script>
+<script src="data.js?v=12"></script>
+<script src="app.js?v=7"></script>
 <style>
   :root{
     --ink:#1B2430; --muted:#69758A; --paper:#F5F2EA; --card:#FFFFFF;
@@ -312,7 +312,8 @@ function renderSheet(){
         <td class="e" data-k="inc" data-d="${di}" data-r="${ri}" title="นับ/ไม่นับในงบ">${dispVal(day,r,'inc')}</td>
         <td class="e c-note" data-k="note" data-d="${di}" data-r="${ri}" title="${esc(r.note)}">${esc(r.note)}</td>
         <td class="num">${fmt(r.train+effCost(r))}</td>
-        <td><button class="icobtn" data-rmoveup="${di}:${ri}" title="เลื่อนขึ้น">↑</button>
+        <td>${r.type==='food'?`<button class="icobtn" data-food="${di}:${ri}" title="ตัวเลือกร้านย่านนี้">🍜</button>`:''}
+            <button class="icobtn" data-rmoveup="${di}:${ri}" title="เลื่อนขึ้น">↑</button>
             <button class="icobtn" data-rmovedown="${di}:${ri}" title="เลื่อนลง">↓</button>
             <button class="icobtn" data-rdup="${di}:${ri}" title="ทำสำเนา">⧉</button>
             <button class="icobtn" data-rdel="${di}:${ri}" title="ลบแถว">🗑</button></td>
@@ -483,6 +484,8 @@ tbl.addEventListener('click', e=>{
   if(dayinc){ const i=+dayinc.dataset.dayinc; S.days[i].inc=!S.days[i].inc; persist(); renderSheet(); renderSummary(); return; }
   const varp=e.target.closest('[data-var]');
   if(varp){ const [i,vi]=varp.dataset.var.split(':').map(Number); S.days[i].activeVariant=vi; persist(); renderSheet(); renderSummary(); return; }
+  const fd=e.target.closest('[data-food]');
+  if(fd){ const [i,ri]=fd.dataset.food.split(':').map(Number); APP.showMealPicks(S,i,ri); return; }
   const mup=e.target.closest('[data-rmoveup]');
   if(mup){ const [i,ri]=mup.dataset.rmoveup.split(':').map(Number); const rows=rowsOf(S.days[i]);
     if(ri>0){ [rows[ri-1],rows[ri]]=[rows[ri],rows[ri-1]]; persist(); renderSheet(); renderSummary(); } return; }

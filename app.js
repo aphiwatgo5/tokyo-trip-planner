@@ -374,6 +374,56 @@ function renderIdeas(el, opts){
   draw();
 }
 
+// ---------- meal picks (lunch/dinner choices per area — display only, never added to plan) ----------
+const AREA_RULES=[
+  ['skytree',   /solamachi|skytree|โซลามาจิ|สกายทรี/i],
+  ['asakusa',   /asakusa|อาซากุสะ|senso-ji|nakamise/i],
+  ['tokyostation',/tokyo station|marunouchi|nihonbashi|character street|ramen street|หน้าสถานี|กลางเมือง/i],
+  ['yokohama',  /minatomirai|yokohama|mark is|โยโกฮามะ/i],
+  ['kamakura',  /kamakura|hase|komachi|คามาคุระ/i],
+  ['disney',    /maihama|disney|ikspiari|ไมฮามะ/i],
+  ['toyosu',    /toyosu|lalaport|โทโยซุ/i],
+  ['dome',      /dome city|suidobashi|laqua|yellow street|ซุอิโดบาชิ|dome/i],
+  ['shinagawa', /shinagawa|ชินางาวะ/i],
+];
+function mealPicks(S, day, row){
+  const text=`${row.ft||''} ${row.act||''} ${day.zone||''}`;
+  let areaKey='ueno';
+  for(const [k,re] of AREA_RULES){ if(re.test(text)){ areaKey=k; break; } }
+  const start=row.start!=null?row.start:720;
+  const meal=(start>=660&&start<=870)?'มื้อกลางวัน 🌤':'มื้อเย็น 🌙';
+  const area=FOOD_PICKS[areaKey]||FOOD_PICKS.ueno;
+  return {meal, areaKey, areaLabel:area.label, picks:area.items, anywhere:FOOD_ANYWHERE};
+}
+function showMealPicks(S, di, ri){
+  _ensureStyle();
+  const day=S.days[di]; if(!day) return;
+  const row=day.variants[day.activeVariant].rows[ri]; if(!row) return;
+  const m=mealPicks(S, day, row);
+  const wrap=document.createElement('div'); wrap.className='tpm-wrap';
+  wrap.innerHTML=`<div class="tpm" style="max-width:560px; max-height:82vh; display:flex; flex-direction:column;">
+    <h3>🍜 ${m.meal} — ย่าน${m.areaLabel}</h3>
+    <div class="tpm-body" style="flex:1; overflow-y:auto; text-align:left;">
+      <div style="font-family:Mitr; font-size:11px; color:#C99327; margin-bottom:6px;">ตัวเลือกแนะนำในย่านนี้ (แผนเดิม: ${row.ft||'—'})</div>
+      ${m.picks.map(p=>`
+        <div style="border:1px solid #E6E0D2; border-radius:12px; padding:9px 12px; margin-bottom:7px;">
+          <div style="font-weight:700; font-size:13.5px;">${p.n} <span style="font-weight:400; font-size:12px; color:#69758A;">· ${p.kind} · ~¥${p.price.toLocaleString()}/คน</span></div>
+          <div style="font-size:12px; color:#69758A; margin-top:2px;">${p.note}</div>
+        </div>`).join('')}
+      <div style="font-family:Mitr; font-size:11px; color:#69758A; margin:10px 0 6px;">ตัวยืนได้ทุกย่าน (เดินไปไหนก็เจอ):</div>
+      ${m.anywhere.map(p=>`
+        <div style="border:1px dashed #E0C98A; border-radius:12px; padding:7px 11px; margin-bottom:5px; background:#F7EBCB33;">
+          <span style="font-weight:600; font-size:12.5px;">${p.n}</span>
+          <span style="font-size:11.5px; color:#69758A;"> · ${p.kind} · ~¥${p.price.toLocaleString()}/คน · ${p.note}</span>
+        </div>`).join('')}
+    </div>
+    <div class="tpm-ops"><button>ปิด</button></div>
+    <div style="font-size:10.5px; color:#98A6B5; text-align:center; padding-top:6px;">เป็นตัวเลือกให้เลือกสดตอนไปถึง — ไม่ได้เพิ่มเข้าแผน/งบ</div>
+  </div>`;
+  document.body.appendChild(wrap);
+  wrap.addEventListener('click', e=>{ if(e.target===wrap||e.target.closest('button')) wrap.remove(); });
+}
+
 // ---------- import flow with modal (replace current trip or create new) ----------
 async function importFlow(buf, filename){
   const res=parseExcelState(buf, filename);
@@ -403,5 +453,5 @@ async function importFlow(buf, filename){
 
 return {FOOD_MULT, foodMultOf, dayTotalsOf, totalsOf, toast, modal,
         buildWorkbook, downloadExcel, parseExcelState, importFlow,
-        tagChip, renderIdeas, shiftFollowing};
+        tagChip, renderIdeas, shiftFollowing, mealPicks, showMealPicks};
 })();

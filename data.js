@@ -385,6 +385,76 @@ const KIDS_TIPS=[
   ["🏆 คอมโบ 1 วันสนุกสุด","โยโกฮามะ = Anpanman (เช้า) + เดิน Minato Mirai + ชิงช้าสวรรค์ Cosmoworld (บ่าย)"],
   ["👶 เด็กต่ำกว่า 3 ขวบ","สวนสนุก/สวนสัตว์ส่วนใหญ่เข้าฟรี แต่วันหยุดคนเยอะมาก — ไปวันธรรมดา"],
 ];
+// ================= FOOD PICKS — ตัวเลือกร้านตามย่าน (ไม่เพิ่มเข้าแผน ใช้เลือกสด) =================
+// price = ~¥/คน
+const FOOD_PICKS={
+  ueno:{label:"อูเอโนะ",items:[
+    {n:"Kura Sushi Okachimachi",kind:"🍣 ซูชิสายพาน",price:1500,note:"จานละ ¥150-300 · เกม Bikkura Pon ทุก 5 จาน เด็กหลงใจ"},
+    {n:"Marugame Seimen Ueno",kind:"🍜 อุด้ง",price:700,note:"ก๋วยเตี๋ยวนุ่ม เด็กกินง่าย · สั่งที่เคาน์เตอร์ เร็วมาก"},
+    {n:"Seiyoken (上野精養軒)",kind:"🍳 โยชกุ",price:2000,note:"โอมุไรซ์/ครอกเกตตำนาน 1910 · มีเก้าอี้เด็ก"},
+    {n:"Ichiran Ramen Ueno",kind:"🍜 ราเมน",price:1000,note:"บูธส่วนตัว สั่งผ่านเครื่อง · คิวเดินเร็ว"},
+    {n:"Saizeriya / Gusto (Ueno)",kind:"🍝 เฟมิลี่ร้านอาหาร",price:800,note:"เมนูเด็ก+ดริ้งบาร์ · โต๊ะกว้าง รถเข็นเข้าได้"},
+    {n:"Innsyoutei (ใน Ueno Park)",kind:"🍱 ข้าวญี่ปุ่น",price:2500,note:"บ้านญี่ปุ่นโบราณ บรรยากาศสงบ · เหมาะมื้อกลางวันชิลๆ"},
+  ]},
+  asakusa:{label:"อาซากุสะ",items:[
+    {n:"Tempura Daikokuya",kind:"🍤 เท็มปุระด้ง",price:2000,note:"ตำนาน 130 ปี · คิว ~20-40 นาที ไปก่อน 11:30"},
+    {n:"Onigiri Yadoroku",kind:"🍙 โนริมากิ",price:700,note:"ร้านโนริมากิเก่าแก่สุดของโตเกียว · กินเดินได้"},
+    {n:"Sushi Zanmai Asakusa",kind:"🍣 ซูชิ",price:2000,note:"สายพาน เปิดดึก · ของเด็กไม่ใส่วาซาบิได้"},
+    {n:"Sometaro",kind:"🫓 โอโคโนมิยากิ",price:1500,note:"ทอนเองที่โต๊ะ สนุกสำหรับครอบครัว (ระวังร้อน)"},
+    {n:"Asakusa Gyukatsu",kind:"🥩 เกียวคัตสึ",price:1500,note:"เนื้อทอดทานกลาง · คิวสั้นกว่าเท็มปุระ"},
+  ]},
+  disney:{label:"ไมฮามะ (Disney)",items:[
+    {n:"ร้านในสวน (Queen of Hearts ฯลฯ)",kind:"🎢 ในสวน",price:2500,note:"อยู่ในงบแผนอยู่แล้ว · จองรอบอาหารผ่านแอปได้"},
+    {n:"Rainforest Cafe Ikspiari",kind:"🦜 ธีมร้านอาหาร",price:3000,note:"สัตว์จักรกล+ฟ้าผ่ารอบโต๊ะ เด็กชอบมาก"},
+    {n:"Ikspiari Food Court",kind:"🍱 ฟู้ดคอร์ท",price:1200,note:"เลือกง่าย ที่นั่งเยอะ ติดสถานี Maihama"},
+  ]},
+  kamakura:{label:"คามาคุระ",items:[
+    {n:"Tobiuo (ติดสถานี)",kind:"🐟 ชิราสุด้ง",price:1300,note:"ขาวสะอาด อาหารเด็กกินได้ · ไม่ต้องรอนาน"},
+    {n:"Sasagawa (Hase)",kind:"🐟 ชิราสุด้ง",price:1500,note:"ร้านเก่าแก่หลังเนิน · เดินจาก Hase-dera 6 นาที"},
+    {n:"Kua'Aina Hase",kind:"🍔 เบอร์เกอร์",price:1500,note:"เบอร์เกอร์ฮาวายเลื่องชื่อ · เด็กกินง่ายสุดในย่าน"},
+    {n:"Yoroppaken (Komachi)",kind:"🍛 แกง",price:1100,note:"แกงยุโรปบ้านเก่า · เมนูเด็กมี"},
+  ]},
+  yokohama:{label:"โยโกฮามะ/มินาโตมิไร",items:[
+    {n:"MARK IS Food Court",kind:"🍱 ฟู้ดคอร์ท",price:1200,note:"ในแผนอยู่แล้ว — ตัวเลือกเยอะสุดในย่าน"},
+    {n:"bills Minatomirai",kind:"🥞 แพนเค้ก",price:1800,note:"ริค็อตต้าแพนเค้กดัง · เหมาะมื้อช้าๆ"},
+    {n:"Kiyoken (ชุมชนจีนใกล้)",kind:"🥟 ซิวไม่",price:800,note:"ซิวไม่บันได้ติดบ้าน · ซื้อกล่องไปนั่งริมอ่าวได้"},
+    {n:"Manchinro (ไชน่าทาวน์)",kind:"🥟 ติมซำ",price:2500,note:"ถ้าอยากต่อไชน่าทาวน์ · เดินจาก Minatomirai ~15 นาที"},
+  ]},
+  toyosu:{label:"โทโยซุ",items:[
+    {n:"LaLaport Food Court",kind:"🍱 ฟู้ดคอร์ท",price:1200,note:"ในแผนอยู่แล้ว · มีห้องเด็ก/เปลี่ยนผ้าอ้อม"},
+    {n:"Sushiro Toyosu",kind:"🍣 ซูชิสายพาน",price:1000,note:"ถูกและเร็ว · สาขาใหญ่"},
+    {n:"Toyosu Senkyaku Banrai",kind:"🍢 ตลาด+อาหาร",price:1800,note:"ตลาดปลาใหม่+ฟู้ดอัลลีย์ · มีฟุตออนเซ็นฟรีให้แช่เท้า"},
+  ]},
+  dome:{label:"ซุอิโดบาชิ (Tokyo Dome City)",items:[
+    {n:"Yellow Street ซอยร้านอาหาร",kind:"🍱 เลือกหลายร้าน",price:1200,note:"เดิน 1 นาทีจาก Dome · ร้านครอบครัวเยอะ"},
+    {n:"Coco Ichibanya Suidobashi",kind:"🍛 แกงกะหรี่",price:900,note:"ปรับความเผ็ดได้ เมนูเด็ก · เด็กต่ำกว่า 12 ขวบถูกลง"},
+    {n:"Mominoki House",kind:"🌰 ตะวันตกออร์แกนิก",price:1800,note:"ร้านตำนานบ้านไม้ บรรยากาศอบอุ่น"},
+  ]},
+  tokyostation:{label:"หน้าสถานีโตเกียว–นิฮงบาชิ",items:[
+    {n:"Tokyo Ramen Street (B1)",kind:"🍜 ราเมน",price:1100,note:"ในแผนอยู่แล้ว · Rokurinsha สึเกเม็งดัง คิวยาวช่วงเที่ยง"},
+    {n:"Tamahide (นิฮงบาชิ)",kind:"🍚 โอยาโกด้ง",price:1600,note:"ต้นตำรับโอยาโกด้ง 1800 · รสนุ่ม เด็กกินได้"},
+    {n:"Kanda Matsuya",kind:"🍜 โซบะ",price:1000,note:"โซบะ 1884 บ้านเก่า · คิวเดินเร็ว"},
+    {n:"Shiseido Parlour (Ginza edge)",kind:"🍳 โยชกุคลาสสิก",price:2200,note:"โอมุไรซ์/สปาเก็ตตี้สไตล์เรโทร"},
+    {n:"Isomaru Suisan Tokyo Sta.",kind:"🦐 ซีฟู้ดย่าง",price:2500,note:"ย่างเองที่โต๊ะ เปิดดึก"},
+  ]},
+  shinagawa:{label:"ชินางาวะ",items:[
+    {n:"Eat Paradise (Shinagawa Prince)",kind:"🍽️ บุฟเฟ่ต์",price:3200,note:"บุฟเฟ่ต์ใหญ่ มีมุมเด็ก · คุ้มถ้าหิวมาก"},
+    {n:"Ekinaka ชินางาวะ",kind:"🍱 ร้านในสถานี",price:1000,note:"เลือกเยอะ ใกล้ Maxell มาก"},
+  ]},
+  skytree:{label:"สกายทรี/โซลามาจิ",items:[
+    {n:"Solamachi Food Court (10F)",kind:"🍱 ฟู้ดคอร์ท",price:1200,note:"ในแผนอยู่แล้ว · เลือก 10+ ร้าน"},
+    {n:"Katsuya Solamachi",kind:"🍗 คัตสึด้ง",price:800,note:"เร็ว อิ่ม ถูก"},
+    {n:"Momo Paradise Solamachi",kind:"🍲 ชาบู",price:2200,note:"ชาบุหม้อเดี่ยว เด็กกินผักได้ง่าย"},
+    {n:"Sky Restaurant 634",kind:"🌆 ชมวิว",price:4500,note:"มื้อพิเศษบนชั้นสูง — ถ้าอยากเว่อร์ปิดทริป"},
+  ]},
+};
+const FOOD_ANYWHERE=[
+  {n:"Saizeriya / Gusto",kind:"🍝 เฟมิรีเสสตอรัง",price:700,note:"เมนูเด็ก+ดริ้งบาร์ — เจอทุกย่าน"},
+  {n:"Sushiro / Kura Sushi",kind:"🍣 ซูชิสายพาน",price:1000,note:"เด็กต่ำกว่า 3-4 ขวบส่วนใหญ่ฟรี"},
+  {n:"Coco Ichibanya",kind:"🍛 แกงกะหรี่",price:900,note:"ปรับเผ็ด เมนูเด็กทุกสาขา"},
+  {n:"Matsuya / Yoshinoya",kind:"🥩 กิวด้ง",price:600,note:"สั่งจากตู้ เร็ว ราคาเป็นมิตร"},
+];
+
 // ================= TRIPS REGISTRY =================
 const LEGACY_KEY = "tokyo-trip-plan-v2";
 const Trips = {
