@@ -20,23 +20,67 @@ const NEW_D7={date:"2026-12-04", d:"4 ธ.ค.", dow:"ศุกร์ · D7", ta
     R("16:00–17:30","เรือหงส์ Shinobazu Pond + เดิน Ueno Park","Ueno Park","เดิน","~1.5 ชม.",0,1600,"misc","เรือหงส์ ~¥800/30 นาที/ลำ",960,90),
     R("18:30–19:30","มื้อเย็นใกล้โรงแรม","ร้านใกล้ Ueno","เดิน","",0,3500,"food","",1110,60),
   ]}]};
+// ---- v3 revision: drop WB + Odaiba · add Anpanman + Maxell + Marunouchi lights ----
+const V3_D5={date:"2026-12-02", d:"2 ธ.ค.", dow:"พุธ · D5", tag:"วันกลาง", pace:"med", inc:true,
+  title:"teamLab + Maxell Aqua Park 🐬", sub:"ไม่ไป Odaiba แล้ว — ในร่มทั้งวัน เหมาะอากาศธันวา", activeVariant:0,
+  variants:[{name:"แผนหลัก", rows:[
+    R("08:00–08:30","อาหารเช้า","โรงแรม/konbini","เดิน","",0,1200,"food","",480,30),
+    R("09:00–09:40","ไป teamLab","Ueno → Toyosu","Tokyo Metro (เปลี่ยนสาย 1 ครั้ง)","~40 นาที",500,0,"","",540,40),
+    R("10:00–11:30","teamLab Planets","Toyosu","","1.5 ชม.",0,7600,"entry","รถเข็นเข้าไม่ได้ ต้องอุ้ม · เตรียมชุดสำรอง Hooga (ลุยน้ำ)",600,90),
+    R("12:00–13:00","มื้อกลางวัน LaLaport Toyosu","LaLaport (food court)","เดิน","",0,2800,"food","เลือกตามสะดวก มี family restaurant เยอะ — หลวมๆ พอ",720,60),
+    R("13:30–14:00","กลับโรงแรม งีบ","Toyosu → Ueno","Tokyo Metro","~30 นาที",500,0,"","ชาร์จแบตก่อนรอบเย็น",810,30),
+    R("16:00–16:25","ไป Maxell Aqua Park","Ueno → Shinagawa","JR Yamanote (ตรง)","~25 นาที",760,0,"","อควาเรียมในร่มติดสถานี ~15 นาทีจากใจกลางเมือง",960,25),
+    R("16:30–18:30","Maxell Aqua Park 🐬","ชินางาวะ","","2 ชม.",0,4400,"entry","โชว์โลมาทุก ~1 ชม. — เช็กตารางโชว์แล้วเลือกรอบก่อนเข้า · ธันวามีโชว์กลางคืนแสงไฟสวยพิเศษ",990,120),
+    R("19:00–19:45","มื้อเย็นย่านสถานีชินางาวะ","Ekinaka / food court","เดิน","",0,3500,"food","ร้านในสถานีเยอะ เลือกตามสะดวก — ไม่ต้องจอง",1140,45),
+    R("20:00–20:25","กลับ Ueno","Shinagawa → Ueno","JR Yamanote","~25 นาที",760,0,"","",1200,25),
+  ]}]};
+const V3_D6={date:"2026-12-03", d:"3 ธ.ค.", dow:"พฤหัส · D6", tag:"วันหนัก", pace:"big", inc:true,
+  title:"Anpanman + Yokohama 🐜", sub:"ไม่ไป Warner Bros แล้ว — day trip โยโกฮามะ (ธรรมดา คนน้อยกว่าเสาร์อาทิตย์)", activeVariant:0,
+  variants:[{name:"แผนหลัก", rows:[
+    R("08:00–08:30","อาหารเช้า","โรงแรม/konbini","เดิน","",0,1200,"food","",480,30),
+    R("08:45–09:35","ไป Minatomirai","Ueno → Minatomirai","JR Yamanote → Yokohama → Minatomirai Line","~50 นาที",1460,0,"","≈¥730/คน · Hooga ฟรี (ต่ำกว่า 6 ขวบ)",525,50),
+    R("10:00–12:30","Anpanman Museum 🐜","Minatomirai (MARK IS)","","2.5 ชม.",0,3600,"entry","เหมาะกับ 1-2 ขวบที่สุดในลิสต์ — ซื้อบัตรหน้างาน/ออนไลน์ได้ · เด็ก 1 ขวบขึ้นมีบัตรเด็ก ~¥1,600 ตามจริง",600,150),
+    R("12:30–13:30","มื้อกลางวัน ใน MARK IS / ริมอ่าว","Minatomirai","เดิน","",0,3000,"food","food court ใหญ่ เลือกตามสะดวก — หลวมๆ",750,60),
+    R("13:30–15:00","Cosmoworld โซนเด็ก + ชิงช้าสวรรค์","Cosmoworld (ริมอ่าว)","เดิน","~1.5 ชม.",0,2000,"misc","สวนสนุกเข้าฟรี จ่ายรายเครื่อง ~¥300-500 · ธันวามีไฟประดับริมอ่าวช่วงค่ำ",810,90),
+    R("15:15–16:05","กลับ Ueno","Minatomirai → Ueno","Minatomirai Line → Yokohama → JR","~50 นาที",1460,0,"","Hooga งีบบนรถไฟ",915,50),
+    R("17:00–17:45","ซักผ้า + พัก","โรงแรม / coin laundry","","","",500,"misc","เผื่อซักให้เสร็จก่อนวันสุดท้าย",1020,45),
+    R("18:30–19:30","มื้อเย็นใกล้โรงแรม","ร้านใกล้ Ueno","เดิน","",0,3500,"food","เดินเลือกได้เลย — ไม่ต้องจอง",1110,60),
+  ]}]};
+const V3_D7={date:"2026-12-04", d:"4 ธ.ค.", dow:"ศุกร์ · D7", tag:"วันกลาง", pace:"med", inc:true,
+  title:"Pokémon Café + ไฟ Marunouchi 🎆", sub:"ค้างโตเกียวทุกคืน · เย็นดูไฟประดับหน้า Tokyo Station (ฤดูหนาว)", activeVariant:0,
+  variants:[{name:"แผนหลัก", rows:[
+    R("08:00–08:30","อาหารเช้า","โรงแรม/konbini","เดิน","",0,1200,"food","",480,30),
+    R("09:10–09:35","ไป Nihonbashi","Ueno → Nihonbashi","JR Yamanote → Tokyo Sta. + เดิน 15 นาที","~25 นาที",340,0,"","รถไฟ ¥170/คน",550,25),
+    R("10:00–11:00","Pokémon Café (Nihonbashi Takashimaya)","Nihonbashi","","1 ชม.",0,4000,"food","จองล่วงหน้า — เปิดวันที่ 1 ของเดือนก่อน 18:00 หมดเร็วมาก (วันเยี่ยม 4 ธ.ค. → จอง 1 พ.ย.)",600,60),
+    R("11:15–12:30","Tokyo Character Street + KITTE","Tokyo Station","เดิน","~1 ชม. 15 นาที",0,0,"","ร้านการ์ตูนใต้ Tokyo Station · ดาดฟ้า KITTE วิวสถานี",675,75),
+    R("12:30–13:15","มื้อกลางวัน Ramen Street / food court","Tokyo Station","เดิน","",0,3000,"food","เลือกตามสะดวก — คิวเร็ว",750,45),
+    R("13:30–14:00","กลับโรงแรม งีบ","Nihonbashi → Ueno","เดิน → JR Yamanote","~30 นาที",340,0,"","",810,30),
+    R("16:00–16:25","ไป Tokyo Station / Marunouchi","Ueno → Tokyo","JR Yamanote","~10 นาที",340,0,"","พระอาทิตย์ตก ~16:30 ธันวา — เย็นนี้ดูไฟพอดี",960,25),
+    R("16:30–17:45","เดินเล่น Marunouchi / ดาดฟ้า KITTE","Marunouchi","เดิน","",0,0,"","เข้าเย็นแสงสวย อากาศธันวาเย็นเตรียมเสื้อกันหนาวให้ Hooga",990,75),
+    R("18:00–19:00","มื้อเย็นย่าน Marunouchi","ร้านย่านสถานี","เดิน","",0,3500,"food","ร้านเยอะ เลือกตามสะดวก — หลวมๆ",1080,60),
+    R("19:15–19:45","ชมไฟ Marunouchi Illumination 🎆","หน้า Tokyo Station","เดิน","~30 นาที",0,0,"","mid-Nov–Feb ทุกปี · ฟรี · วิวสวยสุดตอนค่ำ รถเข็นได้สบาย",1155,30),
+    R("20:00–20:25","กลับ Ueno","Tokyo → Ueno","JR Yamanote","~10 นาที",340,0,"","",1200,25),
+  ]}]};
 const NEW_D8={date:"2026-12-05", d:"5 ธ.ค.", dow:"เสาร์ · D8", tag:"วันหนัก", pace:"big", inc:true,
-  title:"Hanayashiki + Skytree 🎡🗼", sub:"วันเที่ยวเต็มสุดท้ายในโตเกียว", activeVariant:0,
+  title:"Hanayashiki + Skytree + ช้อปของฝาก 🎡🛍️", sub:"วันสุดท้ายเต็มวัน — เที่ยวเช้า Asakusa · ช้อป+อควอเรียมเย็น Skytree", activeVariant:0,
   variants:[{name:"แผนหลัก", rows:[
     R("08:30–09:00","อาหารเช้า","คาเฟ่ใกล้โรงแรม","เดิน","","",1500,"food","",510,30),
     R("09:15–09:25","ไป Asakusa","Ueno → Asakusa","Tokyo Metro Ginza Line","~10 นาที",360,0,"","",555,10),
     R("09:30–11:30","Hanayashiki (สวนสนุกเก่าแก่ที่สุดของญี่ปุ่น)","ถัดจาก Senso-ji","เดิน","2 ชม.",0,3200,"entry","ผู้ใหญ่ ¥1,600 · Hooga ≤4 ขวบฟรี · จ่ายรายเครื่องเล่น ~¥100–200",570,120),
-    R("11:45–12:30","มื้อกลางวัน Asakusa","ร้านย่าน Asakusa","เดิน","","",3000,"food","",705,45),
+    R("11:30–11:50","เดินช้อป Nakamise ของฝากเล็ก","Nakamise-dori","เดิน","~20 นาที",0,0,"shopping","นิงเงิ๋วยากิ/ขนมข้าวโพด — เดินผ่านทางกลับสถานีพอดี",690,20),
+    R("11:50–12:35","มื้อกลางวัน Asakusa","ร้านย่าน Asakusa","เดิน","",0,3000,"food","เดินเลือกตามสะดวก — หลวมๆ พอ",710,45),
     R("12:45–13:00","กลับโรงแรม","Asakusa → Ueno","Tokyo Metro Ginza Line","~10 นาที",360,0,"","",765,15),
-    R("13:00–15:00","งีบ + เก็บกระเป๋าบางส่วน","โรงแรม","","",0,0,"","พรุ่งนี้บิน 10:35",780,120),
+    R("13:00–15:00","งีบ + เก็บกระเป๋า","โรงแรม","","","",0,0,"","พรุ่งนี้บิน 10:35",780,120),
     R("15:15–15:35","ไป Skytree","Ueno → Tokyo Skytree","Ginza→Asakusa, Tobu→Skytree","~20 นาที",480,0,"","",915,20),
-    R("15:45–17:15","Sumida Aquarium","Skytree","","1.5 ชม.",0,5000,"entry","แมงกะพรุนเรืองแสง เพนกวินใกล้ๆ เด็กชอบ",945,90),
-    R("17:30–18:45","มื้อเย็นพิเศษส่งท้าย Tokyo Solamachi","ติด Skytree","เดิน","","",5000,"food","",1050,75),
-    R("19:00–19:20","กลับ Ueno + ของฝากดึก Don Quijote","Skytree → Ueno","Tobu→Asakusa, Ginza→Ueno","~20 นาที",480,0,"","Donki Ueno เปิดดึกมาก — เต็มที่รอบสุดท้าย",1140,20),
+    R("15:45–17:15","ช้อปของฝาก Tokyo Solamachi 🛍️","ใต้ Skytree","เดิน","~1.5 ชม.",0,0,"shopping","มอลล์ 4 ชั้น — KitKat Tokyo · Tokyo Banana · ร้านการ์ตูน · รถเข็นเข้าได้สบาย · งบของฝากแยกต่างหาก",945,90),
+    R("17:30–19:00","Sumida Aquarium","Skytree","","1.5 ชม.",0,5000,"entry","เสาระเปิดถึง ~21:00 (เช็กอีกครั้ง) · ตอนเย็นคนน้อยกว่า · เพนกวิน+แมงกะพรุนเรืองแสง",1050,90),
+    R("19:15–20:15","มื้อเย็นพิเศษส่งท้าย","Solamachi (food court/ร้านในมอลล์)","เดิน","",0,5000,"food","เลือกตามสะดวก — ไม่ต้องจอง",1155,60),
+    R("20:30–20:50","กลับ Ueno","Skytree → Ueno","Tobu→Asakusa, Ginza→Ueno","~20 นาที",480,0,"","",1230,20),
+    R("21:00–21:45","ของฝากรอบสุดท้าย Don Quijote","Donki Ueno (เปิด 24 ชม.)","เดิน","~45 นาที",0,0,"shopping","เต็มที่รอบสุดท้าย · เช็กกระเป๋าให้พร้อมก่อนเช้าบิน",1260,45),
   ]}]};
 
 const SEED = {
-  meta: { filename: "Tokyo_Trip_Working_Plan_2026.xlsx", loadedAt: "2026-09-06T00:00:00Z", source: "seed", schema: 2 },
+  meta: { filename: "Tokyo_Trip_Working_Plan_2026.xlsx", loadedAt: "2026-09-06T00:00:00Z", source: "seed", schema: 3 },
   settings: {
     fx: 0.23, foodStyle: "กลาง", hotelTokyo: 13000, nightsTokyo: 8,
     hotelShizuoka: 12000, nightsShizuoka: 0, adults: 2, children: 1
@@ -92,32 +136,9 @@ const SEED = {
         R("16:30–17:40","เดินทางกลับ","Kamakura → Ueno","JR Ueno-Tokyo Line","~65 นาที",2080,0,"",""),
         R("18:30","มื้อเย็น + นอนเร็ว","ร้านใกล้โรงแรม Ueno","เดิน","","",3500,"food",""),
       ] } ] },
-    { date: "2026-12-02", d: "2 ธ.ค.", dow: "พุธ · D5", tag: "วันหนัก", pace: "big", inc: true,
-      title: "Toyosu + Odaiba", sub: "teamLab + Legoland", activeVariant: 0,
-      variants: [ { name: "แผนหลัก", rows: [
-        R("08:00","อาหารเช้า","โรงแรม/konbini","","","",1200,"food",""),
-        R("09:00–09:40","เดินทางไป teamLab","Ueno → Toyosu","Tokyo Metro (เปลี่ยนสาย 1 ครั้ง)","~40 นาที",500,0,"","จองรอบ teamLab ~10:00 · เดินจากสถานี 10 นาที"),
-        R("10:00–11:30","teamLab Planets","Toyosu","","1.5 ชม.",0,7600,"entry","รถเข็นเข้าไม่ได้ ต้องอุ้ม · เตรียมชุดสำรอง Hooga (ลุยน้ำ)"),
-        R("12:00","มื้อกลางวัน","LaLaport Toyosu (food court)","เดิน","","",2800,"food","family restaurant เพียบ"),
-        R("13:30–13:45","เดินทางไป Odaiba","Shin-Toyosu → Odaiba-Kaihinkoen","Yurikamome","~13 นาที",660,0,"","วิวอ่าวโตเกียวสวย"),
-        R("14:00–16:30","Legoland Discovery","DECKS Odaiba (เดิน 2 นาที)","เดิน","2.5 ชม.",0,5000,"entry","ผู้ใหญ่ต้องมากับเด็ก · จองรอบล่วงหน้า"),
-        R("16:30–17:30","เดินเล่น Odaiba ริมทะเล / Gundam","Odaiba","เดิน","","","","","งีบในรถเข็น"),
-        R("17:30","มื้อเย็น","bills/Sizzler (DECKS) / food court","เดิน","","",4000,"food",""),
-        R("18:45–19:20","เดินทางกลับ","Odaiba → Ueno","Yurikamome→Shimbashi, JR→Ueno","~35 นาที",1000,0,"",""),
-      ] } ] },
-    { date: "2026-12-03", d: "3 ธ.ค.", dow: "พฤหัส · D6", tag: "วันกลาง", pace: "med", inc: true,
-      title: "Warner Bros HP ⚡", sub: "Studio Tour (Nerima)", activeVariant: 0,
-      variants: [ { name: "แผนหลัก", rows: [
-        R("08:30","อาหารเช้า","โรงแรม/konbini","","","",1200,"food",""),
-        R("09:15–09:45","เดินทางไป WB","Ueno-Okachimachi → Toshimaen","Toei Oedo Line (ตรง)","~30 นาที",560,0,"","Toshimaen เดิน 2 นาทีถึง WB"),
-        R("10:00–13:30","Warner Bros Studio Tour","Toshimaen","","3–4 ชม.",0,14000,"entry","เดินชม ~3-4 ชม. · ผลัดกันอุ้ม Hooga · ตั๋วทารกอีเมลขอแยก"),
-        R("12:30","มื้อกลางวันในสตูดิโอ","Backlot Café","","","",3500,"food","ลอง Butterbeer"),
-        R("14:00–14:30","เดินทางกลับ","Toshimaen → Ueno","Toei Oedo Line","~30 นาที",560,0,"",""),
-        R("15:00–16:30","งีบที่โรงแรม","โรงแรม","","","","","","ไม่จัดต่อ เด็กเล็กอาจล้าจากการเดินชม"),
-        R("17:00","ซักผ้า","โรงแรม / coin laundry","","","",500,"misc","ค้าง Ueno ทุกคืน — ไม่ต้องแพ็กกระเป๋าย้ายโรงแรม"),
-        R("18:00","มื้อเย็น","ร้าน local ใกล้ Ueno","เดิน","","",3000,"food",""),
-      ] } ] },
-    JSON.parse(JSON.stringify(NEW_D7)),
+    JSON.parse(JSON.stringify(V3_D5)),
+    JSON.parse(JSON.stringify(V3_D6)),
+    JSON.parse(JSON.stringify(V3_D7)),
     JSON.parse(JSON.stringify(NEW_D8)),
     { date: "2026-12-06", d: "6 ธ.ค.", dow: "อาทิตย์ · D9", tag: "กลับ", pace: "rest", inc: true,
       title: "กลับกรุงเทพฯ ✈️", sub: "TG683 10:35", activeVariant: 0,
@@ -146,8 +167,8 @@ const SEED = {
     ["จองตั๋ว Disneyland ออนไลน์","เปิดล่วงหน้า 2 เดือน → ~ปลาย ก.ย. 2026","~ก.ย.","w-soon","ยังไม่ได้ทำ"],
     ["จอง Pokémon Café (Nihonbashi)","เปิดจองวันที่ 1 ของเดือนก่อน 18:00 — หมดเร็วมาก (วันเยี่ยม 4 ธ.ค. → จอง 1 พ.ย.)","1 พ.ย. 18:00","w-now","ยังไม่ได้ทำ"],
     ["จอง teamLab Planets (timed slot)","ตั๋วหมดเร็ว จอง ~2–3 สัปดาห์ล่วงหน้า","~1 เดือน","w-pre","ยังไม่ได้ทำ"],
-    ["จอง Legoland Discovery","จองออนไลน์ลดได้ถึง 30%","~1 เดือน","w-pre","ยังไม่ได้ทำ"],
-    ["Warner Bros: จองรอบ + อีเมลขอตั๋วทารก","ตั๋ว Hooga (≤3) ฟรี ไม่มีขายออนไลน์","ล่วงหน้า","w-pre","ยังไม่ได้ทำ"],
+    ["ซื้อบัตร Anpanman Museum","ซื้อหน้างานได้ / ออนไลน์ล่วงหน้า · เด็ก 1 ขวบขึ้นมีบัตรเด็ก ~¥1,600","ก่อนวันไป","w-pre","ยังไม่ได้ทำ"],
+    ["ซื้อบัตร Maxell Aqua Park","ซื้อออนไลน์ลดเล็กน้อย · เช็กตารางโชว์โลมาล่วงหน้า","~2 สัปดาห์","w-pre","ยังไม่ได้ทำ"],
     ["จอง Sumida Aquarium ออนไลน์","ซื้อล่วงหน้าถูกกว่าหน้างาน ~¥200/คน","~1 เดือน","w-pre","ยังไม่ได้ทำ"],
     ["แจ้งโรงแรมยืมเปลเด็ก","ของมีจำกัด แจ้งตอนจอง","ล่วงหน้า","w-pre","ยังไม่ได้ทำ"],
     ["เตรียม Suica + eSIM/pocket wifi","ตั้ง Suica ในมือถือก่อนบิน","ก่อนบิน","w-pre","ยังไม่ได้ทำ"],
@@ -323,7 +344,42 @@ const Trips = {
 
 // ================= v2 MIGRATION (Tokyo-every-night plan change) =================
 function migrate(state){
-  if(!state || !state.days || state.meta?.schema===2) return state;
+  if(!state || !state.days) return state;
+  state.meta=state.meta||{};
+  // ---- v3: drop Warner Bros + Odaiba, add Anpanman/Maxell/Marunouchi-lights ----
+  if(state.meta.schema<3){
+    const txt3=JSON.stringify(state.days);
+    if(txt3.includes('Warner')||txt3.includes('Odaiba')||txt3.includes('Legoland')){
+      const swap=(nw,idx)=>{
+        let i=state.days.findIndex(d=>d.date===nw.date);
+        if(i<0) i=state.days.findIndex(d=>d.d===nw.d);
+        if(i<0) i=idx;
+        state.days[i]=JSON.parse(JSON.stringify(nw));
+      };
+      // preserve เรือหงส์ if present in old D7 → park it into the idea library
+      const oldD7=state.days.find(d=>d.date==="2026-12-04"||d.d==="4 ธ.ค.");
+      if(oldD7){
+        const swan=oldD7.variants[oldD7.activeVariant].rows.find(r=>r.act.includes('เรือหงส์'));
+        if(swan){
+          state.parked=state.parked||[];
+          state.parked.push({n:swan.act, area:swan.ft||'', tag:swan.tag||'attraction', est:swan.cost||0, note:swan.note||'', from:'4 ธ.ค.'});
+        }
+      }
+      swap(V3_D5,4); swap(V3_D6,5); swap(V3_D7,6); swap(NEW_D8,7);
+      state.days.forEach((d,i)=>{ if(d.dow && /·\s*D\d+/.test(d.dow)) d.dow=d.dow.replace(/·\s*D\d+/, '· D'+(i+1)); });
+      state.checks=(state.checks||[]).filter(c=>!String(c[0]).includes('Warner')&&!String(c[0]).includes('Legoland'));
+      if(!state.checks.find(c=>String(c[0]).includes('Anpanman'))){
+        state.checks.splice(3,0,["ซื้อบัตร Anpanman Museum","ซื้อหน้างาน/ออนไลน์ · เด็ก 1 ขวบขึ้น ~¥1,600","ก่อนวันไป","w-pre","ยังไม่ได้ทำ"]);
+      }
+      if(!state.checks.find(c=>String(c[0]).includes('Maxell'))){
+        state.checks.splice(4,0,["ซื้อบัตร Maxell Aqua Park","ออนไลน์ลดเล็กน้อย · เช็กตารางโชว์โลมา","~2 สัปดาห์","w-pre","ยังไม่ได้ทำ"]);
+      }
+      state.__mig='dec-revise';
+    }
+    state.meta.schema=3;
+    return state;
+  }
+  if(state.meta.schema===3) return state;
   // detect this specific Tokyo trip by Shizuoka mentions in plan CONTENT (not settings keys —
   // unrelated trips also carry a nightsShizuoka field)
   const tripText=JSON.stringify(state.days)+' '+JSON.stringify(state.routes||[])+' '+JSON.stringify(state.checks||[]);
@@ -351,9 +407,9 @@ function migrate(state){
     if(!state.routes.find(r=>String(r[0]).includes('Nihonbashi'))){
       state.routes.splice(7,0,["Ueno → Nihonbashi (Pokémon Café)","JR Yamanote → Tokyo Sta. + เดิน 15 นาที","~25 นาที",170,0]);
     }
-    state.__mig='tokyo-nights';
+    state.__mig=state.__mig||'tokyo-nights';
   }
-  state.meta=state.meta||{}; state.meta.schema=2;
+  state.meta.schema=3;
   return state;
 }
 
