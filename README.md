@@ -64,6 +64,16 @@
 
 - ทุกหน้า responsive: การ์ดเรียงแนวตั้ง + แถบงบรวมติดล่างจอ · ตาราง scroll แนวนอน + ปุ่ม ↑↓ จัดลำดับ (drag ใช้ไม่ได้บน touch) + แถบกระโดดข้ามวัน · Route = แผนที่บน + timeline ล่าง
 
+## 🔒 กติกา QA ก่อน deploy (บังคับ)
+
+**ทุกครั้งก่อน push ต้องผ่าน QA** — สคริปต์ตรวจทั้งแผน: เวลาเรียงถูกต้อง · ไม่ทับกัน · ระยะเวลาไม่พัง (ไม่ข้ามเที่ยงคืน / ไม่เกิน 6 ชม.) · โน้ต/แท็กไม่ถูก arg-shift · งบรวมสมเหตุสมผล:
+
+```bash
+node scripts/qa.mjs            # ตรวจ seed ใน data.js
+node scripts/qa.mjs plan.json  # หรือไฟล์ ⬇︎ JSON จากแอป
+./scripts/deploy.sh            # QA → commit → push (หยุดถ้า QA fail)
+```
+
 ## Deploy ขึ้น GitHub Pages
 
 repo นี้พร้อม deploy แล้ว (มี `.github/workflows/deploy.yml` + `.nojekyll`):
