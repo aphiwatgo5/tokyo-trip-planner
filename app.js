@@ -376,6 +376,7 @@ function renderIdeas(el, opts){
 
 // ---------- meal picks (lunch/dinner choices per area — display only, never added to plan) ----------
 const AREA_RULES=[
+  ['ueno',      /ueno|อูเอโนะ|ameyoko/i],
   ['skytree',   /solamachi|skytree|โซลามาจิ|สกายทรี/i],
   ['asakusa',   /asakusa|อาซากุสะ|senso-ji|nakamise/i],
   ['tokyostation',/tokyo station|marunouchi|nihonbashi|character street|ramen street|หน้าสถานี|กลางเมือง/i],
@@ -387,9 +388,11 @@ const AREA_RULES=[
   ['shinagawa', /shinagawa|ชินางาวะ/i],
 ];
 function mealPicks(S, day, row){
-  const text=`${row.ft||''} ${row.act||''} ${day.zone||''}`;
+  const t1=`${row.ft||''} ${row.act||''}`;
+  const t2=`${t1} ${day.zone||''}`;
   let areaKey='ueno';
-  for(const [k,re] of AREA_RULES){ if(re.test(text)){ areaKey=k; break; } }
+  for(const [k,re] of AREA_RULES){ if(re.test(t1)){ areaKey=k; break; } }            // row's own words win
+  if(areaKey==='ueno'&&t2!==t1) for(const [k,re] of AREA_RULES){ if(re.test(t2)){ areaKey=k; break; } } // zone only as fallback
   const start=row.start!=null?row.start:720;
   const meal=(start>=660&&start<=870)?'มื้อกลางวัน 🌤':'มื้อเย็น 🌙';
   const area=FOOD_PICKS[areaKey]||FOOD_PICKS.ueno;
