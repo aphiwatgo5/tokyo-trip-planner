@@ -8,15 +8,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="data.js?v=9"></script>
+<script src="data.js?v=10"></script>
 <script src="app.js?v=6"></script>
 <style>
   :root{
-    --ink:#20242E; --muted:#5A6270; --paper:#ECEEE8; --card:#FFFFFF;
-    --momiji:#CE4A2B; --momiji-soft:#F3D9CF; --pine:#275145; --pine2:#2F5E50;
-    --straw:#D79A35; --straw-soft:#F3E2BE; --line:#DCDDD4; --rest:#9DB5AB;
-    --train:#33506F; --train-soft:#E6EDF5;
-    --shadow:0 1px 2px rgba(32,36,46,.06),0 8px 24px rgba(32,36,46,.07);
+    --ink:#1B2430; --muted:#69758A; --paper:#F5F2EA; --card:#FFFFFF;
+    --momiji:#E0572F; --momiji-soft:#FCE8DF; --pine:#0E5B47; --pine2:#12846A;
+    --straw:#C99327; --straw-soft:#F7EBCB; --line:#E6E0D2; --rest:#98A6B5;
+    --train:#3D5A80; --train-soft:#E8EFF7; --violet:#6D5AA8; --violet-soft:#ECE7F8;
+    --shadow:0 1px 2px rgba(27,36,48,.05),0 10px 30px rgba(27,36,48,.08);
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -24,7 +24,7 @@
     font-family:"Sarabun",system-ui,sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;}
   h1,h2,h3,h4{font-family:"Mitr",sans-serif; font-weight:500; line-height:1.25; margin:0;}
   .wrap{max-width:980px; margin:0 auto; padding:0 16px;}
-  .hero{background:linear-gradient(155deg,#21433A 0%,#2C5648 60%,#1C3A31 100%); color:#F4F1E9; position:relative; overflow:hidden;}
+  .hero{background:linear-gradient(140deg,#0B3A2E 0%,#116552 55%,#0E4A3B 100%); color:#F4F1E9; position:relative; overflow:hidden;}
   .hero::after{content:"🍁"; position:absolute; font-size:190px; right:-24px; top:-28px; opacity:.06; transform:rotate(12deg);}
   .hero .wrap{padding:28px 16px 22px;}
   .eyebrow{font-family:"Mitr"; letter-spacing:.18em; text-transform:uppercase; font-size:11px; color:var(--straw);}
@@ -56,7 +56,9 @@
   .sec-note{color:var(--muted); font-size:14px; margin-bottom:16px; max-width:680px;}
   /* day tabs */
   .daytabs{display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; -webkit-overflow-scrolling:touch; align-items:stretch;}
-  .daytab{flex:0 0 auto; background:#fff; border:1px solid var(--line); border-radius:11px; padding:8px 12px; cursor:pointer; min-width:72px; text-align:center; transition:.15s; position:relative;}
+  .daytab{flex:0 0 auto; background:#fff; border:1px solid var(--line); border-radius:13px; padding:9px 13px; cursor:pointer; min-width:88px; text-align:center; transition:.15s; position:relative;}
+  .daytab .zn{font-size:9.5px; color:var(--pine2); font-family:"Mitr"; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:110px;}
+  .pace-dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; vertical-align:middle;}
   .daytab .dd{font-family:"Mitr"; font-size:11.5px; color:var(--muted);}
   .daytab .dt{font-family:"Mitr"; font-weight:600; font-size:13.5px; color:var(--ink);}
   .daytab .tg{font-size:10px; margin-top:2px; padding:1px 6px; border-radius:20px; display:inline-block;}
@@ -85,7 +87,7 @@
   .varadd{font-family:"Mitr"; font-size:11.5px; border:1px dashed var(--rest); background:transparent; color:var(--pine2); border-radius:20px; padding:4px 10px; cursor:pointer;}
   .vardel{border:none; background:none; color:var(--muted); cursor:pointer; font-size:12px;}
   /* activity rows */
-  .row{display:grid; grid-template-columns:70px 1fr auto auto; gap:10px; background:#fff; border:1px solid var(--line); border-radius:13px; padding:11px 13px; margin-bottom:8px; box-shadow:var(--shadow); align-items:start;}
+  .row{display:grid; grid-template-columns:70px 1fr auto auto; gap:10px; background:#fff; border:1px solid var(--line); border-left:4px solid var(--row-accent,#C8D2CE); border-radius:14px; padding:11px 13px; margin-bottom:8px; box-shadow:var(--shadow); align-items:start;}
   .row .time{font-family:"Mitr"; font-weight:500; font-size:12px; color:var(--momiji); line-height:1.35;}
   .row .act{font-weight:600; font-size:14.5px;}
   .row.skip .act, .row.skip .time{text-decoration:line-through; opacity:.55;}
@@ -110,6 +112,10 @@
   .inctoggle .sw::after{content:""; position:absolute; width:14px; height:14px; border-radius:50%; background:#fff; top:2.5px; left:3px; transition:.15s;}
   .inctoggle.on .sw{background:var(--pine2);}
   .inctoggle.on .sw::after{left:17px;}
+  .zonechip{display:inline-flex; align-items:center; gap:5px; font-family:"Mitr"; font-size:11px; color:var(--pine2); background:#E7F2ED; border:1px solid #CDE4DB; border-radius:14px; padding:2px 10px;}
+  .extras{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 10px; align-items:center;}
+  .extras .xlb{font-family:"Mitr"; font-size:11px; color:var(--straw);}
+  .xchip{font-size:11px; color:#8A6A1F; background:var(--straw-soft); border:1px dashed #E0C98A; border-radius:12px; padding:2px 10px;}
   .dsub{display:flex; justify-content:flex-end; gap:20px; align-items:baseline; padding:10px 14px; background:#EAF0EC; border:1px solid #D6E2DA; border-radius:13px; margin-top:4px;}
   .dsub .lbl{font-family:"Mitr"; font-size:12px; color:var(--pine2);}
   .dsub .val{font-family:"Mitr"; font-weight:600; font-size:15px; color:var(--pine);}
@@ -178,7 +184,7 @@
   .dropzone.show{display:flex;}
   .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; font-family:"Mitr"; font-size:13px; padding:10px 18px; border-radius:12px; z-index:1000; opacity:0; transition:.25s; pointer-events:none; max-width:90vw;}
   .toast.show{opacity:1;}
-  footer{background:#21433A; color:#9FBEB2; padding:24px 0; margin-top:16px; font-size:12px; text-align:center;}
+  footer{background:#0B3A2E; color:#9FBEB2; padding:24px 0; margin-top:16px; font-size:12px; text-align:center;}
   footer b{color:#F4F1E9; font-family:"Mitr"; font-weight:400;}
   /* ---- mobile ---- */
   .mb-total{display:none;}
@@ -444,12 +450,14 @@ function buildPlan(){
   const tabsEl=document.getElementById('daytabs');
   const panelsEl=document.getElementById('daypanels');
   tabsEl.innerHTML=''; panelsEl.innerHTML='';
+  const TAGCOLOR={attraction:'var(--momiji)',food:'var(--straw)',shopping:'var(--train)',rest:'var(--rest)',logistic:'var(--pine2)',view:'var(--violet)',other:'#B9C2CC'};
+  const PACE_DOT={big:'#E0572F',med:'#C99327',light:'#12846A',rest:'#98A6B5'};
   S.days.forEach((day,i)=>{
     const rows=day.variants[day.activeVariant].rows;
     const t=document.createElement('div');
     t.className='daytab'+(day.inc?'':' off');
     t.dataset.i=i;
-    t.innerHTML=`<div class="dd">${day.dow}</div><div class="dt">${day.d}</div><div class="tg ${paceCls[day.pace]||''}">${day.tag}</div>`;
+    t.innerHTML=`<div class="dd">${day.dow}</div><div class="dt">${day.d}</div><div class="zn">📍 ${day.zone||''}</div><div class="tg ${paceCls[day.pace]||''}"><span class="pace-dot" style="background:${PACE_DOT[day.pace]||'#999'}"></span>${day.tag}</div>`;
     t.onclick=()=>{ui.day=i; ui.editing=null; buildPlan();};
     tabsEl.appendChild(t);
 
@@ -459,6 +467,7 @@ function buildPlan(){
     let html=`<div class="dhead">
       <div class="bd">${day.d}</div>
       <div><div class="ht">${day.title}</div><div class="hs">${day.sub||''} · ${day.date}</div></div>
+      ${day.zone?`<span class="zonechip">📍 ${day.zone}</span>`:''}
       <div class="pace ${paceCls[day.pace]||''}">${day.tag}</div>
       <div class="inctoggle ${day.inc?'on':''}" data-dayinc="${i}"><span>รวมงบ</span><div class="sw"></div></div>
       <span style="margin-left:auto;display:flex;gap:4px;">
@@ -478,12 +487,17 @@ function buildPlan(){
       if(day.variants.length>1) html+=`<button class="vardel" data-vardel="${i}" title="ลบตัวเลือกที่เลือก">✕ ลบตัวเลือกนี้</button>`;
       html+=`</div>`;
     }
+    if(day.extras&&day.extras.length){
+      html+=`<div class="extras"><span class="xlb">⏳ เหลือเวลา/แรง:</span>${day.extras.map(x=>`<span class="xchip">${x}</span>`).join('')}</div>`;
+    }
     // day edit form
     if(ui.editing && ui.editing.kind==='day' && ui.editing.d===i){
       html+=`<div class="dayedit"><div class="fgrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;">
         ${df('de-date','วันที่ (ISO)',day.date)}${df('de-d','แสดงวันที่',day.d)}${df('de-dow','วัน · D#',day.dow)}
         ${df('de-tag','ป้าย',day.tag)}${dsel('de-pace','โหมด',day.pace,['big','med','light','rest'])}
         ${df('de-title','ชื่อวัน',day.title)}${df('de-sub','คำอธิบาย',day.sub)}
+        ${df('de-zone','โซน (logistics)',day.zone||'')}
+        <div style="grid-column:1/-1;"><label style="font-size:11px;color:var(--muted);font-family:Mitr;display:block;margin-bottom:3px;">ทางเลือกถ้าเวลาเหลือ (คั่นด้วย ,)</label><input id="de-extras" value="${(day.extras||[]).join(', ')}" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:Sarabun;font-size:13.5px;"></div>
       </div><div class="ops"><button class="tbtn primary" data-desave="${i}">บันทึกหัววัน</button>
       <button class="tbtn" data-decancel="1">ยกเลิก</button></div></div>`;
     }
@@ -494,7 +508,7 @@ function buildPlan(){
         return;
       }
       const [main,costHtml]=rowHtml(r).split('|');
-      html+=`<div class="row ${r.inc?'':'skip'}">
+      html+=`<div class="row ${r.inc?'':'skip'}" style="--row-accent:${TAGCOLOR[r.tag]||'#C8D2CE'}">
         <div class="time">${r.time}</div>
         <div><div class="act">${r.act}</div>${main}</div>
         <div class="cost">${costHtml}</div>
@@ -543,7 +557,8 @@ function wire(){
   q('[data-desave]').forEach(el=>el.onclick=()=>{
     const i=+el.dataset.desave, d=S.days[i];
     d.date=v('de-date'); d.d=v('de-d'); d.dow=v('de-dow'); d.tag=v('de-tag');
-    d.pace=v('de-pace'); d.title=v('de-title'); d.sub=v('de-sub');
+    d.pace=v('de-pace'); d.title=v('de-title'); d.sub=v('de-sub'); d.zone=v('de-zone');
+    d.extras=v('de-extras')?v('de-extras').split(',').map(x=>x.trim()).filter(Boolean):[];
     ui.editing=null; persist(); buildPlan(); toast('บันทึกหัววันแล้ว');
   });
   q('[data-decancel]').forEach(el=>el.onclick=()=>{ui.editing=null; buildPlan();});
