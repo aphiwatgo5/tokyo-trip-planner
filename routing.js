@@ -15,7 +15,7 @@ window.RK = (function(){
     if(bakedLoaded) return baked;
     bakedLoaded=true;
     try{
-      const r=await fetch(PLACES_URL+'?v=2',{cache:'force-cache'});
+      const r=await fetch(PLACES_URL+'?v=3',{cache:'force-cache'});
       if(r.ok) baked=await r.json();
     }catch(e){}
     return baked;

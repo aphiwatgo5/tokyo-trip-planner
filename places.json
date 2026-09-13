@@ -11,41 +11,37 @@
   "lat": 35.7175966,
   "lng": 139.7975626
  },
- "senso-ji + nakamise|asakusa": {
+ "hanayashiki (รวมวันเดียวกับ asakusa)|ถัดจาก senso-ji": {
+  "lat": 35.7154975,
+  "lng": 139.7946127
+ },
+ "senso-ji + nakamise ช่วงพลบค่ำ|asakusa": {
   "lat": 35.7134032,
   "lng": 139.7955265
  },
- "เข้าสวน disneyland|maihama (เดิน 5 นาที)": {
+ "เข้าสวน + fantasyland + toontown|maihama (เดิน 5 นาที)": {
   "lat": 35.6364251,
   "lng": 139.8810001
  },
- "fantasyland + toontown|ในสวน": {
+ "เครื่องเล่นเพิ่ม + พาเหรดคริสต์มาส|ในสวน": {
   "lat": 35.6364251,
   "lng": 139.8810001
  },
- "เครื่องเล่นเพิ่ม + พาเหรด|ในสวน": {
-  "lat": 35.6364251,
-  "lng": 139.8810001
+ "anpanman museum|mark is minatomirai": {
+  "lat": 35.4632355,
+  "lng": 139.6289425
  },
- "tsurugaoka hachimangu + komachi-dori|kamakura sta.": {
-  "lat": 35.3251836,
-  "lng": 139.5561787
- },
- "ซื้อ enoden 1-day pass (noriorikun)|kamakura sta.": {
+ "enoden ไป hase|kamakura → hase": {
   "lat": 35.3112923,
   "lng": 139.5358669
  },
- "hase-dera + great buddha (kotoku-in)|hase sta.": {
+ "hase-dera|hase": {
   "lat": 35.3122687,
   "lng": 139.5333092
  },
- "นั่ง enoden ชมทะเล / enoshima|hase → enoshima": {
-  "lat": 35.7155517,
-  "lng": 139.4250583
- },
- "เดินทางไป teamlab|ueno → toyosu": {
-  "lat": 35.64938,
-  "lng": 139.789728
+ "ueno|kamakura → ueno": {
+  "lat": 35.7118212,
+  "lng": 139.7775694
  },
  "teamlab|ueno → toyosu": {
   "lat": 35.64938,
@@ -55,31 +51,27 @@
   "lat": 35.64938,
   "lng": 139.789728
  },
- "เดินทางไป odaiba|shin-toyosu → odaiba-kaihinkoen": {
-  "lat": 35.631084,
-  "lng": 139.7773535
+ "เดินเล่น ueno park ช่วงพลบค่ำ|ueno park": {
+  "lat": 35.7161484,
+  "lng": 139.777257
  },
- "odaiba|shin-toyosu → odaiba-kaihinkoen": {
-  "lat": 35.631084,
-  "lng": 139.7773535
+ "tokyo dome city|ueno → suidobashi": {
+  "lat": 35.704961,
+  "lng": 139.7525594
  },
- "legoland discovery|decks odaiba (เดิน 2 นาที)": {
-  "lat": 35.6288171,
-  "lng": 139.775669
+ "asobono! สนามเล่นในร่มยักษ์|tokyo dome city": {
+  "lat": 35.704961,
+  "lng": 139.7525594
  },
- "เดินเล่น odaiba ริมทะเล / gundam|odaiba": {
-  "lat": 35.631084,
-  "lng": 139.7773535
- },
- "warner bros studio tour|toshimaen": {
-  "lat": 35.74562,
-  "lng": 139.645745
+ "ueno|suidobashi → ueno": {
+  "lat": 35.7118212,
+  "lng": 139.7775694
  },
  "nihonbashi|ueno → nihonbashi": {
   "lat": 35.6825055,
   "lng": 139.7748426
  },
- "pokémon café (nihonbashi takashimaya)|nihonbashi": {
+ "pokémon café ⚡|nihonbashi takashimaya": {
   "lat": 35.6804441,
   "lng": 139.7743669
  },
@@ -87,23 +79,23 @@
   "lat": 35.6816079,
   "lng": 139.7683381
  },
- "เรือหงส์ shinobazu pond + เดิน ueno park|ueno park": {
-  "lat": 35.711875,
-  "lng": 139.7708647
+ "maxell aqua park|ueno → shinagawa": {
+  "lat": 35.6278989,
+  "lng": 139.7353316
  },
- "hanayashiki (สวนสนุกเก่าแก่ที่สุดของญี่ปุ่น)|ถัดจาก senso-ji": {
-  "lat": 35.7154975,
-  "lng": 139.7946127
+ "maxell aqua park|ชินางาวะ": {
+  "lat": 35.6278989,
+  "lng": 139.7353316
+ },
+ "ueno|tokyo → ueno": {
+  "lat": 35.7118212,
+  "lng": 139.7775694
  },
  "skytree|ueno → tokyo skytree": {
   "lat": 35.7100543,
   "lng": 139.8107141
  },
- "sumida aquarium|skytree": {
-  "lat": 35.7101011,
-  "lng": 139.8093338
- },
- "ueno + ของฝากดึก don quijote|skytree → ueno": {
+ "ueno|skytree → ueno": {
   "lat": 35.7118212,
   "lng": 139.7775694
  },
@@ -115,10 +107,6 @@
   "lat": 35.6252604,
   "lng": 139.4282753
  },
- "maxell aqua park|ชินางาวะ": {
-  "lat": 35.6278989,
-  "lng": 139.7353316
- },
  "ueno zoo|อูเอโนะ": {
   "lat": 35.7153426,
   "lng": 139.768896
@@ -126,10 +114,6 @@
  "sunshine city aquarium + pokémon center|อิเคบุคุโระ": {
   "lat": 35.7291388,
   "lng": 139.7202726
- },
- "asobono! สนามเล่นในร่มยักษ์|tokyo dome city": {
-  "lat": 35.704961,
-  "lng": 139.7525594
  },
  "sumida aquarium + skytree|โอชิอาเกะ": {
   "lat": 35.7101011,
