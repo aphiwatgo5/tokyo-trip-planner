@@ -256,6 +256,44 @@ const IDEAS=[
   {n:"Don Quijote Mega Shibuya 🐧",area:"Shibuya",tag:"shopping",est:0,note:"สาขาใหญ่สุดเปิด 24 ชม. — ถ้าอยากได้รอบดึกจริงจัง"},
 ];
 
+// ================= TODDLER ATTRACTION CATALOG (explore.html) =================
+// score /10 for age 1-2 = ความสนุกสำหรับวัย + ปลอดภัย + สะดวกรถเข็น + มีห้องนม/ห้องน้ำเด็ก
+// est = ราคาโดยประมาณ 2 ผู้ใหญ่ (เด็กต่ำกว่า 3-6 ขวบ ส่วนใหญ่ฟรี)
+// tier: top (แนะนำจริง ≤30-40 นาที) | cond (มีเงื่อนไข/เด็กโตคุ้มกว่า) | bonus (40-60 นาที)
+const KIDS_ATTRACTIONS=[
+  {n:"Anpanman Museum 🐜",zone:"Minatomirai, โยโกฮามะ",time:"~30-35 นาที",score:9.5,tier:"top",indoor:true,est:3600,dur:"ครึ่งวัน",note:"เหมาะกับ 1-2 ขวบที่สุดในลิสต์นี้ — ออกแบบมาเพื่อเด็ก 1-6 ขวบโดยเฉพาะ"},
+  {n:"Sanrio Puroland 🎀",zone:"Tama Center",time:"~35-40 นาที (จากชินจูกุ)",score:9.5,tier:"top",indoor:true,est:6600,dur:"ครึ่งวัน-ทั้งวัน",note:"ธีมพาร์คในร่ม Hello Kitty — ตัวเลือกวันฝนตกที่ดีที่สุด"},
+  {n:"Maxell Aqua Park 🐟",zone:"ชินางาวะ",time:"~15 นาที",score:9,tier:"top",indoor:true,est:4400,dur:"2 ชม.",note:"อควาเรียมในร่มติดสถานี โชว์โลมาสวย วงล้อสว่างไฟ"},
+  {n:"Ueno Zoo 🐼",zone:"อูเอโนะ",time:"~15 นาที",score:8.5,tier:"top",indoor:false,est:1200,dur:"2.5 ชม.",note:"สวนสัตว์เก่าแก่ ทางเดินกว้าง รถเข็นสะดวก (อยู่ในแผน D2 แล้ว)"},
+  {n:"Sunshine City Aquarium + Pokémon Center 🐠",zone:"อิเคบุคุโระ",time:"~20 นาที",score:8.5,tier:"top",indoor:true,est:4400,dur:"ครึ่งวัน",note:"อควาเรียมบนตึก + ร้านโปเกมอนใหญ่ในคอมเพล็กซ์เดียว — ครบจบในร่ม"},
+  {n:"Asobono! สนามเล่นในร่มยักษ์ 🧸",zone:"Tokyo Dome City",time:"~15 นาที",score:8.5,tier:"top",indoor:true,est:1600,dur:"2-3 ชม.",note:"สนามเล่นอินดอร์ใหญ่สุดแถวนี้ ออกแบบสำหรับเด็ก 0-6 ขวบโดยเฉพาะ"},
+  {n:"Sumida Aquarium + Skytree 🐧",zone:"โอชิอาเกะ",time:"~30 นาที",score:8.5,tier:"top",indoor:true,est:5000,dur:"ครึ่งวัน",note:"เพนกวิน+แมงกะพรุนเรืองแสง แวะ Solamachi ได้ (อยู่ในแผน D8 แล้ว)"},
+  {n:"Showa Kinen Park 🌳",zone:"ทาจิกาวะ",time:"~30-40 นาที (จากชินจูกุ)",score:8.5,tier:"top",indoor:false,est:1000,dur:"ครึ่งวัน",note:"สวนใหญ่มาก มีเรือนกระจก+สนามเด็ก ลานกว้างให้วิ่ง"},
+  {n:"The Railway Museum 🚂",zone:"โอมิยะ",time:"~35-40 นาที",score:8,tier:"top",indoor:true,est:2000,dur:"2-3 ชม.",note:"ดีมากแต่เด็ก 3+ สนุกกว่า — วัย 1-2 ขวบสนุกช่วงโซนของเล่น ~1.5-2 ชม.พอ"},
+  {n:"Tokyo Toy Museum 🪀",zone:"โยสึยะ",time:"~10 นาที",score:8,tier:"top",indoor:true,est:1600,dur:"1.5-2 ชม.",note:"พิพิธภัณฑ์ของเล่นไม้ในอาคารโรงเรียนเก่า มีโซน Bubbles สำหรับเด็กเล็ก"},
+  {n:"Minato Mirai เดินเล่น + Cosmoworld 🎡",zone:"โยโกฮามะ",time:"~35 นาที",score:8,tier:"top",indoor:false,est:2000,dur:"ครึ่งวัน",note:"โซนเด็กของ Cosmoworld + เดินริมทะเล คู่กับ Anpanman ได้เป็นวันโยโกฮามะ"},
+  {n:"Tokyo Sea Life Park + สวนคาไซ 🐡",zone:"คาไซ",time:"~20-25 นาที",score:7.5,tier:"top",indoor:true,est:1200,dur:"2-3 ชม.",note:"อควาเรียมราคาถูก ปลาทูน่าวงกลม ต่อรถไฟ 1 เด้งจาก คาไซริงไค"},
+  // ---- conditional ----
+  {n:"Pokémon Café ⚡",zone:"นิฮงบาชิ",time:"~20 นาที",score:7,tier:"cond",indoor:true,est:4000,dur:"1 ชม.",note:"ต้องจองล่วงหน้าหลายวัน ทางเว็บเท่านั้น (อยู่ในแผน D7 แล้ว)"},
+  {n:"teamLab Planets 🎨",zone:"โทโยซุ",time:"~25 นาที",score:7.5,tier:"cond",indoor:true,est:6400,dur:"1.5 ชม.",note:"ตื่นตามาก แต่ต้องถือเด็กช่วงลุยน้ำ จองตั๋วรอบเวลาล่วงหน้า (อยู่ในแผน D5 แล้ว)"},
+  {n:"Legoland Discovery 🧱",zone:"โอไดบะ",time:"~30 นาที",score:6.5,tier:"cond",indoor:true,est:5000,dur:"2.5 ชม.",note:"มีโซน Duplo ให้เด็กเล็ก แต่เหมาะหลัก 3+ (อยู่ในแผน D5 แล้ว)"},
+  {n:"Pokémon Center 🛍️",zone:"อิเคบุคุโระ/โยโกฮามะ",time:"~20 นาที",score:6.5,tier:"cond",indoor:true,est:0,dur:"20-30 นาที",note:"เป็นร้านของเล่นไม่ใช่สวนสนุก เที่ยวจบใน 20 นาที — แนะนำรวมกับ Sunshine Aquarium"},
+  {n:"Ghibli Museum 🎈",zone:"มิตากะ",time:"~35 นาที",score:6,tier:"cond",indoor:true,est:2000,dur:"2 ชม.",note:"ใต้ 4 ขวบฟรี แต่ของเล่นน้อยสำหรับวัยนี้ จองตั้งแต่วันที่ 10 ของเดือนก่อน ปิดวันอังคาร"},
+  {n:"Doraemon Museum 🐱",zone:"คาวาซากิ",time:"~30 นาที",score:6.5,tier:"cond",indoor:true,est:2000,dur:"2 ชม.",note:"ต้องจองล่วงหน้า ปิดวันอังคาร เด็กโตจะสนุกกว่า"},
+  {n:"Tokyo Disneyland 🎢",zone:"ไมฮามะ",time:"~50 นาที (จากอูเอโนะ)",score:6,tier:"cond",indoor:false,est:18000,dur:"ทั้งวัน",note:"แค่ ~15 นาทีจากสถานีโตเกียว มี Baby Care Center ครบ — เด็กโตสนุกกว่าแต่วัยนี้ก็ได้ (อยู่ในแผน D3 แล้ว)"},
+  {n:"KidZania Tokyo 👷",zone:"โทโยซุ",time:"~25 นาที",score:null,tier:"cond",indoor:true,est:0,dur:"—",note:"เข้าไม่ได้ถ้าต่ำกว่า 3 ขวบ — ข้ามไปก่อน"},
+  // ---- bonus 40-60 min ----
+  {n:"Zoorasia 🦒",zone:"โยโกฮามะ",time:"~50-60 นาที",score:9,tier:"bonus",indoor:false,est:1600,dur:"ครึ่งวัน",note:"สวนสัตว์ระดับตำนาน เงาเยอะ รถเข็นสะดวก กรงปลอดภัยเปิดกว้าง"},
+  {n:"Tama Zoo 🦁",zone:"ฮิโนะ",time:"~40-45 นาที",score:8.5,tier:"bonus",indoor:false,est:1200,dur:"ครึ่งวัน",note:"บัสซาฟารี + กระช้าลอยฟรี (ลิงตัวใหญ่จะแย่งของกิน — ระวัง)"},
+  {n:"Hakkeijima Sea Paradise 🐬",zone:"คานาซาวะ, โยโกฮามะ",time:"~45-50 นาที",score:8,tier:"bonus",indoor:false,est:4400,dur:"ทั้งวัน",note:"อควาเรียม + สวนสนุกริมทะเล เกาะเล็กน่าเดิน ลมเย็นๆ"},
+  {n:"Moominvalley Park 🌷",zone:"ฮันโน, ไซตามะ",time:"~50 นาที (จากอิเคบุคุโระ)",score:8,tier:"bonus",indoor:false,est:3000,dur:"ครึ่งวัน",note:"หุบเขามูมินน่ารักมาก บรรยากาศสงบ เหมาะเดินเล่นชิลๆ"},
+];
+const KIDS_TIPS=[
+  ["☔ วันฝนตก","Puroland / Anpanman / Asobono! / Aqua Park — ในร่มทั้งหมด"],
+  ["🎟️ ต้องจองล่วงหน้า","Pokémon Café, Ghibli, Doraemon Museum, teamLab"],
+  ["🏆 คอมโบ 1 วันสนุกสุด","โยโกฮามะ = Anpanman (เช้า) + เดิน Minato Mirai + ชิงช้าสวรรค์ Cosmoworld (บ่าย)"],
+  ["👶 เด็กต่ำกว่า 3 ขวบ","สวนสนุก/สวนสัตว์ส่วนใหญ่เข้าฟรี แต่วันหยุดคนเยอะมาก — ไปวันธรรมดา"],
+];
 // ================= TRIPS REGISTRY =================
 const LEGACY_KEY = "tokyo-trip-plan-v2";
 const Trips = {

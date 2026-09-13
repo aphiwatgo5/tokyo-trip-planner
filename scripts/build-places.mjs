@@ -28,9 +28,9 @@ function loadPlan(){
   }
   const src=fs.readFileSync(path.join(ROOT,'data.js'),'utf8');
   const sandboxStorage={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};
-  const fn=new Function('localStorage','window', src+'\n;return {SEED};');
-  const {SEED}=fn(sandboxStorage,undefined);
-  return {settings:SEED.settings, days:SEED.days};
+  const fn=new Function('localStorage','window', src+'\n;return {SEED, KIDS_ATTRACTIONS};');
+  const {SEED,KIDS_ATTRACTIONS}=fn(sandboxStorage,undefined);
+  return {settings:SEED.settings, days:SEED.days, catalog:KIDS_ATTRACTIONS||[]};
 }
 
 // clean an activity title into a geocodable query using the alias table
@@ -55,10 +55,11 @@ function rowPlace(row){
   if(m) name=m[1];
   const q=searchQuery(name);
   if(!q) return null;
-  const ft=String(row.ft||'').trim().toLowerCase();
-  const keys=[name.toLowerCase()+'|'+ft];
+  const clean=x=>String(x||'').replace(/[\u{1F300}-\u{1FAFF}]/gu,'').replace(/\s+/g,' ').trim().toLowerCase();
+  const ft=clean(row.ft);
+  const keys=[clean(name)+'|'+ft];
   const m2=name.match(/^(?:ไป|กลับ|เดินทางไป|เดินทางกลับ)\s+(.+)$/);
-  if(m2) keys.push(m2[1].toLowerCase()+'|'+ft);
+  if(m2) keys.push(clean(m2[1])+'|'+ft);
   return {keys, q};
 }
 
@@ -93,17 +94,28 @@ async function main(){
       }
     }
   }
-  console.log('Geocoding '+(places.size+1)+' unique queries…');
+  // catalog entries (explore.html) — keyed name|zone exactly like rows created from it
+  const catKeys=new Map();
+  for(const a of plan.catalog||[]){
+    const q=searchQuery(a.n.replace(/\s[\u{1F300}-\u{1FAFF}]/gu,'').trim());
+    if(q) catKeys.set(a.n.toLowerCase().replace(/\s[\u{1F300}-\u{1FAFF}]/gu,'').trim()+'|'+String(a.zone||'').toLowerCase(), {q});
+  }
+  console.log('Geocoding '+(places.size+catKeys.size+1)+' unique queries…');
   await geocode('Ueno Station Tokyo', cache);
   for(const [key,p] of places){
     const hit=await geocode(p.q, cache);
     if(hit) p.geo=hit;
   }
+  for(const [key,c] of catKeys){
+    const hit=await geocode(c.q, cache);
+    if(hit) c.geo=hit;
+  }
   fs.writeFileSync(cachePath, JSON.stringify(cache,null,1));
 
   // write places.json in routing.js lookup format: key "act|ft" → {lat,lng}
   const out={};
-  for(const [key,p] of places){ if(p.geo) out[key]=p.geo; }  // Map collapsed to unique keys already
+  for(const [key,p] of places){ if(p.geo) out[key]=p.geo; }
+  for(const [key,c] of catKeys){ if(c.geo) out[key]=c.geo; }
   out['hotel base|ueno']={lat:35.7121,lng:139.7780};   // hotel fixed at Ueno (matches settings.base)
   fs.writeFileSync(path.join(ROOT,'places.json'), JSON.stringify(out,null,1));
   console.log('places.json written: '+Object.keys(out).length+' entries');

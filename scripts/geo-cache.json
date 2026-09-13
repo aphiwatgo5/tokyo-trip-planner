@@ -86,5 +86,81 @@
  "Hase-dera Temple Kamakura": {
   "lat": 35.3122687,
   "lng": 139.5333092
+ },
+ "Sanrio Puroland Tama Center": {
+  "lat": 35.6252604,
+  "lng": 139.4282753
+ },
+ "Sunshine Aquarium Ikebukuro": {
+  "lat": 35.7291388,
+  "lng": 139.7202726
+ },
+ "Showa Kinen Park Tachikawa": {
+  "lat": 35.7122591,
+  "lng": 139.3943216
+ },
+ "The Railway Museum": {
+  "lat": 35.9217287,
+  "lng": 139.617861
+ },
+ "Pokémon Café ⚡": {
+  "lat": 35.6804441,
+  "lng": 139.7743669
+ },
+ "Pokémon Center️": {
+  "lat": 35.7100217,
+  "lng": 139.8122692
+ },
+ "Ghibli Museum Mitaka": {
+  "lat": 35.6961731,
+  "lng": 139.5706324
+ },
+ "Fujiko F. Fujio Museum Kawasaki": {
+  "lat": 35.6098389,
+  "lng": 139.5736331
+ },
+ "KidZania Tokyo": {
+  "lat": 35.6563097,
+  "lng": 139.7913488
+ },
+ "Zoorasia Yokohama Zoo": {
+  "lat": 35.4967796,
+  "lng": 139.5236471
+ },
+ "Tama Zoological Park Tokyo": {
+  "lat": 35.6507492,
+  "lng": 139.4008953
+ },
+ "Hakkeijima Sea Paradise": {
+  "lat": 35.3365027,
+  "lng": 139.6457835
+ },
+ "Moominvalley Park Hanno": {
+  "lat": 35.8719763,
+  "lng": 139.3258264
+ },
+ "Anpanman Museum Yokohama": {
+  "lat": 35.4632355,
+  "lng": 139.6289425
+ },
+ "Aqua Park Shinagawa": {
+  "lat": 35.6278989,
+  "lng": 139.7353316
+ },
+ "Tokyo Dome City": {
+  "lat": 35.704961,
+  "lng": 139.7525594
+ },
+ "Tokyo Toy Museum": {
+  "lat": 35.6897793,
+  "lng": 139.7179766
+ },
+ "Yokohama Cosmo World": {
+  "lat": 35.4556655,
+  "lng": 139.6355287
+ },
+ "Kasai Rinkai Park": {
+  "lat": 35.6422106,
+  "lng": 139.8594834
  }
 }

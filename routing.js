@@ -15,7 +15,7 @@ window.RK = (function(){
     if(bakedLoaded) return baked;
     bakedLoaded=true;
     try{
-      const r=await fetch(PLACES_URL+'?v=1',{cache:'force-cache'});
+      const r=await fetch(PLACES_URL+'?v=2',{cache:'force-cache'});
       if(r.ok) baked=await r.json();
     }catch(e){}
     return baked;
@@ -88,7 +88,7 @@ window.RK = (function(){
   let aliasMap=null;
   async function loadAlias(){
     if(aliasMap) return aliasMap;
-    try{ const r=await fetch('places-alias.json?v=1',{cache:'force-cache'});
+    try{ const r=await fetch('places-alias.json?v=2',{cache:'force-cache'});
       aliasMap=r.ok?(await r.json()).aliases||{}:{};
     }catch(e){ aliasMap={}; }
     return aliasMap;
@@ -134,7 +134,8 @@ window.RK = (function(){
   // base: {name, geo} hotel — prepended as waypoint 0 (or null)
   // classify legs: walk (no line / line 'เดิน') vs transit (has line)
   function placeKeys(row){
-    const norm=s=>String(s||'').trim().toLowerCase();
+    // strip emoji + collapse spaces on both sides — keys match build-places.mjs output
+    const norm=x=>String(x||'').replace(/[\u{1F300}-\u{1FAFF}]/gu,'').replace(/\s+/g,' ').trim().toLowerCase();
     const act=String(row.act||'').trim(), ft=String(row.ft||'').trim();
     const keys=[norm(act)+'|'+norm(ft), norm(act)+'|'];
     const m=act.match(/^(?:ไป|กลับ|เดินทางไป|เดินทางกลับ)\s+(.+)$/);
