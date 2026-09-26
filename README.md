@@ -101,3 +101,13 @@ gh api repos/{owner}/tokyo-trip-planner/pages -X POST \
 - ข้อมูลผู้ใช้เก็บใน localStorage ตาม origin (ย้ายเครื่อง/เว็บ ใช้ JSON export/import)
 
 ราคา/เวลาเป็นประมาณการ — ตรวจสอบเว็บทางการก่อนจองทุกครั้ง
+
+
+## Multi-trip templates (v3)
+
+สร้างทริปใหม่ได้จาก dropdown บนแถบเครื่องมือ → มีฐานข้อมูลเทมเพลต 8 วันใน `data-trips.js`:
+- 🏔️ **ภาคกลางญี่ปุ่น** — นาโกย่า/ทากายามะ/ชิรากาวะโก/คานาซาวะ (มีคำนวณ pass: Takayama-Hokuriku ¥19,800 คุ้มกว่าตั๋วเดี่ยว)
+- 🏯 **โอซาก้า–คันไซ** — ฐานเดียว Namba + นารา/เกียวโตะ/USJ (สรุป: ไม่ต้องซื้อ pass — IC card พอ)
+
+ทริปใหม่แต่ละทริปมี: แผน 9 วันครบ + งบ multi-city stays + ตัวเลือกอาหารต่อย่าน (foodAreas/foodRules ของทริปนั้น) + เช็กลิสต์จอง + packing checklist + ตารางเทียบบัตรรถไฟ — และ sync Excel สองทางได้เหมือนทริปโตเกียว (ชีต "ตั้งค่า" มี row ที่พักต่อเมือง)
+เพิ่มเทมเพลตใหม่: เพิ่ม object ใน `TRIP_TEMPLATES` แล้วรัน `node scripts/build-places.mjs` เพื่อ geocode สถานที่ใหม่ — `qa.mjs` จะตรวจทุกเทมเพลตอัตโนมัติก่อนทุก deploy

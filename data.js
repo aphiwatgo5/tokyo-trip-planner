@@ -572,6 +572,7 @@ function tpLoad(){
   if(!st){ st=JSON.parse(JSON.stringify(SEED)); }
   const before=JSON.stringify(st);
   st=migrate(st);
+  st.routes=st.routes||[];   // template trips / older states may omit routes — initStatic iterates it
   normalizeTimes(st);
   normalizeTags(st);
   if(JSON.stringify(st)!==before){

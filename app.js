@@ -69,7 +69,8 @@ function totalsOf(S){
   let train=0, entry=0, food=0, other=0;
   S.days.forEach(d=>{ const t=dayTotalsOf(S,d); train+=t.train; entry+=t.entry; food+=t.food; other+=t.other; });
   const st=S.settings;
-  const hotel = st.hotelTokyo*st.nightsTokyo + st.hotelShizuoka*st.nightsShizuoka;
+  const hotel=(st.stays&&st.stays.length)?st.stays.reduce((a,x)=>a+(x.per||0)*(x.nights||0),0)
+    : st.hotelTokyo*st.nightsTokyo + st.hotelShizuoka*st.nightsShizuoka;   // multi-city stays → legacy single-city
   const grand = train+entry+food+other+hotel;
   return {train, entry, food, other, hotel, grand, baht: Math.round(grand*st.fx)};
 }
@@ -146,10 +147,10 @@ function buildWorkbook(S){
     ["รายการ","ค่า","หมายเหตุ"],
     ["อัตราแลกเงิน (¥→฿)",st.fx,""],
     ["สไตล์อาหาร",st.foodStyle,"ประหยัด=0.8 กลาง=1.0 สบาย=1.3"],
-    ["โรงแรมโตเกียว (¥/คืน)",st.hotelTokyo,""],
-    ["คืนโตเกียว",st.nightsTokyo,""],
-    ["โรงแรม Shizuoka (¥/คืน)",st.hotelShizuoka,""],
-    ["คืน Shizuoka",st.nightsShizuoka,""],
+    ...((st.stays&&st.stays.length)
+      ? st.stays.flatMap(x=>[[`โรงแรม${x.city} (¥/คืน)`,x.per,""],[`คืน${x.city}`,x.nights,""]])
+      : [["โรงแรมโตเกียว (¥/คืน)",st.hotelTokyo,""],["คืนโตเกียว",st.nightsTokyo,""],
+         ["โรงแรม Shizuoka (¥/คืน)",st.hotelShizuoka,""],["คืน Shizuoka",st.nightsShizuoka,""]]),
     ["ผู้ใหญ่",st.adults,""],["เด็ก",st.children,""],
   ]),"ตั้งค่า");
   const plan=[["วันที่ (ISO)","วันที่","วัน","ป้าย","โหมด","รวมวัน?","ชื่อวัน","คำอธิบายวัน","ตัวเลือก","เวลา","กิจกรรม","แท็ก","เส้นทาง","ขนส่ง/สาย","ระยะเวลา","ค่าเดินทาง ¥","ค่าใช้จ่าย ¥","หมวด","รวมแถว?","โน้ต","dayKey"]];
@@ -197,7 +198,11 @@ function parseExcelState(buf, filename){
     (grid(setSh)||[]).forEach(row=>{
       const k=String(row[0]||'').trim(), val=row[1];
       if(!k) return;
-      if(k.includes('อัตราแลก')) settings.fx=parseFloat(val)||settings.fx;
+      const mHotel=k.match(/^โรงแรม(.+?)\s*\(¥\/คืน\)$/);
+      const mNight=k.match(/^คืน(.+)$/);
+      if(mHotel){ (settings._staysXL=settings._staysXL||[]).push({city:mHotel[1].trim(),per:parseFloat(val)||0,nights:0}); }
+      else if(mNight){ const stx=(settings._staysXL||[]).find(x=>x.city===mNight[1].trim()&&!x._n); if(stx){ stx.nights=parseInt(val)||0; stx._n=1; } }  // same city twice → fill in order
+      else if(k.includes('อัตราแลก')) settings.fx=parseFloat(val)||settings.fx;
       else if(k.includes('สไตล์อาหาร')) settings.foodStyle=FOOD_MULT[val]?val:settings.foodStyle;
       else if(k.includes('โตเกียว')&&k.includes('¥')) settings.hotelTokyo=parseFloat(val)||settings.hotelTokyo;
       else if(k.includes('คืนโตเกียว')) settings.nightsTokyo=parseInt(val)||0;
@@ -206,6 +211,9 @@ function parseExcelState(buf, filename){
       else if(k==='ผู้ใหญ่') settings.adults=parseInt(val)||2;
       else if(k==='เด็ก') settings.children=parseInt(val)||1;
     });
+    const staysXL=(settings._staysXL||[]).filter(x=>x.nights>0).map(x=>({city:x.city,per:x.per,nights:x.nights}));
+    if(staysXL.length){ settings.stays=staysXL; settings.hotelTokyo=Math.round(staysXL.reduce((a,x)=>a+x.per*x.nights,0)/staysXL.reduce((a,x)=>a+x.nights,0)); settings.nightsTokyo=staysXL.reduce((a,x)=>a+x.nights,0); }
+    delete settings._staysXL;
   }
 
   const planSh=findSheet('แผนรายวัน');
@@ -388,14 +396,18 @@ const AREA_RULES=[
   ['shinagawa', /shinagawa|ชินางาวะ/i],
 ];
 function mealPicks(S, day, row){
+  const FP=(S&&S.foodAreas&&Object.keys(S.foodAreas).length)?S.foodAreas:FOOD_PICKS;   // per-trip DB (templates) → global Tokyo fallback
+  const RULES=(S&&S.foodRules&&S.foodRules.length)?S.foodRules:AREA_RULES;
+  const defKey=FP===FOOD_PICKS?'ueno':Object.keys(FP)[0];
   const t1=`${row.ft||''} ${row.act||''}`;
   const t2=`${t1} ${day.zone||''}`;
-  let areaKey='ueno';
-  for(const [k,re] of AREA_RULES){ if(re.test(t1)){ areaKey=k; break; } }            // row's own words win
-  if(areaKey==='ueno'&&t2!==t1) for(const [k,re] of AREA_RULES){ if(re.test(t2)){ areaKey=k; break; } } // zone only as fallback
+  const rx=re=>typeof re==='string'?new RegExp(re,'i'):(re instanceof RegExp?re:null);   // rules survive JSON as strings
+  let areaKey=defKey;
+  for(const [k,re] of RULES){ const R=rx(re); if(R&&FP[k]&&R.test(t1)){ areaKey=k; break; } }            // row's own words win
+  if(areaKey===defKey&&t2!==t1) for(const [k,re] of RULES){ const R=rx(re); if(R&&FP[k]&&R.test(t2)){ areaKey=k; break; } } // zone only as fallback
   const start=row.start!=null?row.start:720;
   const meal=(start>=660&&start<=870)?'มื้อกลางวัน 🌤':'มื้อเย็น 🌙';
-  const area=FOOD_PICKS[areaKey]||FOOD_PICKS.ueno;
+  const area=FP[areaKey]||FP[defKey]||FOOD_PICKS.ueno;
   return {meal, areaKey, areaLabel:area.label, picks:area.items, anywhere:FOOD_ANYWHERE};
 }
 function showMealPicks(S, di, ri){

@@ -27,9 +27,17 @@
   "lat": 35.6364251,
   "lng": 139.8810001
  },
+ "minatomirai|ueno → minatomirai": {
+  "lat": 35.4572917,
+  "lng": 139.6329716
+ },
  "anpanman museum|mark is minatomirai": {
   "lat": 35.4632355,
   "lng": 139.6289425
+ },
+ "ลงใต้ต่อ → kamakura|minatomirai → yokohama → kamakura": {
+  "lat": 35.319003,
+  "lng": 139.5506805
  },
  "enoden ไป hase|kamakura → hase": {
   "lat": 35.3112923,
@@ -38,6 +46,14 @@
  "hase-dera|hase": {
   "lat": 35.3122687,
   "lng": 139.5333092
+ },
+ "great buddha (kotoku-in)|hase": {
+  "lat": 35.3157072,
+  "lng": 139.5351718
+ },
+ "กลับสถานี kamakura (ผ่าน komachi)|hase → kamakura sta.": {
+  "lat": 35.319003,
+  "lng": 139.5506805
  },
  "ueno|kamakura → ueno": {
   "lat": 35.7118212,
@@ -91,13 +107,141 @@
   "lat": 35.7118212,
   "lng": 139.7775694
  },
+ "ช้อปของฝาก ameyoko + เก็บของชิ้นเล็ก|ameyoko": {
+  "lat": 35.7100241,
+  "lng": 139.7745414
+ },
  "skytree|ueno → tokyo skytree": {
   "lat": 35.7100543,
   "lng": 139.8107141
  },
+ "ช้อปของฝาก tokyo solamachi ️|ใต้ skytree": {
+  "lat": 35.7102358,
+  "lng": 139.8119453
+ },
  "ueno|skytree → ueno": {
   "lat": 35.7118212,
   "lng": 139.7775694
+ },
+ "เดิน oasis 21 + ย่าน sakae ช่วงไฟ|oasis 21": {
+  "lat": 35.171088,
+  "lng": 136.9096446
+ },
+ "nagoya port|sakae → nagoya port": {
+  "lat": 35.09097,
+  "lng": 136.8780335
+ },
+ "port of nagoya public aquarium|nagoya port": {
+  "lat": 35.09097,
+  "lng": 136.8780335
+ },
+ "osu kannon + ตลาด osu เดินเบาๆ|osu": {
+  "lat": 35.1593589,
+  "lng": 136.901099
+ },
+ "เมืองเก่า sanmachi + สะพานคาไคบาชิ|sanmachi": {
+  "lat": 36.1408745,
+  "lng": 137.2596623
+ },
+ "ตลาดเช้า miyagawa|miyagawa river": {
+  "lat": 36.1446938,
+  "lng": 137.2578518
+ },
+ "พิพิธภัณฑ์ของเล่น showa-kan|ย่านเมืองเก่า": {
+  "lat": 36.1440555,
+  "lng": 137.2600239
+ },
+ "hida no sato หมู่บ้านกระท่อม|hida no sato": {
+  "lat": 36.1314919,
+  "lng": 137.2357015
+ },
+ "บัส → ชิรากาวะโก|takayama → shirakawa-go": {
+  "lat": 36.2620171,
+  "lng": 136.9068702
+ },
+ "ชิรากาวะโก ️|shirakawa-go": {
+  "lat": 36.2620171,
+  "lng": 136.9068702
+ },
+ "ปราสาทคานาซาวะ + เคนโรคุเอ็น|kenrokuen": {
+  "lat": 36.5643513,
+  "lng": 136.6620537
+ },
+ "พิพิธภัณฑ์ศิลปะแห่งศตวรรษที่ 21|21st century museum": {
+  "lat": 36.5608382,
+  "lng": 136.6582097
+ },
+ "ย่าน higashiyama เดินเย็น|higashiyama": {
+  "lat": 36.5729914,
+  "lng": 136.6650703
+ },
+ "kanazawa → nagoya|kanazawa → nagoya": {
+  "lat": 36.566651,
+  "lng": 136.662604
+ },
+ "dotonbori + hozenji ช่วงพลบค่ำ|dotonbori": {
+  "lat": 34.6673964,
+  "lng": 135.5059042
+ },
+ "ไปปราสาทโอซาก้า|namba → tanimachi 4-chome": {
+  "lat": 34.686527,
+  "lng": 135.5272461
+ },
+ "ปราสาทโอซาก้า + สวน nishinomaru|osaka castle park": {
+  "lat": 34.686527,
+  "lng": 135.5272461
+ },
+ "kids plaza osaka|kids plaza (umeda ฝั่ง tenma)": {
+  "lat": 34.7045253,
+  "lng": 135.5102709
+ },
+ "usj|namba → usj": {
+  "lat": 34.6656393,
+  "lng": 135.4324527
+ },
+ "universal wonderland (โซนเด็กเล็ก)|usj": {
+  "lat": 34.6656393,
+  "lng": 135.4324527
+ },
+ "โซน super nintendo + เครื่องเล่นเพิ่ม|usj": {
+  "lat": 34.6656393,
+  "lng": 135.4324527
+ },
+ "สวนกวางนารา + วัดโทไดจิ|nara park": {
+  "lat": 34.6829008,
+  "lng": 135.8545975
+ },
+ "ช้อป shinsaibashi-suji|shinsaibashi": {
+  "lat": 34.670845,
+  "lng": 135.500003
+ },
+ "ป่าไผ่ + สะพานโทเก็ตสึเกียว|arashiyama": {
+  "lat": 35.0167419,
+  "lng": 135.6711482
+ },
+ "tempozan|namba → osakako": {
+  "lat": 34.6562694,
+  "lng": 135.4309587
+ },
+ "พิพิธภัณฑ์สัตว์น้ำไคยูคัง|tempozan (osakako)": {
+  "lat": 34.6545464,
+  "lng": 135.4289211
+ },
+ "ชิงช้า tempozan ริมอ่าว|tempozan giant ferris wheel": {
+  "lat": 34.6562694,
+  "lng": 135.4309587
+ },
+ "expo park|namba → bampaku-kinen-koen": {
+  "lat": 34.812017,
+  "lng": 135.5301934
+ },
+ "อุทยาน expo’70 + tower of the sun|expo commemoration park": {
+  "lat": 34.8117138,
+  "lng": 135.5412127
+ },
+ "nifrel|nifrel (expocity)": {
+  "lat": 34.8062757,
+  "lng": 135.5336456
  },
  "anpanman museum|minatomirai, โยโกฮามะ": {
   "lat": 35.4632355,

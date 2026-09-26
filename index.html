@@ -8,8 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="data.js?v=12"></script>
-<script src="app.js?v=8"></script>
+<script src="data.js?v=14"></script>
+<script src="data-trips.js?v=2"></script>
+<script src="app.js?v=10"></script>
 <style>
   :root{
     --ink:#1B2430; --muted:#69758A; --paper:#F5F2EA; --card:#FFFFFF;
@@ -321,13 +322,43 @@
         <div class="sec-eyebrow">กันลืม</div>
         <h2 class="sec-title" style="font-size:19px;">เช็กลิสต์จองล่วงหน้า</h2>
         <div class="check" id="checklist-el"></div>
-        <div class="callout"><b>ห้ามลืม:</b> ตั๋วทารก Warner Bros (≤3 ขวบ ฟรี) ต้องอีเมลขอแยก ไม่มีขายออนไลน์</div>
+        <div class="callout"><b>ห้ามลืม:</b> บางที่ต้องจองล่วงหน้าเท่านั้น (Pokémon Café / Anpanman Museum) — ดูช่อง "ช่วงเวลา" ของแต่ละรายการ</div>
       </div>
     </div>
   </div>
 </section>
 
+<section id="prep-sec" style="display:none;background:#E7EAE3;">
+  <div class="wrap">
+    <div class="sec-eyebrow">🧳 เตรียมทริป</div>
+    <h2 class="sec-title" style="font-size:19px;">Packing checklist + บัตรทางไกล (ตามแผนนี้)</h2>
+    <style>
+      #prep-sec .card{background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 10px rgba(20,30,40,.06)}
+      #prep-sec h3{font-family:Mitr;font-weight:600;font-size:16px;margin:0 0 10px}
+      #prep-sec .pk-cat{margin-bottom:12px}
+      #prep-sec .pk-h{font-family:Mitr;font-weight:600;font-size:13px;color:#0E5B47;margin-bottom:4px;text-transform:capitalize}
+      #prep-sec .pk-it{display:flex;gap:8px;font-size:12.5px;padding:2.5px 0;align-items:flex-start;line-height:1.45}
+      #prep-sec .pk-it input{margin-top:3px;accent-color:#0E5B47}
+      #prep-sec .pk-done{color:#9AA5B1;text-decoration:line-through}
+      #prep-sec table.pk-table{width:100%;border-collapse:collapse;font-size:12.5px}
+      #prep-sec .pk-table th,#prep-sec .pk-table td{border-bottom:1px solid #E6E0D2;padding:5px 6px;text-align:left}
+      #prep-sec .pk-table th{color:#69758A;font-weight:500;font-size:11.5px}
+      #prep-sec .pk-pass{margin-top:9px;font-size:12.5px}
+      #prep-sec .pk-note{font-size:11px;color:#69758A;margin-top:2px}
+      #prep-sec .pk-verdict{margin-top:12px;padding:9px 12px;background:#E7F2ED;border-radius:8px;font-size:13px;font-family:Mitr;font-weight:500;color:#0E5B47}
+      #prep-sec .prep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+      @media(max-width:760px){#prep-sec .prep-grid{grid-template-columns:1fr}}
+    </style>
+    <div class="prep-grid">
+      <div class="card" id="packing-card"></div>
+      <div class="card" id="pass-card"></div>
+    </div>
+    <p class="tinynote">ราคา pass และค่ารถเป็นข้อมูลวางแผน (ประมาณ) — ตรวจราคาล่าสุดก่อนซื้อทุกครั้ง</p>
+  </div>
+</section>
+
 <section id="ideas-sec" style="background:#E7EAE3;">
+
   <div class="wrap">
     <div class="sec-eyebrow">💡 คลังไอเดีย</div>
     <h2 class="sec-title">ยังไม่อยู่ในแผน — attraction / food / shopping</h2>
@@ -366,6 +397,7 @@ function updateSyncInfo(){
 function rebuildAll(){
   S=tpLoad(); ui.day=0; ui.editing=null;
   buildPlan(); initBudget(); initStatic(); refreshTrips(); updateSyncInfo(); checkMigToast();
+  if(typeof renderPrep==='function') renderPrep();
   if(typeof renderIdeasPanel==='function') renderIdeasPanel();
 }
 function checkMigToast(){
@@ -403,15 +435,21 @@ function recalc(){
   let train=0, entry=0, food=0, other=0;
   S.days.forEach(d=>{ const t=dayTotals(d); train+=t.train; entry+=t.entry; food+=t.food; other+=t.other; });
   const st=S.settings;
-  const hotel = st.hotelTokyo*st.nightsTokyo + st.hotelShizuoka*st.nightsShizuoka;
+  let hotel, hd;
+  if(st.stays&&st.stays.length){          // multi-city: คิดจาก stays ของเทมเพลต
+    hotel=st.stays.reduce((a,x)=>a+(x.per||0)*(x.nights||0),0);
+    hd=st.stays.map(x=>`${x.nights}N ${x.city}`).join(' + ');
+  }else{
+    hotel=st.hotelTokyo*st.nightsTokyo + st.hotelShizuoka*st.nightsShizuoka;
+    hd=`${fmt(st.hotelTokyo)} × ${st.nightsTokyo} คืน`;
+    if(st.nightsShizuoka>0) hd+=` + Shizuoka ${fmt(st.hotelShizuoka)} × ${st.nightsShizuoka} คืน`;
+  }
   const grand = train+entry+food+other+hotel;
   document.getElementById('b-train').textContent=fmt(train);
   document.getElementById('b-entry').textContent=fmt(entry+other);
   document.getElementById('b-food').textContent=fmt(food);
   document.getElementById('b-foodmult').textContent=fm!==1?`×${fm}`:'';
   document.getElementById('b-hotel').textContent=fmt(hotel);
-  let hd=`${fmt(st.hotelTokyo)} × ${st.nightsTokyo} คืน`;
-  if(st.nightsShizuoka>0) hd+=` + Shizuoka ${fmt(st.hotelShizuoka)} × ${st.nightsShizuoka} คืน`;
   document.getElementById('b-hoteldesc').textContent=hd;
   document.getElementById('g-yen').textContent=fmt(grand);
   const baht="≈ ฿"+Math.round(grand*st.fx).toLocaleString();
@@ -668,6 +706,15 @@ function initBudget(){
   bind('in-hotel','hotelTokyo'); bind('in-nights','nightsTokyo');
   bind('in-hotel-s','hotelShizuoka'); bind('in-nights-s','nightsShizuoka');
   bind('in-fx','fx');
+  if(st.stays&&st.stays.length){
+    const hIn=document.getElementById('in-hotel'), nIn=document.getElementById('in-nights');
+    const totN=st.stays.reduce((a,x)=>a+x.nights,0)||1;
+    hIn.value=Math.round(st.stays.reduce((a,x)=>a+x.per*x.nights,0)/totN);
+    nIn.value=totN; nIn.disabled=true; nIn.title='ค้างหลายเมือง — แก้ได้ในชีต Excel (ตั้งค่า)';
+    hIn.addEventListener('input',()=>{ const per=parseFloat(hIn.value); if(per>0){ st.stays.forEach(x=>x.per=per); persist(); recalc(); } });
+    const s2=document.getElementById('in-hotel-s'), n2=document.getElementById('in-nights-s');
+    if(s2) s2.disabled=true; if(n2) n2.disabled=true;
+  }
 }
 
 // ================= ROUTES + CHECKLIST =================
@@ -737,14 +784,7 @@ function wireFiles(){
   tsel.onchange=async ()=>{
     if(tsel.value==='__new'){
       tsel.value=Trips.get().activeId;
-      const name=prompt('ชื่อทริปใหม่:','ทริปใหม่');
-      if(!name) return;
-      const id=Trips.create(name);
-      Trips.saveData(id,{meta:{filename:'',loadedAt:new Date().toISOString(),source:'seed',schema:2},
-        settings:JSON.parse(JSON.stringify(SEED.settings)),
-        days:[{date:new Date().toISOString().slice(0,10),d:thaiDate(new Date().toISOString().slice(0,10)),dow:'วันที่ 1',tag:'วันกลาง',pace:'med',inc:true,title:'วันแรกของทริป',sub:'',activeVariant:0,variants:[{name:'แผนหลัก',rows:[]}]}],
-        routes:[],checks:[]});
-      rebuildAll();
+      openTemplatePicker();
       return;
     }
     Trips.setActive(tsel.value);
@@ -763,6 +803,76 @@ function wireFiles(){
   });
 }
 
+
+// ================= TRIP TEMPLATES + PREP (packing / pass compare) =================
+function openTemplatePicker(){
+  let ov=document.getElementById('tpl-overlay'); if(ov) ov.remove();
+  ov=document.createElement('div'); ov.id='tpl-overlay';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(12,22,18,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+  const tpls=(typeof TRIP_TEMPLATES!=='undefined')?TRIP_TEMPLATES:[];
+  const card=(icon,name,blurb,i)=>`<div data-i="${i}" style="background:#fff;border-radius:14px;padding:16px;width:min(300px,92vw);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.18);border:2px solid transparent;" onmouseover="this.style.borderColor='#0E5B47'" onmouseout="this.style.borderColor='transparent'"><div style="font-size:30px">${icon}</div><div style="font-family:Mitr;font-weight:600;font-size:16px;margin:6px 0 4px">${name}</div><div style="font-size:12.5px;color:#69758A;line-height:1.55">${blurb}</div></div>`;
+  ov.innerHTML=`<div style="background:#F5F2EA;border-radius:18px;padding:22px;max-width:780px;width:100%;max-height:86vh;overflow:auto;">
+    <div style="font-family:Mitr;font-weight:600;font-size:20px;">สร้างทริปใหม่ 🗺️</div>
+    <div style="font-size:13px;color:#69758A;margin:4px 0 14px;">เลือกฐานข้อมูลเทมเพลต 8 วัน — สร้างแล้วแก้ได้ทุกอย่าง (เวลา/งบ/ร้านอาหาร) + sync Excel สองทางเหมือนเดิม</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      ${tpls.map((t,i)=>card(t.icon,t.name,t.blurb+' · ที่พักตั้งต้น ¥'+t.settings.stays.reduce((a,x)=>a+x.per*x.nights,0).toLocaleString(),i)).join('')}
+      ${card('✏️','เริ่มว่างๆ','ตารางเปล่า 1 วัน — วางแผนเองทั้งหมด',-1)}
+    </div>
+    <div style="text-align:right;margin-top:14px"><button id="tpl-x" style="border:0;background:#1B2430;color:#fff;font-family:Mitr;border-radius:8px;padding:8px 16px;cursor:pointer">ยกเลิก</button></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  ov.addEventListener('click',e=>{
+    if(e.target===ov) return close();
+    if(e.target.id==='tpl-x') return close();
+    const c=e.target.closest('[data-i]'); if(!c) return;
+    const i=+c.dataset.i; close();
+    if(i<0){
+      const name=prompt('ชื่อทริปใหม่:','ทริปใหม่'); if(!name) return;
+      const id=Trips.create(name);
+      Trips.saveData(id,{meta:{filename:'',loadedAt:new Date().toISOString(),source:'seed',schema:2},
+        settings:JSON.parse(JSON.stringify(SEED.settings)),
+        days:[{date:new Date().toISOString().slice(0,10),d:thaiDate(new Date().toISOString().slice(0,10)),dow:'วันที่ 1',tag:'วันกลาง',pace:'med',inc:true,title:'วันแรกของทริป',sub:'',activeVariant:0,variants:[{name:'แผนหลัก',rows:[]}]}],
+        routes:[],checks:[]});
+      rebuildAll(); return;
+    }
+    const t=TRIP_TEMPLATES[i], id=Trips.create(t.name);
+    Trips.saveData(id, mkState(t));
+    rebuildAll();
+    toast('สร้าง "'+t.name+'" แล้ว ✓ แก้ได้ทุกอย่าง — เช็กหัวข้อ 🧳 เตรียมทริปด้านล่าง');
+  });
+}
+function renderPrep(){
+  const sec=document.getElementById('prep-sec'); if(!sec) return;
+  const hasPack=S.packing&&Object.keys(S.packing).length>0, hasPass=S.passCompare&&S.passCompare.legs&&S.passCompare.legs.length;
+  sec.style.display=(hasPack||hasPass)?'':'none';
+  const packEl=document.getElementById('packing-card'), passEl=document.getElementById('pass-card');
+  if(packEl) packEl.style.display=hasPack?'':'none';
+  if(passEl) passEl.style.display=hasPass?'':'none';
+  if(hasPack&&packEl){
+    if(!S.packingDone) S.packingDone={};
+    const done=Object.keys(S.packingDone).filter(k=>S.packingDone[k]).length;
+    const total=Object.values(S.packing).reduce((a,x)=>a+x.length,0);
+    packEl.innerHTML=`<h3>🎒 Packing Checklist <span style="font-size:12px;color:#69758A;font-weight:400">${done}/${total}</span></h3>`+
+      Object.entries(S.packing).map(([cat,items])=>`<div class="pk-cat"><div class="pk-h">${cat.replace(/_/g,' ')}</div>${
+        items.map((it,ii)=>{const key=cat+':'+ii;return `<label class="pk-it"><input type="checkbox" data-pk="${key.replace(/"/g,'&quot;')}" ${S.packingDone[key]?'checked':''}><span class="${S.packingDone[key]?'pk-done':''}">${it}</span></label>`;}).join('')
+      }</div>`).join('')+
+      `<div style="font-size:11px;color:#69758A;margin-top:8px">เก็บในเครื่องนี้ (ตามทริป) — ไม่เข้าไฟล์ Excel</div>`;
+    packEl.querySelectorAll('[data-pk]').forEach(cb=>cb.onchange=()=>{S.packingDone[cb.dataset.pk]=cb.checked; tpSave(S); renderPrep();});
+  }
+  if(hasPass&&passEl){
+    const pc=S.passCompare;
+    const all=pc.legs.reduce((a,l)=>a+l.fare,0), cov=pc.legs.filter(l=>l.pass).reduce((a,l)=>a+l.fare,0);
+    passEl.innerHTML=`<h3>🚄 บัตรทางไกลคุ้มไหม?</h3>
+      <table class="pk-table"><thead><tr><th>สายที่ใช้จริง</th><th style="text-align:right">เดี่ยว</th><th>pass ครอบคลุม</th></tr></thead><tbody>
+      ${pc.legs.map(l=>`<tr><td>${l.from} <span style="color:#9AA5B1">· ${l.mode}</span></td><td style="text-align:right">¥${l.fare.toLocaleString()}</td><td>${l.pass?'✓':'—'}</td></tr>`).join('')}
+      <tr style="font-weight:600"><td>รวม</td><td style="text-align:right">¥${all.toLocaleString()}</td><td>¥${cov.toLocaleString()}</td></tr></tbody></table>
+      ${pc.passes.map(pp=>`<div class="pk-pass"><b>${pp.name}</b> — ¥${pp.price.toLocaleString()}<div class="pk-note">${pp.note}</div></div>`).join('')}
+      <div class="pk-verdict">🎯 ${pc.verdict}</div>
+      ${pc.note?`<div class="pk-note">${pc.note}</div>`:''}`;
+  }
+}
+
 // ================= INIT =================
 initBudget();
 initStatic();
@@ -771,6 +881,7 @@ wireFiles();
 refreshTrips();
 updateSyncInfo();
 checkMigToast();
+renderPrep();
 renderIdeasPanel();
 
 function renderIdeasPanel(){

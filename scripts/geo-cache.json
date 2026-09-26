@@ -162,5 +162,125 @@
  "Kasai Rinkai Park": {
   "lat": 35.6422106,
   "lng": 139.8594834
+ },
+ "Minatomirai": {
+  "lat": 35.4572917,
+  "lng": 139.6329716
+ },
+ "Kamakura Station": {
+  "lat": 35.319003,
+  "lng": 139.5506805
+ },
+ "Great Buddha   🗿": {
+  "lat": 35.3157072,
+  "lng": 139.5351718
+ },
+ "Ameyoko Ueno": {
+  "lat": 35.7100241,
+  "lng": 139.7745414
+ },
+ "Tokyo Solamachi": {
+  "lat": 35.7102358,
+  "lng": 139.8119453
+ },
+ "Oasis 21 Nagoya": {
+  "lat": 35.171088,
+  "lng": 136.9096446
+ },
+ "Nagoya Port": {
+  "lat": 35.09097,
+  "lng": 136.8780335
+ },
+ "Port of Nagoya Aquarium": {
+  "lat": 35.09097,
+  "lng": 136.8780335
+ },
+ "Osu Shopping Street Nagoya": {
+  "lat": 35.1593589,
+  "lng": 136.901099
+ },
+ "Sanmachi Suji Takayama": {
+  "lat": 36.1408745,
+  "lng": 137.2596623
+ },
+ "Miyagawa Morning Market Takayama": {
+  "lat": 36.1446938,
+  "lng": 137.2578518
+ },
+ "Takayama Showa-kan": {
+  "lat": 36.1440555,
+  "lng": 137.2600239
+ },
+ "Shirakawa-go": {
+  "lat": 36.2620171,
+  "lng": 136.9068702
+ },
+ "Kenrokuen Garden Kanazawa": {
+  "lat": 36.5643513,
+  "lng": 136.6620537
+ },
+ "21st Century Museum of Contemporary Art Kanazawa": {
+  "lat": 36.5608382,
+  "lng": 136.6582097
+ },
+ "Kanazawa → Nagoya": {
+  "lat": 36.566651,
+  "lng": 136.662604
+ },
+ "Dotonbori Osaka": {
+  "lat": 34.6673964,
+  "lng": 135.5059042
+ },
+ "Kids Plaza Osaka": {
+  "lat": 34.7045253,
+  "lng": 135.5102709
+ },
+ "Universal Studios Japan": {
+  "lat": 34.6656393,
+  "lng": 135.4324527
+ },
+ "Nara Park": {
+  "lat": 34.6829008,
+  "lng": 135.8545975
+ },
+ "Shinsaibashi Osaka": {
+  "lat": 34.670845,
+  "lng": 135.500003
+ },
+ "Arashiyama Bamboo Grove Kyoto": {
+  "lat": 35.0167419,
+  "lng": 135.6711482
+ },
+ "Osaka Aquarium Kaiyukan": {
+  "lat": 34.6545464,
+  "lng": 135.4289211
+ },
+ "Expo Park": {
+  "lat": 34.812017,
+  "lng": 135.5301934
+ },
+ "Nifrel Osaka": {
+  "lat": 34.8062757,
+  "lng": 135.5336456
+ },
+ "Hida Folk Village Takayama": {
+  "lat": 36.1314919,
+  "lng": 137.2357015
+ },
+ "Osaka Castle Park": {
+  "lat": 34.686527,
+  "lng": 135.5272461
+ },
+ "Tempozan Ferris Wheel Osaka": {
+  "lat": 34.6562694,
+  "lng": 135.4309587
+ },
+ "Higashi Chaya District": {
+  "lat": 36.5729914,
+  "lng": 136.6650703
+ },
+ "Bampaku Kinen Koen Suita": {
+  "lat": 34.8117138,
+  "lng": 135.5412127
  }
 }

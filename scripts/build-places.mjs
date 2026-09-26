@@ -30,7 +30,15 @@ function loadPlan(){
   const sandboxStorage={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};
   const fn=new Function('localStorage','window', src+'\n;return {SEED, KIDS_ATTRACTIONS};');
   const {SEED,KIDS_ATTRACTIONS}=fn(sandboxStorage,undefined);
-  return {settings:SEED.settings, days:SEED.days, catalog:KIDS_ATTRACTIONS||[]};
+  let tplDays=[];
+  const tpath=path.join(ROOT,'data-trips.js');
+  if(fs.existsSync(tpath)){
+    // templates use R() from data.js — eval both together (mirrors browser script order)
+    const srcBoth=src+'\n'+fs.readFileSync(tpath,'utf8');
+    const fnT=new Function('localStorage','window',srcBoth+'\n;return {TRIP_TEMPLATES};');
+    for(const t of (fnT(sandboxStorage,undefined).TRIP_TEMPLATES||[])) tplDays=tplDays.concat(t.days);
+  }
+  return {settings:SEED.settings, days:SEED.days.concat(tplDays), catalog:KIDS_ATTRACTIONS||[]};
 }
 
 // clean an activity title into a geocodable query using the alias table
