@@ -365,6 +365,116 @@ function shiftFollowing(day, fromIdx, deltaMin){
   return n;
 }
 
+// ---------- plan health check (port กฎ qa.mjs เป็น warnings — ใช้กับ AI import / ปุ่มตรวจแผน) ----------
+function qaCheck(state){
+  const warns=[];
+  (state.days||[]).forEach((d,di)=>{
+    const dl=(d.d||('Day '+(di+1)))+' (D'+(di+1)+')';
+    const rows=(d.variants[d.activeVariant||0]||{}).rows||[];
+    let prev=null;
+    rows.forEach((r,ri)=>{
+      if(!r.act){ warns.push(dl+': แถว '+(ri+1)+' ไม่มีชื่อกิจกรรม'); return; }
+      if(r.start==null){ if(ri>0) warns.push(dl+': "'+r.act.slice(0,18)+'" ไม่มีเวลาเริ่ม'); return; }
+      const end=r.start+(r.durMin||0);
+      if(r.durMin>360) warns.push(dl+': "'+r.act.slice(0,18)+'" นานเกิน 6 ชม.');
+      if(end>=1440) warns.push(dl+': "'+r.act.slice(0,18)+'" ข้ามเที่ยงคืน');
+      if(prev){
+        if(r.start<prev.start) warns.push(dl+': "'+r.act.slice(0,18)+'" เวลาไม่เรียงตามลำดับแถว');
+        if(r.start<prev.end) warns.push(dl+': "'+r.act.slice(0,18)+'" ทับเวลาแถวก่อนหน้า');
+      }
+      prev={start:r.start,end:r.start+(r.durMin||0)};
+    });
+  });
+  return warns;
+}
+
+// ---------- AI handoff: แพ็กเกจ (พรอมป์ตไทย + JSON) สำหรับ AI ที่ค้นเว็บได้ เช่น z.ai ----------
+function buildAIPackage(S){
+  const T=totalsOf(S);
+  const tripName=(Trips.activeTrip?((Trips.activeTrip(Trips.get())||{}).name):'')||'ทริป';
+  const compact={
+    trip:{name:tripName, currency:'JPY', fxYenToThb:S.settings.fx, foodStyle:S.settings.foodStyle,
+      homeBase:S.settings.baseName||'', currentGrandBudgetYen:Math.round(T.grand)},
+    days:S.days.map((d,i)=>({dayNo:i+1, date:d.date||'', label:d.d||'', title:d.title||'', pace:d.pace||'med',
+      rows:(d.variants[d.activeVariant||0]||{}).rows.map(r=>({time:r.time||'', act:r.act||'', area:r.ft||'',
+        transit:r.line||'', duration:r.dur||'', trainYen:r.train||0, costYen:r.cost||0, costType:r.type||'',
+        included:r.inc!==false, pinned:!!r.pin, note:r.note||'', geo:r.geo||null}))}))
+  };
+  const prompt=
+`# บทบาท
+คุณคือที่ปรึกษาวางแผนทริปญี่ปุ่นมืออาชีพ สำหรับครอบครัว 2 ผู้ใหญ่ + เด็ก 1-2 ขวบ (ต้องมีเวลางีบ/พัก เดินไม่ไกล)
+
+# งาน
+ปรับปรุงแผนทริปด้านล่าง แล้ว **ตอบกลับเป็น JSON โครงเดิมทั้งไฟล์** ใน \`\`\`json fence เดียว (ห้ามมีคำอธิบายนอก fence)
+
+# กติกา (ต้องคงไว้ทั้งหมด)
+1. จัด geo-cluster: วันละ 1 ทิศทาง ลดเวลาต่อรถ — กิจกรรมในวันเดียวกันต้องอยู่ย่านเดียวกัน/ใกล้กัน
+2. เวลากิจกรรมอยู่ใน 09:00–20:00 และทุกวันต้องมีแถวพัก/งีบสำหรับเด็ก (tag rest)
+3. **ห้ามแก้เวลา/ลบ/ย้ายแถวที่ "pinned": true** (รถไฟ/สิ่งที่จองไว้แล้ว) และห้ามลบแถวเครื่องบิน (act ขึ้นต้น ✈️/TG)
+4. **ตรวจเวลาเปิด-ปิดจริงจากเว็บ** ของสถานที่ที่แตะ (ใช้ web search) แล้วค่อยกำหนดเวลา — ถ้าปิดวันนั้นให้สลับกับกิจกรรมอื่น
+5. งบรวมห้าเกิน currentGrandBudgetYen + 15%
+6. แถวเดินทางให้ระบุ transit เช่น "JR Yamanote" และ trainYen ต่อ 2 คน
+7. คง field ทุกตัวตาม schema — เพิ่ม/ลด/สลับ/แก้เวลา แถวได้ แต่ห้ามเปลี่ยนชื่อ field
+
+# Schema ของคำตอบ (โครงเดียวกับ input)
+\`\`\`json
+{"days":[{"dayNo":1,"date":"YYYY-MM-DD","label":"","title":"","pace":"med|light|big|rest",
+  "rows":[{"time":"HH:MM-HH:MM","act":"","area":"","transit":"","duration":"","trainYen":0,"costYen":0,
+           "costType":"food|entry|misc|","included":true,"pinned":false,"note":"","geo":null}]}]}
+\`\`\`
+
+# แผนปัจจุบัน
+\`\`\`json
+${JSON.stringify(compact,null,1)}
+\`\`\``;
+  return prompt;
+}
+
+// ---------- AI handoff: parse คำตอบกลับ → state (ผ่าน pipeline เดียวกับ Excel import) ----------
+function parseAIReturn(text, fallbackSettings){
+  const s=String(text||'');
+  // try EVERY ```json fence (the AI may echo the schema example first) — take the first one that parses AND has days[]
+  const fences=[...s.matchAll(/```(?:json)?\s*([\s\S]*?)```/gi)].map(m=>m[1].trim()).filter(t=>t.startsWith('{'));
+  let j=null;
+  for(const f of fences.concat(s.includes('{')?[s.slice(s.indexOf('{'), s.lastIndexOf('}')+1)]:[])){
+    try{ const p=JSON.parse(f); if(p && Array.isArray(p.days)){ j=p; break; } }catch(e){}
+  }
+  if(!j) return {ok:false, error:'ไม่พบ JSON ที่มี days[] ในคำตอบ — ต้องวางคำตอบที่มี ```json ... ``` ตาม schema'};
+  const normRows=rows=>(rows||[]).filter(r=>r&&r.act).map(r=>({time:String(r.time||''), act:String(r.act), tag:TAGS[r.tag]?r.tag:undefined,
+    ft:String(r.area||r.ft||''), line:String(r.transit||r.line||''), dur:String(r.duration||r.dur||''),
+    train:(+r.trainYen)||(+r.train)||0, cost:(+r.costYen)||(+r.cost)||0,
+    type:['food','entry','misc'].includes(r.costType||r.type)?(r.costType||r.type):'',
+    inc:r.included!==false && r.inc!==false, note:String(r.note||''), pin:!!(r.pinned||r.pin)}));
+  const state={meta:{filename:'ai-'+new Date().toISOString().slice(0,10), loadedAt:new Date().toISOString(), source:'ai', schema:11},
+    settings:(fallbackSettings?JSON.parse(JSON.stringify(fallbackSettings)):(typeof SEED!=='undefined'?JSON.parse(JSON.stringify(SEED.settings)):{})),
+    days:j.days.map(d=>({date:String(d.date||''), d:String(d.label||d.d||('Day '+(d.dayNo||''))), dow:'', tag:'วันกลาง',
+      pace:['big','med','light','rest'].includes(d.pace)?d.pace:'med', inc:true,
+      title:String(d.title||d.label||'วัน'), sub:'', activeVariant:0,
+      variants:[{name:'แผนหลัก', rows:normRows(d.rows)}]})),
+    routes:[], checks:[], parked:[]};
+  normalizeTimes(state); normalizeTags(state);
+  return {ok:true, state, warns:qaCheck(state),
+    summary:{days:state.days.length, acts:state.days.reduce((a,d)=>a+d.variants[0].rows.length,0)}};
+}
+
+// ---------- AI handoff: diff แผนเดิม vs แผนใหม่ (เทียบชื่อกิจกรรม) ----------
+function diffPlan(oldS, newS){
+  const key=r=>String(r.act||'').replace(/\s+/g,' ').trim().toLowerCase();
+  const activeRows=St=>{ const m=new Map();
+    (St.days||[]).forEach((d,di)=>((d.variants[d.activeVariant||0]||{}).rows||[]).forEach(r=>{ const k=key(r); if(!m.has(k)) m.set(k,{day:di,r}); }));
+    return m; };
+  const A=activeRows(oldS), B=activeRows(newS);
+  const added=[], removed=[], moved=[], retime=[];
+  B.forEach((v,k)=>{ const o=A.get(k);
+    if(!o) added.push({day:v.day, act:v.r.act});
+    else if(o.day!==v.day) moved.push({act:v.r.act, from:(oldS.days[o.day]||{}).d||('D'+(o.day+1)), to:(newS.days[v.day]||{}).d||('D'+(v.day+1))});
+    else if(String(o.r.time||'')!==String(v.r.time||'')) retime.push({act:v.r.act, oldT:o.r.time||'—', newT:v.r.time||'—'});
+  });
+  A.forEach((v,k)=>{ if(!B.has(k)) removed.push({day:v.day, act:v.r.act}); });
+  const T1=totalsOf(oldS), T2=totalsOf(newS);
+  return {added, removed, moved, retime, oldGrand:T1.grand, newGrand:T2.grand, budgetDelta:Math.round(T2.grand-T1.grand)};
+}
+
 // ---------- reflow a day so times follow the row ORDER (drag/↑↓ → เวลาเรียงตาม) ----------
 // Rules (aligned with scripts/qa.mjs):
 // - first timed row of the day = anchor: keeps its start (day doesn't drift)
@@ -527,5 +637,6 @@ async function importFlow(buf, filename){
 
 return {FOOD_MULT, foodMultOf, dayTotalsOf, totalsOf, toast, modal,
         buildWorkbook, downloadExcel, parseExcelState, importFlow,
-        tagChip, renderIdeas, shiftFollowing, reflowDay, mealPicks, showMealPicks};
+        tagChip, renderIdeas, shiftFollowing, reflowDay, mealPicks, showMealPicks,
+        qaCheck, buildAIPackage, parseAIReturn, diffPlan};
 })();

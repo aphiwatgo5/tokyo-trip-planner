@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="data.js?v=14"></script>
-<script src="app.js?v=12"></script>
+<script src="app.js?v=14"></script>
 <style>
   :root{
     --ink:#1B2430; --muted:#69758A; --paper:#F5F2EA; --card:#FFFFFF;
@@ -113,6 +113,25 @@
   .hint{font-size:11.5px; color:var(--muted); margin-top:10px; line-height:1.5;}
   .dropzone{position:fixed; inset:0; background:rgba(33,67,58,.88); z-index:999; display:none; align-items:center; justify-content:center; color:#fff; font-family:"Mitr"; font-size:22px; text-align:center;}
   .dropzone.show{display:flex;}
+  /* ---------- AI handoff modal ---------- */
+  .aiwrap{position:fixed; inset:0; background:rgba(32,36,46,.55); z-index:1100; display:none; align-items:center; justify-content:center; padding:16px;}
+  .aiwrap.show{display:flex;}
+  .aim{background:#fff; border-radius:16px; box-shadow:0 12px 40px rgba(32,36,46,.25); width:min(880px,96vw); max-height:88vh; display:flex; flex-direction:column; overflow:hidden;}
+  .aim-head{padding:14px 18px 0; display:flex; align-items:baseline; gap:10px;}
+  .aim-head h3{font-family:"Mitr"; font-weight:600; font-size:17px; margin:0;}
+  .aim-head .x{margin-left:auto; border:0; background:none; font-size:18px; cursor:pointer; color:var(--muted);}
+  .aim-tabs{display:flex; gap:6px; padding:10px 18px 0;}
+  .aim-tabs button{font-family:"Mitr"; font-size:13px; border:1px solid var(--line); background:#F4F5F2; border-radius:10px 10px 0 0; padding:8px 16px; cursor:pointer; color:var(--ink);}
+  .aim-tabs button.on{background:var(--pine2); color:#fff; border-color:var(--pine2);}
+  .aim-body{padding:14px 18px 18px; overflow-y:auto; flex:1; font-size:13px;}
+  .aim textarea{width:100%; min-height:200px; border:1px solid var(--line); border-radius:10px; padding:10px; font-family:"Sarabun"; font-size:12px; background:#FBFCFA; box-sizing:border-box;}
+  .aim textarea:focus{outline:none; border-color:var(--pine2);}
+  .aim .ops{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; justify-content:flex-end; align-items:center;}
+  .aim .note{font-size:11.5px; color:var(--muted); margin:6px 0 0; line-height:1.5;}
+  .diffbox{border:1px solid var(--line); border-radius:12px; margin-top:10px; font-size:12.5px; overflow:hidden;}
+  .diffbox .dh{padding:8px 12px; background:#F0F2EE; font-family:"Mitr"; font-weight:600; font-size:12.5px;}
+  .diffbox ul{margin:0; padding:8px 12px 10px 30px;}
+  .diffbox li{margin-bottom:2px;}
   #dayjump{display:none; gap:6px; overflow-x:auto; padding:8px 4px 4px; -webkit-overflow-scrolling:touch;}
   #dayjump button{flex:0 0 auto; font-family:"Mitr"; font-size:11.5px; border:1px solid var(--line); background:#fff;
     border-radius:16px; padding:5px 11px; cursor:pointer; white-space:nowrap;}
@@ -146,6 +165,8 @@
     <button class="tbtn" id="btn-json">⬇︎ JSON</button>
     <button class="tbtn" id="btn-jsonin">⬆︎ JSON</button>
     <input type="file" id="file-json" accept=".json" hidden>
+    <button class="tbtn" id="btn-ai" title="ส่งแผนให้ AI (เช่น z.ai) ช่วยปรับ แล้วรับกลับมาดู diff">🤖 AI</button>
+    <button class="tbtn" id="btn-check" title="ตรวจแผนปัจจุบันตามกฎ QA (เวลาทับ/เรียง/ข้ามคืน)">✓ ตรวจแผน</button>
     <button class="tbtn danger" id="btn-reset">↺ รีเซ็ต</button>
     <select id="trip-sel" class="tbtn"></select>
     <label class="chainlbl" title="เปิด: ลาก/↑↓ แถวแล้วเวลาทั้งวันเรียงตามลำดับใหม่อัตโนมัติ + แก้เวลาเริ่ม/ระยะเวลาแล้วดันแถวถัดไป · แถวที่กด 📌 ตรึงเวลาไว้จะไม่ถูกขยับ">
@@ -226,6 +247,36 @@
 </div>
 
 <div class="dropzone" id="dropzone"><div>📥 ปล่อยไฟล์ Excel (.xlsx)<br><span style="font-size:14px;opacity:.8">เพื่อโหลดแผนจากไฟล์</span></div></div>
+
+<div class="aiwrap" id="aiwrap">
+  <div class="aim">
+    <div class="aim-head"><h3>🤖 AI ช่วยปรับแผน</h3><button class="x" onclick="aiClose()">✕</button></div>
+    <div class="aim-tabs">
+      <button data-ai="send" class="on">📤 ส่งให้ AI</button>
+      <button data-ai="recv">📥 รับจาก AI</button>
+    </div>
+    <div class="aim-body">
+      <div id="ai-send">
+        <p class="note" style="margin:0 0 8px;">1) กด <b>คัดลอก</b> → 2) ไปแชทกับ AI ที่ค้นเว็บได้ (เช่น <b>z.ai</b>, ChatGPT, Gemini) → 3) วาง + ส่ง → 4) กลับมาแท็บ "รับจาก AI" วางคำตอบ</p>
+        <textarea id="ai-out" readonly></textarea>
+        <div class="ops">
+          <button class="tbtn primary" id="ai-copy">📋 คัดลอกทั้งหมด</button>
+          <button class="tbtn" id="ai-dl">⬇︎ ดาวน์โหลด .md</button>
+        </div>
+      </div>
+      <div id="ai-recv" style="display:none;">
+        <p class="note" style="margin:0 0 8px;">วางคำตอบของ AI (ต้องมี <code>```json ... ```</code>) แล้วกด "วิเคราะห์" — ระบบจะแสดงสิ่งที่เปลี่ยนก่อน แล้วค่อยเลือกว่าจะเอามาใช้ไหม</p>
+        <textarea id="ai-in" placeholder="วางคำตอบจาก AI ที่นี่…"></textarea>
+        <div class="ops">
+          <button class="tbtn" id="ai-file-btn">📂 จากไฟล์</button>
+          <input type="file" id="ai-file" accept=".md,.json,.txt" hidden>
+          <button class="tbtn primary" id="ai-analyze">🔍 วิเคราะห์</button>
+        </div>
+        <div id="ai-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 // ================= STATE =================
@@ -734,8 +785,94 @@ function renderIdeasPanel(){
   });
 }
 
+// ================= AI HANDOFF (z.ai loop) =================
+let aiParsed=null;   // parsed new state waiting for the user to apply
+function openAI(tab){
+  document.getElementById('aiwrap').classList.add('show');
+  aiSwitchTab(tab||'send');
+}
+function aiClose(){ document.getElementById('aiwrap').classList.remove('show'); aiParsed=null; }
+function aiSwitchTab(t){
+  document.querySelectorAll('.aim-tabs button').forEach(b=>b.classList.toggle('on', b.dataset.ai===t));
+  document.getElementById('ai-send').style.display=t==='send'?'':'none';
+  document.getElementById('ai-recv').style.display=t==='recv'?'':'none';
+  if(t==='send') document.getElementById('ai-out').value=APP.buildAIPackage(S);
+}
+function aiAnalyze(){
+  const res=APP.parseAIReturn(document.getElementById('ai-in').value, S.settings);
+  const box=document.getElementById('ai-result');
+  if(!res.ok){ aiParsed=null; box.innerHTML='<div class="diffbox"><div class="dh">❌ '+esc(res.error)+'</div></div>'; return; }
+  const d=APP.diffPlan(S, res.state);
+  aiParsed=res.state;
+  const sec=(title, items, fmt, cls)=>items.length
+    ? '<div class="dh" style="font-size:11.5px;color:'+(cls||'var(--ink)')+';">'+title+' '+items.length+'</div><ul>'+items.map(fmt).join('')+'</ul>'
+    : '';
+  const dayLabel=i=>((res.state.days[i]||{}).d)||('D'+(i+1));
+  box.innerHTML='<div class="diffbox">'
+    +'<div class="dh">📊 '+res.summary.days+' วัน · '+res.summary.acts+' กิจกรรม — งบ ¥'+Math.round(d.oldGrand).toLocaleString()+' → <b>¥'+Math.round(d.newGrand).toLocaleString()+'</b> ('+(d.budgetDelta>=0?'+':'')+d.budgetDelta.toLocaleString()+')</div>'
+    +sec('➕ เพิ่ม', d.added, x=>'<li>'+esc(x.act)+' → '+esc(dayLabel(x.day))+'</li>', 'var(--pine2)')
+    +sec('➖ หายไป', d.removed, x=>'<li>'+esc(x.act)+' (เดิมอยู่ '+esc(((S.days[x.day]||{}).d)||('D'+(x.day+1)))+')</li>', 'var(--momiji)')
+    +sec('🔁 ย้ายวัน', d.moved, x=>'<li>'+esc(x.act)+': '+esc(x.from)+' → '+esc(x.to)+'</li>')
+    +sec('🕒 แก้เวลา', d.retime, x=>'<li>'+esc(x.act)+': '+esc(x.oldT)+' → '+esc(x.newT)+'</li>')
+    +(res.warns.length?'<div class="dh" style="color:var(--momiji);">⚠️ คำเตือน '+res.warns.length+'</div><ul>'+res.warns.map(w=>'<li>'+esc(w)+'</li>').join('')+'</ul>':'')
+    +'<div class="ops" style="padding:10px 12px;">'
+    +'<button class="tbtn" onclick="aiApply(\'variant\')">🧪 สร้างเป็นตัวเลือกใหม่ (เทียบ A/B ได้)</button>'
+    +'<button class="tbtn primary" onclick="aiApply(\'replace\')">✅ ทับแผนเดิม</button>'
+    +'</div></div>';
+}
+function aiApply(mode){
+  if(!aiParsed) return;
+  pushUndo();
+  const st=JSON.parse(JSON.stringify(aiParsed));
+  if(mode==='replace'){
+    st.routes=S.routes; st.checks=S.checks; st.parked=S.parked;   // AI ไม่คืนข้อมูลส่วนนี้ — เก็บของเดิมไว้
+    S=st;
+  }else{
+    const stamp=new Date().toISOString().slice(5,10);
+    const n=Math.min(S.days.length, st.days.length);
+    for(let i=0;i<n;i++){
+      S.days[i].variants.push({name:'AI '+stamp, rows:st.days[i].variants[0].rows});
+      S.days[i].activeVariant=S.days[i].variants.length-1;
+    }
+    for(let i=n;i<st.days.length;i++) S.days.push(st.days[i]);
+  }
+  aiClose();
+  persist(); renderSheet(); renderSummary(); renderIdeasPanel(); refreshTrips();
+  APP.toast(mode==='replace'?'รับแผนจาก AI มาทับแผนเดิมแล้ว':'สร้างตัวเลือก "AI" ต่อทุกวันแล้ว — สลับกลับได้ที่ pill บนหัววัน', 5000, {label:'ย้อน', fn:doUndo});
+}
+function wireAI(){
+  document.getElementById('btn-ai').onclick=()=>openAI('send');
+  document.querySelectorAll('.aim-tabs button').forEach(b=>b.onclick=()=>aiSwitchTab(b.dataset.ai));
+  document.getElementById('ai-copy').onclick=()=>{
+    const t=document.getElementById('ai-out'); t.select();
+    (navigator.clipboard?navigator.clipboard.writeText(t.value):Promise.reject())
+      .then(()=>APP.toast('คัดลอกแล้ว — ไปวางที่ z.ai ได้เลย'))
+      .catch(()=>{ document.execCommand('copy'); APP.toast('คัดลอกแล้ว (คัดลอกแบบสำรอง)'); });
+  };
+  document.getElementById('ai-dl').onclick=()=>{
+    const blob=new Blob([document.getElementById('ai-out').value],{type:'text/markdown'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download='ai-handoff-'+new Date().toISOString().slice(0,10)+'.md'; a.click();
+  };
+  document.getElementById('ai-analyze').onclick=aiAnalyze;
+  document.getElementById('ai-file-btn').onclick=()=>document.getElementById('ai-file').click();
+  document.getElementById('ai-file').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    f.text().then(t=>{ document.getElementById('ai-in').value=t; aiAnalyze(); });
+    e.target.value='';
+  };
+  document.getElementById('aiwrap').addEventListener('click',e=>{ if(e.target.id==='aiwrap') aiClose(); });
+  document.getElementById('btn-check').onclick=()=>{
+    const w=APP.qaCheck(S);
+    if(!w.length){ APP.toast('✓ แผนผ่านกฎ QA ทั้งหมด — เวลาเรียง ไม่ทับ ไม่ข้ามคืน'); return; }
+    APP.modal({title:'✓ ตรวจแผน — พบ '+w.length+' ข้อสังเกต', body:'<ul style="margin:0;padding-left:18px;text-align:left;">'+w.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>', buttons:[{label:'ปิด', cls:'primary', val:1}]});
+  };
+}
+
+
 // ================= INIT =================
 initBudget();
+wireAI();
 renderDayjump();
 renderSheet();
 renderSummary();
