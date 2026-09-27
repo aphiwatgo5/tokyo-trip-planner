@@ -85,6 +85,9 @@ function _ensureStyle(){
     font-family:"Mitr",sans-serif; font-size:13px; padding:10px 18px; border-radius:12px; z-index:1200;
     opacity:0; transition:.25s; pointer-events:none; max-width:90vw;}
   .tp-toast.show{opacity:1;}
+  .tp-toast.act{pointer-events:auto; display:flex; align-items:center; gap:10px;}
+  .tp-toast.act button{border:0; background:#fff; color:#20242E; font-family:"Mitr",sans-serif; font-size:12px;
+    border-radius:8px; padding:4px 14px; cursor:pointer;}
   .tpm-wrap{position:fixed; inset:0; background:rgba(32,36,46,.5); z-index:1100; display:flex; align-items:center; justify-content:center; padding:16px;}
   .tpm{background:#fff; border-radius:16px; box-shadow:0 12px 40px rgba(32,36,46,.25); max-width:440px; width:100%; padding:20px; font-family:"Sarabun",sans-serif;}
   .tpm h3{font-family:"Mitr"; font-weight:600; font-size:17px; margin:0 0 6px; color:#20242E; word-break:break-word;}
@@ -117,11 +120,22 @@ function _ensureStyle(){
   .ideacard button:hover{background:#244a3f;}`;
   document.head.appendChild(st);
 }
-function toast(msg, ms){
+function toast(msg, ms, action){
   _ensureStyle();
   let t=document.getElementById('tp-app-toast');
   if(!t){ t=document.createElement('div'); t.id='tp-app-toast'; t.className='tp-toast'; document.body.appendChild(t); }
-  t.textContent=msg; t.classList.add('show');
+  if(action){
+    t.classList.add('act');
+    t.innerHTML='';
+    t.append(document.createTextNode(msg));
+    const b=document.createElement('button'); b.textContent=action.label;
+    b.onclick=()=>{ t.classList.remove('show'); action.fn(); };
+    t.appendChild(b);
+  }else{
+    t.classList.remove('act');
+    t.textContent=msg;
+  }
+  t.classList.add('show');
   clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), ms||2600);
 }
 function modal({title, body, buttons}){
@@ -152,13 +166,15 @@ function buildWorkbook(S){
       : [["โรงแรมโตเกียว (¥/คืน)",st.hotelTokyo,""],["คืนโตเกียว",st.nightsTokyo,""],
          ["โรงแรม Shizuoka (¥/คืน)",st.hotelShizuoka,""],["คืน Shizuoka",st.nightsShizuoka,""]]),
     ["ผู้ใหญ่",st.adults,""],["เด็ก",st.children,""],
+    ["schema (โครงสร้าง)",(S.meta&&S.meta.schema)||11,"ห้ามแก้ — บอกเวอร์ชันโครงสร้างเพื่อข้ามการ migrate"],
   ]),"ตั้งค่า");
-  const plan=[["วันที่ (ISO)","วันที่","วัน","ป้าย","โหมด","รวมวัน?","ชื่อวัน","คำอธิบายวัน","ตัวเลือก","เวลา","กิจกรรม","แท็ก","เส้นทาง","ขนส่ง/สาย","ระยะเวลา","ค่าเดินทาง ¥","ค่าใช้จ่าย ¥","หมวด","รวมแถว?","โน้ต","dayKey"]];
+  const plan=[["วันที่ (ISO)","วันที่","วัน","ป้าย","โหมด","รวมวัน?","ชื่อวัน","คำอธิบายวัน","ตัวเลือก","เวลา","กิจกรรม","แท็ก","เส้นทาง","ขนส่ง/สาย","ระยะเวลา","ค่าเดินทาง ¥","ค่าใช้จ่าย ¥","หมวด","รวมแถว?","โน้ต","dayKey","ตรึงเวลา?"]];
   S.days.forEach((d,di)=>{
     d.variants.forEach(vr=>{
       vr.rows.forEach(r=>{
         plan.push([d.date,d.d,d.dow,d.tag,d.pace,d.inc?"รวม":"ไม่รวม",d.title,d.sub||"",vr.name,
-          r.time,r.act,r.tag||"",r.ft||"",r.line||"",r.dur||"",r.train||0,r.cost||0,r.type||"",r.inc?"รวม":"ไม่รวม",r.note||"",di+1]);
+          r.time,r.act,r.tag||"",r.ft||"",r.line||"",r.dur||"",r.train||0,r.cost||0,r.type||"",r.inc?"รวม":"ไม่รวม",r.note||"",di+1,
+          r.pin?"📌":""]);
       });
     });
   });
@@ -210,6 +226,7 @@ function parseExcelState(buf, filename){
       else if(k.includes('คืน Shizuoka')) settings.nightsShizuoka=parseInt(val)||0;
       else if(k==='ผู้ใหญ่') settings.adults=parseInt(val)||2;
       else if(k==='เด็ก') settings.children=parseInt(val)||1;
+      else if(/^schema/i.test(k)) settings._schema=parseInt(val)||0;
     });
     const staysXL=(settings._staysXL||[]).filter(x=>x.nights>0).map(x=>({city:x.city,per:x.per,nights:x.nights}));
     if(staysXL.length){ settings.stays=staysXL; settings.hotelTokyo=Math.round(staysXL.reduce((a,x)=>a+x.per*x.nights,0)/staysXL.reduce((a,x)=>a+x.nights,0)); settings.nightsTokyo=staysXL.reduce((a,x)=>a+x.nights,0); }
@@ -235,7 +252,8 @@ function parseExcelState(buf, filename){
         title:find(['ชื่อวัน','ธีม'],6), sub:find(['คำอธิบาย'],-1),
         variant:find(['ตัวเลือก'],-1), time:t, act:a, tag:find(['แท็ก'],a+1), ft:find(['เส้นทาง'],a+2), line:find(['ขนส่ง'],a+3),
         dur:find(['ระยะเวลา'],a+4), train:find(['ค่าเดินทาง'],a+5), cost:find(['ค่าใช้จ่าย'],a+6),
-        type:find(['หมวด'],a+7), rowinc:find(['รวมแถว','รวมงบ'],a+8), note:find(['โน้ต','note'],a+9)};
+        type:find(['หมวด'],a+7), rowinc:find(['รวมแถว','รวมงบ'],a+8), note:find(['โน้ต','note'],a+9),
+        pin:find(['ตรึง'],-1)};
       break;
     }
   }
@@ -273,7 +291,8 @@ function parseExcelState(buf, filename){
       train:toNum(cell(col.train)), cost:toNum(cell(col.cost)),
       type:TYPE_MAP[String(cell(col.type)).trim()]||'',
       inc:String(cell(col.rowinc)).trim()!=='ไม่รวม',
-      note:String(cell(col.note)).trim()});
+      note:String(cell(col.note)).trim(),
+      pin:col.pin>=0 && /📌|^1$|^true$|^yes$/i.test(String(cell(col.pin)).trim())});
   }
   if(!days.length) return {ok:false, error:'ไม่พบข้อมูลกิจกรรมในไฟล์'};
 
@@ -324,7 +343,9 @@ function parseExcelState(buf, filename){
     }
   }
   // schema starts at 1 so migrate() can inspect content (Shizuoka → Tokyo-nights) before stamping v2
-  const state={meta:{filename:filename||'excel', loadedAt:new Date().toISOString(), source:'excel', schema:1},
+  // modern exports carry their schema in the ตั้งค่า sheet → skip the migration chain entirely
+  const xlSchema=settings._schema||1; delete settings._schema;
+  const state={meta:{filename:filename||'excel', loadedAt:new Date().toISOString(), source:'excel', schema:xlSchema},
     settings, days, routes:routes||[], checks:checks||[], parked};
   migrate(state);
   normalizeTimes(state);
@@ -342,6 +363,40 @@ function shiftFollowing(day, fromIdx, deltaMin){
     if(rows[i].start!=null){ rows[i].start+=deltaMin; syncTimeText(rows[i]); n++; }
   }
   return n;
+}
+
+// ---------- reflow a day so times follow the row ORDER (drag/↑↓ → เวลาเรียงตาม) ----------
+// Rules (aligned with scripts/qa.mjs):
+// - first timed row of the day = anchor: keeps its start (day doesn't drift)
+// - pinned rows (r.pin, 📌) never move — reservations/trains; they become hard anchors
+// - every other timed row keeps the gap it currently has before it → reflowing an
+//   unchanged order is a NO-OP; only rows whose predecessor changed get new times
+// - gap collapses to 0 when catching up to a pinned anchor (overlap = yellow warn in UI)
+// - rows with start==null are skipped entirely (QA ignores them too)
+// returns count of rows whose start changed
+function reflowDay(day){
+  const rows=day.variants[day.activeVariant].rows;
+  const gapBefore=rowIdx=>{                       // minutes this row sits after the timed row above it
+    const r=rows[rowIdx];
+    for(let j=rowIdx-1;j>=0;j--){
+      if(rows[j].start!=null) return Math.max(0, r.start-(rows[j].start+(rows[j].durMin||0)));
+    }
+    return null;                                  // no timed row above → anchor candidate
+  };
+  let cursor=null, moved=0;
+  rows.forEach((r,i)=>{
+    if(r.start==null) return;                     // untimed: untouched
+    if(cursor==null || r.pin){                    // day anchor or pinned: immovable
+      if(r.pin && cursor!=null && r.start<cursor) { /* pinned now overlaps prev — leave visible */ }
+      cursor=r.start+(r.durMin||0);
+      return;
+    }
+    const g=gapBefore(i);
+    const want=cursor+(g==null?10:g);
+    if(want!==r.start){ r.start=want; syncTimeText(r); moved++; }
+    cursor=want+(r.durMin||0);
+  });
+  return moved;
 }
 
 // ---------- idea library renderer (shared by index & sheet) ----------
@@ -472,5 +527,5 @@ async function importFlow(buf, filename){
 
 return {FOOD_MULT, foodMultOf, dayTotalsOf, totalsOf, toast, modal,
         buildWorkbook, downloadExcel, parseExcelState, importFlow,
-        tagChip, renderIdeas, shiftFollowing, mealPicks, showMealPicks};
+        tagChip, renderIdeas, shiftFollowing, reflowDay, mealPicks, showMealPicks};
 })();

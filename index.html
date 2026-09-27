@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="data.js?v=14"></script>
-<script src="app.js?v=11"></script>
+<script src="app.js?v=12"></script>
 <style>
   :root{
     --ink:#1B2430; --muted:#69758A; --paper:#F5F2EA; --card:#FFFFFF;
@@ -73,6 +73,7 @@
   .dayops{margin-left:8px; display:inline-flex; gap:4px;}
   .icobtn{border:1px solid var(--line); background:#fff; border-radius:7px; cursor:pointer; font-size:11.5px; padding:2px 7px; line-height:1.3;}
   .icobtn:hover{border-color:var(--momiji); color:var(--momiji);}
+  .icobtn.pin-on{background:var(--straw-soft); border-color:var(--straw); color:#8a6a10;}
   .inctgl{display:inline-flex; align-items:center; gap:5px; font-family:"Mitr"; font-size:11px; color:var(--muted); cursor:pointer; user-select:none; margin-left:10px;}
   .inctgl .sw{width:30px; height:17px; border-radius:20px; background:#C6CDC9; position:relative; transition:.15s; flex:0 0 auto;}
   .inctgl .sw::after{content:""; position:absolute; width:12px; height:12px; border-radius:50%; background:#fff; top:2.5px; left:2.5px; transition:.15s;}
@@ -134,7 +135,7 @@
 <div class="topbar">
   <div class="eyebrow">📊 แผนทั้งทริปในตารางเดียว — พิมพ์แก้ได้ทุกช่อง · ลากจัดเรียง · คำนวณสด</div>
   <h1>Tokyo Trip Planner</h1>
-  <div class="sub">คลิกช่องไหนก็พิมพ์แก้ได้เลย (Enter/Tab = ช่องถัดไป) · ลาก ⠿ เพื่อสลับลำดับหรือย้ายข้ามวัน · แก้เวลา/ระยะเวลาแล้วแถวถัดไปถูกดันให้อัตโนมัติ (⛓) · พิมพ์ในแถวว่างท้ายวันเพื่อเพิ่มกิจกรรม · อ่านสบายตา/พรินต์: หน้า 📋 อ่าน</div>
+  <div class="sub">คลิกช่องไหนก็พิมพ์แก้ได้เลย (Enter/Tab = ช่องถัดไป) · ลาก ⠿ สลับลำดับ/ย้ายข้ามวัน แล้ว<b>เวลาทั้งวันเรียงตามอัตโนมัติ</b> (⛓ เปิด · แถว 📌 ตรึงเวลาไม่ขยับ · มีปุ่มย้อน) · พิมพ์ในแถวว่างท้ายวันเพื่อเพิ่มกิจกรรม · อ่านสบายตา/พรินต์: หน้า 📋 อ่าน</div>
 </div>
 
 <div class="toolbar">
@@ -147,8 +148,8 @@
     <input type="file" id="file-json" accept=".json" hidden>
     <button class="tbtn danger" id="btn-reset">↺ รีเซ็ต</button>
     <select id="trip-sel" class="tbtn"></select>
-    <label class="chainlbl" title="เมื่อแก้เวลาเริ่มหรือระยะเวลา ให้ดันแถวถัดไปในวันเดียวกันตามส่วนต่างอัตโนมัติ">
-      <input type="checkbox" id="chain" checked> ⛓ ดันเวลาถัดไปอัตโนมัติ
+    <label class="chainlbl" title="เปิด: ลาก/↑↓ แถวแล้วเวลาทั้งวันเรียงตามลำดับใหม่อัตโนมัติ + แก้เวลาเริ่ม/ระยะเวลาแล้วดันแถวถัดไป · แถวที่กด 📌 ตรึงเวลาไว้จะไม่ถูกขยับ">
+      <input type="checkbox" id="chain" checked> ⛓ เวลาเดินตามลำดับอัตโนมัติ
     </label>
     <a class="tbtn" href="map.html">🗺️ แผนที่</a>
     <a class="tbtn" href="route.html">🧭 Route</a>
@@ -213,7 +214,7 @@
         <thead><tr><th>วัน</th><th>ธีม</th><th style="text-align:right">รวมวัน (¥)</th></tr></thead>
         <tbody id="daysum"></tbody>
       </table>
-      <div style="padding:10px 12px;" class="hint">ช่องสีเหลืองรอบเวลาเริ่ม = เวลาทับกับกิจกรรมก่อนหน้า · แก้ "วันที่" เป็น ISO (เช่น 2026-12-05) = ย้ายแถวไปวันนั้น · ปุ่ม 💾 บันทึกลงไฟล์ Excel ที่ผูกไว้</div>
+      <div style="padding:10px 12px;" class="hint">ลาก ⠿ (หรือ ↑↓) แล้วเวลาทั้งวันเรียงตามลำดับใหม่อัตโนมัติเมื่อเปิด ⛓ · กด 📌 ต่อแถวเพื่อตรึงเวลา (รถ/ของจองไว้) ไม่ให้ถูกขยับ · ช่องสีเหลืองรอบเวลาเริ่ม = เวลาทับกับกิจกรรมก่อนหน้า · แก้ "วันที่" เป็น ISO (เช่น 2026-12-05) = ย้ายแถวไปวันนั้น</div>
     </div>
   </div>
 
@@ -235,6 +236,9 @@ const CAT_LABEL={food:"อาหาร",entry:"ค่าเข้า",misc:"อ�
 const CAT_REV={"อาหาร":"food","ค่าเข้า":"entry","อื่นๆ":"misc","":""};
 let pendingFocus=null;   // {d,r,k} focus after render
 let dragCtx=null, dropPlan=null;
+let undoSnap=null;       // 1-level undo for structural mutations (drop / ↑↓ / reflow / AI apply)
+function pushUndo(){ undoSnap=JSON.parse(JSON.stringify(S)); }
+function doUndo(){ if(!undoSnap) return; S=undoSnap; undoSnap=null; persist(); renderSheet(); renderSummary(); renderIdeasPanel(); APP.toast('ย้อนกลับแล้ว'); }
 const autoChain=()=>document.getElementById('chain').checked;
 function persist(){ tpSave(S); updateSyncInfo(); }
 function rowsOf(d){ return d.variants[d.activeVariant].rows; }
@@ -289,6 +293,7 @@ function renderSheet(){
       ${day.variants.length>1?day.variants.map((v,vi)=>`<button class="varpill ${vi===day.activeVariant?'on':''}" data-var="${di}:${vi}">${v.name}</button>`).join(''):''}
       <span class="inctgl ${day.inc?'on':''}" data-dayinc="${di}"><span>รวมงบ</span><div class="sw"></div></span>
       <span class="dayops">
+        <button class="icobtn" data-dayreflow="${di}" title="เรียงเวลาทั้งวันใหม่ตามลำดับแถว (แถว 📌 ไม่ขยับ)">⛓</button>
         <button class="icobtn" data-dayup="${di}" title="เลื่อนวันขึ้น">↑</button>
         <button class="icobtn" data-daydown="${di}" title="เลื่อนวันลง">↓</button>
         <button class="icobtn" data-daydel="${di}" title="ลบวันนี้">🗑</button>
@@ -299,7 +304,7 @@ function renderSheet(){
       html+=`<tr class="act ${isSkip?'skip':''}" data-d="${di}" data-r="${ri}">
         <td class="hdl" title="ลากเพื่อสลับลำดับ / ย้ายวัน">⠿</td>
         <td class="e ${''}" data-k="date" data-d="${di}" data-r="${ri}">${ri===0?(day.d):''}</td>
-        <td class="e time" data-k="start" data-d="${di}" data-r="${ri}">${dispVal(day,r,'start')}</td>
+        <td class="e time" data-k="start" data-d="${di}" data-r="${ri}"${r.pin?' title="📌 ตรึงเวลา — การเรียงเวลาอัตโนมัติจะไม่ขยับแถวนี้"':''}>${dispVal(day,r,'start')}${r.pin?' 📌':''}</td>
         <td class="e time" data-k="end" data-d="${di}" data-r="${ri}">${dispVal(day,r,'end')}</td>
         <td class="e c-act" data-k="act" data-d="${di}" data-r="${ri}" title="${esc(r.act)}">${esc(r.act)}</td>
         <td class="e" data-k="tag" data-d="${di}" data-r="${ri}" title="แท็กกิจกรรม">${TAGS[r.tag]?TAGS[r.tag].icon+' '+TAGS[r.tag].label:'—'}</td>
@@ -313,6 +318,7 @@ function renderSheet(){
         <td class="e c-note" data-k="note" data-d="${di}" data-r="${ri}" title="${esc(r.note)}">${esc(r.note)}</td>
         <td class="num">${fmt(r.train+effCost(r))}</td>
         <td>${r.type==='food'?`<button class="icobtn" data-food="${di}:${ri}" title="ตัวเลือกร้านย่านนี้">🍜</button>`:''}
+            <button class="icobtn ${r.pin?'pin-on':''}" data-rpin="${di}:${ri}" title="${r.pin?'ยกเลิกตรึงเวลา':'ตรึงเวลานี้ไว้ — การเรียงเวลาอัตโนมัติจะไม่ขยับแถวนี้'}">📌</button>
             <button class="icobtn" data-rmoveup="${di}:${ri}" title="เลื่อนขึ้น">↑</button>
             <button class="icobtn" data-rmovedown="${di}:${ri}" title="เลื่อนลง">↓</button>
             <button class="icobtn" data-rdup="${di}:${ri}" title="ทำสำเนา">⧉</button>
@@ -452,7 +458,9 @@ function moveRowByDate(d,r,val){
     S.days.push(dst);
   }
   rowsOf(dst).push(row);
-  APP.toast(`ย้ายแถวไป ${dst.d} แล้ว`);
+  let refl=0;
+  if(autoChain()) refl=APP.reflowDay(dst);
+  APP.toast(`ย้ายแถวไป ${dst.d} แล้ว${refl?` · ⛓ เรียงเวลาใหม่ ${refl} แถว`:''}`);
   return true;
 }
 
@@ -486,12 +494,31 @@ tbl.addEventListener('click', e=>{
   if(varp){ const [i,vi]=varp.dataset.var.split(':').map(Number); S.days[i].activeVariant=vi; persist(); renderSheet(); renderSummary(); return; }
   const fd=e.target.closest('[data-food]');
   if(fd){ const [i,ri]=fd.dataset.food.split(':').map(Number); APP.showMealPicks(S,i,ri); return; }
+  const pinb=e.target.closest('[data-rpin]');
+  if(pinb){ const [i,ri]=pinb.dataset.rpin.split(':').map(Number); const r=rowsOf(S.days[i])[ri]; if(!r) return;
+    r.pin=!r.pin; persist(); renderSheet();
+    APP.toast(r.pin?'📌 ตรึงเวลา — การเรียงเวลาอัตโนมัติจะไม่ขยับแถวนี้':'ยกเลิกตรึงเวลาแล้ว');
+    return; }
+  const drf=e.target.closest('[data-dayreflow]');
+  if(drf){ const i=+drf.dataset.dayreflow; if(!S.days[i]) return;
+    pushUndo(); const n=APP.reflowDay(S.days[i]); persist(); renderSheet(); renderSummary();
+    if(n) APP.toast(`⛓ เรียงเวลาวันนี้ใหม่ ${n} แถว`, 5000, {label:'ย้อน', fn:doUndo});
+    else APP.toast('เวลาเรียงถูกต้องอยู่แล้ว');
+    return; }
   const mup=e.target.closest('[data-rmoveup]');
   if(mup){ const [i,ri]=mup.dataset.rmoveup.split(':').map(Number); const rows=rowsOf(S.days[i]);
-    if(ri>0){ [rows[ri-1],rows[ri]]=[rows[ri],rows[ri-1]]; persist(); renderSheet(); renderSummary(); } return; }
+    if(ri>0){ pushUndo(); [rows[ri-1],rows[ri]]=[rows[ri],rows[ri-1]];
+      let n=0; if(autoChain()) n=APP.reflowDay(S.days[i]);
+      persist(); renderSheet(); renderSummary();
+      if(n) APP.toast(`⛓ เรียงเวลาตามลำดับใหม่ (${n} แถว)`, 5000, {label:'ย้อน', fn:doUndo}); }
+    return; }
   const mdn=e.target.closest('[data-rmovedown]');
   if(mdn){ const [i,ri]=mdn.dataset.rmovedown.split(':').map(Number); const rows=rowsOf(S.days[i]);
-    if(ri<rows.length-1){ [rows[ri+1],rows[ri]]=[rows[ri],rows[ri+1]]; persist(); renderSheet(); renderSummary(); } return; }
+    if(ri<rows.length-1){ pushUndo(); [rows[ri+1],rows[ri]]=[rows[ri],rows[ri+1]];
+      let n=0; if(autoChain()) n=APP.reflowDay(S.days[i]);
+      persist(); renderSheet(); renderSummary();
+      if(n) APP.toast(`⛓ เรียงเวลาตามลำดับใหม่ (${n} แถว)`, 5000, {label:'ย้อน', fn:doUndo}); }
+    return; }
   const dup=e.target.closest('[data-rdup]');
   if(dup){ const [i,ri]=dup.dataset.rdup.split(':').map(Number); const rows=rowsOf(S.days[i]);
     rows.splice(ri+1,0,JSON.parse(JSON.stringify(rows[ri]))); persist(); renderSheet(); renderSummary(); return; }
@@ -570,10 +597,14 @@ tbody.addEventListener('drop', e=>{
   else if(tr.classList.contains('subrow')){ d2=+tr.dataset.day; idx=rowsOf(S.days[+tr.dataset.day]).length; }
   else return;
   if(d1===d2 && r1<idx) idx--;
+  pushUndo();
   const row=rowsOf(S.days[d1]).splice(r1,1)[0];
   rowsOf(S.days[d2]).splice(idx,0,row);
+  let refl=0;
+  if(autoChain()){ refl=APP.reflowDay(S.days[d1]); if(d2!==d1) refl+=APP.reflowDay(S.days[d2]); }
   persist(); renderSheet(); renderSummary();
-  APP.toast(d1===d2?'สลับลำดับแล้ว':`ย้ายไป ${S.days[d2].d} แล้ว`);
+  if(refl) APP.toast((d1===d2?'สลับลำดับ + เรียงเวลาใหม่':'ย้าย + เรียงเวลาใหม่')+` (${refl} แถว)`, 5000, {label:'ย้อน', fn:doUndo});
+  else APP.toast(d1===d2?'สลับลำดับแล้ว':`ย้ายไป ${S.days[d2].d} แล้ว`);
 });
 
 // ================= SUMMARY =================
