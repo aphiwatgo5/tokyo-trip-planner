@@ -157,6 +157,8 @@ function dayBadge(ref){
 
 const map=L.map('map').setView([35.70,139.76],11);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
+// deep-link: map.html?day=3 → โหมด "วันนี้" — โชว์เฉพาะจุดของวันนั้น (live plan + curated ของวันนั้น + base)
+const DAY_FILTER=(()=>{ const d=parseInt(new URLSearchParams(location.search).get('day')); return (!isNaN(d)&&d>=1)?d:null; })();
 const bounds=L.latLngBounds(spots.map(s=>[s[1],s[2]]));
 const mkIcon=(emoji,color)=>L.divIcon({className:'',html:`<div class="mk" style="background:${color}"><span>${emoji}</span></div>`,iconSize:[30,30],iconAnchor:[15,28],popupAnchor:[0,-26]});
 const emoji={live:"📅",plan:"🎯",idea:"💡",food:"🍽️",base:"🏨"};
@@ -176,22 +178,30 @@ fitBtn.onAdd=()=>{const d=document.createElement('div');
   d.onclick=()=>map.fitBounds(bounds.pad(0.05)); return d;};
 fitBtn.addTo(map);
 
-let active='all';
+let active=DAY_FILTER?'live':'all';
 const fEl=document.getElementById('filters');
 const sideEl=document.getElementById('sidebar');
 function render(){
   buildMarkers();
   fEl.innerHTML='';
+  if(DAY_FILTER){
+    const info=dayInfo['D'+DAY_FILTER];
+    const dayBtn=document.createElement('a');
+    dayBtn.className='fbtn on'; dayBtn.href='map.html'; dayBtn.style.textDecoration='none';
+    dayBtn.innerHTML=`📅 ${info?info.label:'วันที่ '+DAY_FILTER} — กดเพื่อดูทุกวัน`;
+    fEl.appendChild(dayBtn);
+  }
   const allBtn=document.createElement('button'); allBtn.className='fbtn'+(active==='all'?' on':'');
   allBtn.innerHTML=`All <span class="cnt">${spots.length}</span>`; allBtn.onclick=()=>{active='all';render();}; fEl.appendChild(allBtn);
   Object.keys(cats).forEach(k=>{
     const b=document.createElement('button'); b.className='fbtn'+(active===k?' on':'');
-    const n=spots.filter(s=>s[3]===k).length;
+    const n=spots.filter(s=>s[3]===k && (!DAY_FILTER || s[3]==='live' || s[4]==='all' || s[4]==='D'+DAY_FILTER)).length;
     b.innerHTML=`${cats[k].label} <span class="cnt">${n}</span>`;
     b.onclick=()=>{active=k;render();}; fEl.appendChild(b);
   });
   const cnt=document.createElement('span'); cnt.className='fcount';
-  const show=spots.map((s,i)=>[s,i]).filter(([s])=>active==='all'||s[3]===active);
+  const show=spots.map((s,i)=>[s,i]).filter(([s])=>(active==='all'||s[3]===active)
+    && (!DAY_FILTER || s[3]==='live' || s[4]==='all' || s[4]==='D'+DAY_FILTER));
   cnt.textContent=`Showing ${show.length} spots`; fEl.appendChild(cnt);
   sideEl.innerHTML='';
   markers.forEach(m=>{ m.removeFrom(map); });
@@ -215,6 +225,7 @@ render();
   async function collect(){
     mk.length=0;
     for(let i=0;i<live.days.length;i++){
+      if(DAY_FILTER && i!==DAY_FILTER-1) continue;
       const d=live.days[i];
       for(const r of (d.variants[d.activeVariant]||{}).rows||[]){
         const geo=await RK.geocodeRow(r);
@@ -226,10 +237,15 @@ render();
   await collect();
   const planSpots=mk.map(m=>[ (m.tag&&(TAGS[m.tag]||{}).icon?TAGS[m.tag].icon+' ':'')+m.n, m.lat, m.lng, 'live',
     m.dd, m.cost?('¥'+m.cost.toLocaleString()):'—',
-    `${m.time}${m.line?' · '+m.line:''}`, 'จากแผนปัจจุบัน — แก้ในหน้าการ์ด/ตารางแล้วแผนที่ตามอัตโนมัติ' ]);
+    `${m.time}${m.line?' · '+m.line:''}`, 'จากแผนปัจจุบัน — แก้ในหน้าแผน (Sheet) แล้วแผนที่ตามอัตโนมัติ' ]);
   // splice into spots AFTER the base category (index 2) so ordering stays sane
   spots.splice(2, 0, ...planSpots);
   render();
+  if(DAY_FILTER){
+    const pts=spots.filter(s=>s[3]==='live'||s[4]==='all').map(s=>[s[1],s[2]]);
+    if(pts.length>1) map.fitBounds(L.latLngBounds(pts).pad(0.15));
+    else if(pts.length===1) map.setView(pts[0],15);
+  }
 })();
 
 // ---------- cross-tab live refresh: plan edited in another tab/page → reload here ----------

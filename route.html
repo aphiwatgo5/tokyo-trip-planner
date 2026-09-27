@@ -82,7 +82,7 @@
       <a class="tbtn" href="index.html">📊 แผน (Sheet)</a>
       <a class="tbtn" href="cards.html">📋 อ่าน</a>
       <a class="tbtn" href="explore.html">🔍 สำรวจ</a>
-      <a class="tbtn" href="map.html">🗺️ แผนที่</a>
+      <a class="tbtn" id="lnk-daymap" href="map.html" title="จุดของวันนี้บนแผนที่ใหญ่">🗺️ แผนที่วันนี้</a>
     </div>
   </div>
   <div class="daybar" id="daybar"></div>
@@ -121,6 +121,14 @@ let curDay=0;
 let routeModel=null;     // {stops, legs} from RK.buildDayRoute
 let layerRoute=null, layerStops=null, avatar=null;
 let anim=null;           // playback state
+let pendingStop=null;    // ?stop=<rowIdx> — fly to this row's marker after the day loads
+{ // deep-link: route.html?day=3&stop=5 (1-based day, 0-based row)
+  const qp=new URLSearchParams(location.search);
+  const qd=parseInt(qp.get('day'));
+  if(!isNaN(qd) && qd>=1) curDay=qd-1;
+  const qs=parseInt(qp.get('stop'));
+  if(!isNaN(qs) && qs>=0) pendingStop=qs;
+}
 const map=L.map('map',{zoomControl:true}).setView([35.71,139.775],13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
 
@@ -152,6 +160,14 @@ async function loadDay(forceRefresh){
   routeModel=await RK.buildDayRoute(day, base, (i,n)=>{ $('status').textContent=`เส้นทาง ${i}/${n}…`; });
   drawRoute();
   renderTimeline();
+  // deep-link ?stop= — fly to the row the user clicked in the Sheet
+  if(pendingStop!=null){
+    const rows=rowsOf(day);
+    const si=routeModel.stops.findIndex(s=>s.row===rows[pendingStop]);
+    if(si>=0){ map.flyTo([routeModel.stops[si].geo.lat,routeModel.stops[si].geo.lng],16,{duration:.6}); highlight(si); }
+    else $('status').textContent+=' · แถวนี้ยังไม่มีพิกัด (กด 🔄 เพื่อค้นออนไลน์)';
+    pendingStop=null;
+  }
   const walks=routeModel.legs.filter(l=>l.type==='walk').length;
   const trans=routeModel.legs.filter(l=>l.type==='transit').length;
   const missing=rowsOf(day).length+1-routeModel.stops.length;
@@ -300,6 +316,9 @@ $('scrub').oninput=e=>{
 
 // ================= INIT =================
 renderDaybar();
+(function(){ const l=document.getElementById('lnk-daymap'); if(l) l.href='map.html?day='+(curDay+1); })();
+const _origLoadDay=loadDay;
+loadDay=function(fd){ const l=document.getElementById('lnk-daymap'); if(l) l.href='map.html?day='+(curDay+1); return _origLoadDay(fd); };
 loadDay();
 // plan edited in another tab/page → reload the current day's route
 window.addEventListener('storage', e=>{
