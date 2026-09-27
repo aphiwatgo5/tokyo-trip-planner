@@ -282,5 +282,57 @@
  "Bampaku Kinen Koen Suita": {
   "lat": 34.8117138,
   "lng": 135.5412127
+ },
+ "Tokyo Station": {
+  "lat": 35.680596,
+  "lng": 139.7649711
+ },
+ "Shibuya": {
+  "lat": 35.6637109,
+  "lng": 139.6976941
+ },
+ "Shibuya Sky": {
+  "lat": 35.6582857,
+  "lng": 139.7022617
+ },
+ "Kaminarimon Asakusa": {
+  "lat": 35.7111333,
+  "lng": 139.7963683
+ },
+ "Nakamise Street Asakusa": {
+  "lat": 35.7125206,
+  "lng": 139.7965171
+ },
+ "Disney": {
+  "lat": 35.6308162,
+  "lng": 139.8811452
+ },
+ "Harajuku": {
+  "lat": 35.6687049,
+  "lng": 139.7053357
+ },
+ "Meiji Jingu Gaien Tokyo": {
+  "lat": 35.6724009,
+  "lng": 139.7209749
+ },
+ "Azabudai Hills": {
+  "lat": 35.6614747,
+  "lng": 139.7408267
+ },
+ "Ikebukuro": {
+  "lat": 35.7303213,
+  "lng": 139.7107697
+ },
+ "Imperial Palace East Gardens": {
+  "lat": 35.6867006,
+  "lng": 139.7573959
+ },
+ "Meiji Jingu": {
+  "lat": 35.6748417,
+  "lng": 139.6996266
+ },
+ "Takeshita Street": {
+  "lat": 35.6711612,
+  "lng": 139.7049553
  }
 }

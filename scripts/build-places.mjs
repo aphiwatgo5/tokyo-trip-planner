@@ -124,7 +124,7 @@ async function main(){
   const out={};
   for(const [key,p] of places){ if(p.geo) out[key]=p.geo; }
   for(const [key,c] of catKeys){ if(c.geo) out[key]=c.geo; }
-  out['hotel base|ueno']={lat:35.7121,lng:139.7780};   // hotel fixed at Ueno (matches settings.base)
+  out['hotel base|yaesu']={lat:35.6810,lng:139.7710};   // Sardonyx Tokyo (Yaesu) — matches settings.base
   fs.writeFileSync(path.join(ROOT,'places.json'), JSON.stringify(out,null,1));
   console.log('places.json written: '+Object.keys(out).length+' entries');
 }

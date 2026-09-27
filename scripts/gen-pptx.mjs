@@ -26,7 +26,7 @@ const AREA_RULES=[
   ['tokyostation',/tokyo station|marunouchi|nihonbashi|character street|ramen street|หน้าสถานี|กลางเมือง/i],
   ['yokohama',/minatomirai|yokohama|mark is|โยโกฮามะ/i],['kamakura',/kamakura|hase|komachi|คามาคุระ/i],
   ['disney',/maihama|disney|ikspiari|ไมฮามะ/i],['toyosu',/toyosu|lalaport|โทโยซุ/i],
-  ['dome',/dome city|suidobashi|laqua|yellow street|ซุอิโดบาชิ|dome/i],['shinagawa',/shinagawa|ชินางาวะ/i]];
+  ['dome',/dome city|suidobashi|laqua|yellow street|ซุอิโดบาชิ|dome/i],['shinagawa',/shinagawa|ชินางาวะ/i],['harajuku',/harajuku|omotesando|ฮาราจูกุ|meiji|ไมเจะ|ginkgo|แปะก๊วย/i],['azabudai',/azabudai|kamiyacho|borderless|อะซาบูได/i],['ikebukuro',/ikebukuro|อิเกบุคุโร|sunshine city|pok[eé]mon center mega/i]];
 function mealInfo(day,row){
   const t1=`${row.ft||''} ${row.act||''}`;
   const t2=`${t1} ${day.zone||''}`;
@@ -38,93 +38,92 @@ function mealInfo(day,row){
 }
 
 // ---- per-place tips harvested from public reviews (Reddit/TripAdvisor/Google/official), 2026-09-06 ----
+// ---- per-place tips harvested from public reviews (Reddit/TripAdvisor/official), retrieved 2026-09-27 ----
 const DAY_TIPS={ // di (0-7) → [{p:place, t:[tips]}]
- 0:[{p:'Haneda → เมือง + วันแรก',t:[
-    'รถเข็นร่มแบบเบา ดีที่สุด — ลิฟต์สถานีเล็กและต้องรอคิว (Reddit r/JapanTravelTips)',
-    'ตั้ง Suica ใน Wallet มือถือตั้งแต่สนามบิน — ไม่ต้องต่อคิวตั๋ว วันแรกยังไม่ต้องซื้อพาสเพิ่ม',
-    'สูตร "ถึงเช้า → งีบยาวกลางวัน → เย็นเดินเบาๆ" ปรับ jetlag ทั้งบ้าน วัน 2–3 จะสดกว่า (แผนเรา)']},
-   {p:'Ueno Park / Ameyoko (เย็น)',t:[
-    'Ameyoko เป็นตลาดเงินสดเป็นหลัก — เตรียมแบงค์ย่อย (Trip.com · TripAdvisor)',
-    'ตอนค่ำสตรีทฟู้ดคึกคักสุด แต่ร้านหลายร้านปิด ~20:00 — มาตามแผน 16:30 พอดี',
-    'แปะก๊วย Ueno Park เหลืองสวยปลาย พ.ย.–ต้น ธ.ค. ช่วงเราเพิ่งเริ่มฤดู (inference)']}],
- 1:[{p:'Ueno Zoo',t:[
-    'คิวแพนด้าพีคยาวเป็นชั่วโมง มีรีวิวรอ 40 นาทีได้ดูแค่ 2 นาที — เข้า 09:30 ตอนเปิดแล้วตรงไปแพนด้าก่อน (TripAdvisor/ฟอรัม)',
-    'ครึ่งชั่วโมงแรกหลังเปิดคิวสั้นสุด · วันอาทิตย์ (วันเรา) คนเยอะกว่าปกติ — เดินหน่อย (TripAdvisor)',
-    'ทั้งสวนใช้ 1.5–3 ชม. พอ · ทางเดินกว้าง รถเข็นสบาย (รีวิว + แผนเรา)']},
+ 0:[{p:'Haneda → Yaesu + วันแรก',t:[
+    'รถเข็นร่มแบบเบาดีที่สุด — ลิฟต์สถานีเล็กและต้องรอ (Reddit r/JapanTravelTips)',
+    'ตั้ง Suica ใน Wallet มือถือตั้งแต่สนามบิน — Tokyo Station ออกประตู Yaesu เดิน 5 นาทีถึง Sardonyx',
+    'Ramen Street (B1) ซื้อบัตรที่ตู้ก่อนเข้าคิว เตรียมเงินสด · เลี่ยง 12:00–13:00 (planmyjapan/TripAdvisor)']},
+   {p:'Shibuya SKY 🌆',t:[
+    'เปิดจอง 14 วันก่อน เที่ยงคืน JST (23:00 ไทย) — รอบ sunset หมดใน ~3 นาที ต้องลุ้นเป็น (TripAdvisor/Reddit)',
+    'แผนสำรอง: จอบรอบบ่ายแล้วอยู่บนหอจนถึงพระอาทิตย์ตกได้ — เข้าก่อน sunset 30–45 นาทีสวยสุด (Reddit)',
+    'ลมบนหอแรง + แดดจ้า — ผ้าห่ม/หมวก Hooga · ฝนตก outdoor ปิดได้ (ทางการ)']}],
+ 1:[{p:'ร้านกิโมโน Asakusa 👘',t:[
+    'จองล่วงหน้าและเลือกร้านที่ระบุว่ามีชุดเด็กเล็ก/ทารก — ไม่ใช่ทุกร้านมี (web: รีวิวร้านกิโมโน Asakusa)',
+    'แต่งช่วง 09:30–10:00 แล้วเดิน Sensō-ji ตอน 10:30 — แสงเช้าสวย คนน้อยกว่ากลางวันมาก (รีวิวทั่วไป)',
+    'รองเท้าแตะ/รองเท้าหลุดง่ายใส่มา — ร้านให้ยืมถุงเท้า/tabii อยู่แล้ว (guides)']},
+   {p:'Sensō-ji + Nakamise',t:[
+    'หอใหญ่/อาคารหลักในปิด ~17:00 แต่ลานกลางแจ้งเปิดตลอด — จุดถ่าย Kaminarimon เช้าไฟสวย (รีวิวทั่วไป)',
+    'ningyo-yaki ท้าย Nakamise ซื้อง่าย มีกล่องของฝาก (guides)']},
    {p:'Hanayashiki',t:[
-    'เด็ก 0–4 ขวบขึ้นส่วนใหญ่ฟรี · ค่าเข้า + จ่ายรายเครื่อง ~¥100–200 (japanforkids · TripAdvisor)',
-    'เสน่ห์คือของเก่าริเทรโรปี 1853 ไม่ใช่เครื่องเล่นจัด — คิดเป็นสวนเด็กเล็กกลางย่านจะไม่ผิดหวัง (Reddit)',
-    'อยู่ติด Senso-ji เดินต่อกัน 5 นาที จบทั้งย่านมื้อเดียว (Navitime)']},
-   {p:'Senso-ji ช่วงพลบค่ำ',t:[
-    'หลัง 17:00 ไฟอ่อนสวย คนน้อยลงเยอะ — แผนเราจัดตอนเย็นถูกแล้ว (รีวิวทั่วไป)',
-    'อาคารหลักในปิด ~17:00 แต่ลานกลางแจ้งเปิดตลอด — เก็บ ningyo-yaki ท้าย Nakamise ก่อนออก']}],
- 2:[{p:'บัตร + เข้าสวน',t:[
+    'หน้าหนาว (พ.ย.–ก.พ.) เปิด 10:00–16:00 — ต้องมาช่วงกลางวัน แผนเรา 13:15 พอดี (เว็บทางการ)',
+    'เด็ก 0–4 ขวบขึ้นส่วนใหญ่ฟรี · ค่าเข้า + จ่ายรายเครื่อง ~¥100–200 (japanforkids/TripAdvisor)']}],
+ 2:[{p:'รถไฟ Tokyo Sta. → Kamakura',t:[
+    'JR Yokosuka ขบวนตรงจาก Tokyo Station ~57 นาที ไม่ต้องเปลี่ยน — นั่งชิวกว่าเปลี่ยนที่ Yokohama (Japan Guide/JR)',
+    'Hooga <6 ขวบฟรี — อุ้มบนตักผ่านประตู Suica ได้เลย (กฎ JR)']},
+   {p:'Kamakura (Hase + พระใหญ่)',t:[
+    'พระใหญ่เดินรอบสั้น รถเข็นไหลได้ · Hase-dera บันได+ทางชัน — ผูกอุ้มสะพายจะสบายกว่า (Reddit/onedayaway)',
+    'สูตรครอบครัว: รถเข็น + ผูกอุ้มสำรอง — ลานพระใช้รถเข็น เข้าวัดสลับอุ้ม (Lemon8/geminiconnect)',
+    'Enoden บ่ายแน่นได้ ถ้าคิวยาว เดิน/แท็กซี่ Hase≈10 นาทีก็ถึง (inference จากรีวิว)']}],
+ 3:[{p:'บัตร + เข้าสวน Disney',t:[
     'Hooga (ต่ำกว่า 4 ขวบ) เข้าฟรี · ผู้ใหญ่บัตรตามวัน หลังขึ้นราคา ต.ค. 2025 แพงสุด ~¥12,400 — ซื้อออนไลน์ระบุวันล่วงหน้า (เว็บทางการ TDR)',
     'จองร้านอาหารในสวน (Priority Seating) ผ่านแอปตั้งแต่เช้า — มื้อกลางวันคิวยาวมาก (familyintokyo)',
-    'คิวเครื่องเล่นฮิต 90+ นาที เป็นเรื่องปกติ — วัย Hooga เล่น Fantasyland/Toontown พอ ไม่ต้องเก็บเครื่องเล่นคิวยาว (Reddit r/DisneyPlanning)']},
+    'คิวเครื่องเล่นฮิต 90+ นาที เป็นเรื่องปกติ — วัย Hooga เล่น Fantasyland/Toontown พอ (Reddit r/DisneyPlanning)']},
    {p:'รถเข็น + Baby Center',t:[
-    'เช่ารถเข็นในสวน ~¥1,000/วัน (แบบพับได้) หรือพาของเรา — จุดจอดรถเข็นมีทุกเครื่องเล่น (familyintokyo)',
-    'Baby Center: เปลี่ยนผ้าอ้อม ห้องให้นม อุ่มนม — จำตำแหน่งจากแผนที่ในแอปไว้ (emmajaneexplores · เว็บทางการ)']},
+    'เช่ารถเข็นในสวน ~¥1,000/วัน หรือพาของเราไป — จุดจอดรถเข็นมีทุกเครื่องเล่น (familyintokyo)',
+    'Baby Center: เปลี่ยนผ้าอ้อม ห้องให้นม อุ่นนม — จำตำแหน่งจากแผนที่ในแอป (emmajaneexplores)']},
    {p:'จังหวะวัน',t:[
     'งีบในรถเข็นช่วงบ่าย = กลยุทธ์มาตรฐานครอบครัวญี่ปุ่น เดินช้า พักบ่อย (guides)',
     'พาเหรดคริสต์มาสบ่ายแก่ — ยืนดูริมทางเดินหลักได้ ไม่ต้องยืนจองจุดล่วงหน้านาน']}],
- 3:[{p:'Anpanman Museum',t:[
-    'ต้องจองออนไลน์ล่วงหน้า — ไม่มีขายหน้างาน สุดสัปดาห์หมดก่อน 3 วัน (japanforkids · trip.com)',
-    'ชั้น 1 ฟรี (ร้าน+เบเกอรี่+ฟู้ดคอร์ท) — ถ้าบัตรหมดจริงๆ ยังเดินชั้นล่างได้ (yokohamajapan.com)',
-    'เข้ารอบเปิด 10:00 คนน้อยสุด · กลุ่มเป้าหมายจริงคือ 1–5 ขวบพอดีวัย Hooga (itravelblog · travelxgirl)']},
-   {p:'Kamakura (Hase + พระใหญ่)',t:[
-    'พระใหญ่เดินรอบสั้น รถเข็นไหลได้ · Hase-dera บันได+ทางชัน — ผูกอุ้มสะพายจะสบายกว่า (Reddit · onedayaway)',
-    'สูตรครอบครัว: รถเข็น + ผูกอุ้มสำรอง — ลานพระใช้รถเข็น เข้าวัดสลับอุ้ม (Lemon8 · geminiconnect)',
-    'Enoden บ่ายแน่นได้ ถ้าคิวยาว เดิน/แท็กซี่ ไป Hase ~10 นาทีก็ถึง (inference จากรีวิว)']}],
- 4:[{p:'teamLab Planets',t:[
-    'เดินเท้าเปล่าทั้งที่ (ตู้เก็บรองเท้า) · ผ้าเช็ดมีให้ฟรี ไม่ต้องเตรียม (tinytotintokyo)',
-    'ช่วงลุยน้ำลึก ~เข่า (30 ซม.) + ห้องมืด — เด็ก 1 ขวบต้องอุ้มตลอดจริงๆ (TripAdvisor รีวิวพ่อแม่ + Reddit)',
-    'รีวิวเด็กต่ำกว่า 2 ขวบ ไปมาก/น้อย — ทางเลือกชิลกว่า: teamLab Borderless ที่ Azumabashi ไม่มีน้ำ รถเข็นได้ (Reddit)',
-    'จองรอบออนไลน์ล่วงหน้า มาตรงเวลา — เข้าเป็นกลุ่มพร้อมกัน (guides)']},
-   {p:'LaLaport Toyosu',t:[
-    'ฟู้ดคอร์ทมีมุมเด็ก+ที่เปลี่ยนผ้าอ้อม ร้านครอบครัวเยอะ (แผนเรา)',
-    'ถ้า Hooga ยังสดหลัง teamLab — สนามเด็ก/ร้านของเล่นในมอลล์เดินเล่นได้อีก (inference)']}],
- 5:[{p:'Asobono!',t:[
-    'ถุงเท้าบังคับทั้งเด็กและผู้ใหญ่ — ลืมซื้อได้ที่เคาน์เตอร์ · ถอดรองเท้าทั้งครอบครัว (TripAdvisor · เว็บทางการ)',
-    'เช้าวันธรรมดาเงียบสุด — แผนเราพฤหัส 09:45 พอดี · หลัง 15:00 ค่าเข้าถูกลงแบบเข้าช่วงบ่าย (Klook · เว็บทางการ)',
-    'มีโซนทารกแยกในตัว + บอลพูต 40,000 ลูกเรือโจรสลัด — เริ่มโซนเบบี้ก่อนแล้วค่อยขยาย (japanforkids)']},
-   {p:'Dome City Illumination',t:[
-    'ฟรี ไม่ต้องบัตร · ไฟเปิดพอดีหลังพระอาทิตย์ตก 16:30 — มาหัวค่ำสวยสุด รถเข็นเข็นได้ทั้งทาง (แผนเรา + ข้อมูลทางการ)']}],
- 6:[{p:'Pokémon Café',t:[
-    'เปิดจอง 31 วันก่อน เวลา 18:00 JST = 16:00 เวลาไทย — มื้อ 4 ธ.ค. → เตรียมหน้าจอ 3 พ.ย. 16:00 หมดในไม่กี่นาที (Reddit · FAQ ทางการ)',
-    'กรอกแค่ชื่อ+อีเมล+เบอร์ ไม่ต้องบัตรเครดิต · เช็ก cancellation คืนก่อน ~21:00 + same-day ถึง 08:00 (Reddit)',
-    'ถ้าพลาด: ลุ้นรอบเปิด 10:30 หรือช่วงบ่าย มีคนปล่อยบ่อยกว่ามื้อกลางวัน (Reddit)']},
-   {p:'Character St. + Ramen St.',t:[
-    'Pokémon Store สาขาสถานีแน่นสุดในคอมเพล็กซ์ — มา 10:00–11:00 หลังเปิดยังโล่ง มีของลิมิเต็ดเฉพาะสาขา (Facebook กลุ่ม · TripAdvisor)',
-    'Ramen Street: ซื้อบัตรที่ตู้กดก่อนเข้าคิว เตรียมเงินสด · เลี่ยง 12:00–13:00 คิวยาวเป็นชั่วโมง (planmyjapan · TripAdvisor)',
-    'ตู้กดเฉยๆ นานจะ timeout คืนเงิน — เลือกเมนูไวก่อน (goodtastevice)']},
-   {p:'Maxell Aqua Park',t:[
-    'โชว์โลมา ~15 นาที/รอบ หลายรอบต่อวัน — เช็กบอร์ดตารางก่อนเข้า แล้ววางเดินย้อนจากรอบที่จะดู (TripAdvisor)',
+ 4:[{p:'Meiji Jingu ⛩',t:[
+    'เข้าทาง Harajuku gate ตอนเช้า ~9:30 คนน้อยและเงียบสุด — ทางเดินกรับเบิลกว้าง รถเข็นสบาย (รีวิวทั่วไป)',
+    'น้ำมันเจอะ? — บริเวณวัดมีของประดับฤดู ถ่ายรูปสวยแต่ห้ามปีน (ทางการ)']},
+   {p:'Harajuku + Omotesando',t:[
+    'Takeshita ช่วงเช้าวันธรรมดายังโล่ง — คนเพิ่มช่วงบ่าย (TripAdvisor)',
+    'Omotesando Hills ล็อบบี้กว้าง ลิฟต์ใหญ่ — เดินหนีร้อน/หนาวกับรถเข็นได้ (guides)']},
+   {p:'ถนนแปะก๊วย Meiji Gaien 🍁',t:[
+    'พีคเหลืองทอง ~ปลาย พ.ย.–ต้น ธ.ค. พอดีช่วงเรา — ไฟส้มยามเย็นสวยสุด ~16:00–16:30 (Japan Guide/inference)',
+    'ปิดถนนสำหรับรถบางช่วงฤดู — เดินกลางถนนถ่ายรูปได้ (ขึ้นกับปี)']}],
+ 5:[{p:'teamLab Borderless 🎨',t:[
+    'เลือก Borderless ถูกแล้ว — ไม่มีน้ำ บรรยากาศเหมาะเด็กเล็กกว่า Planets ชัดเจน (Reddit/roamingcrew)',
+    'รถเข็นเข้าไม่ได้ — ฝากที่ล็อกเกอร์ ใช้ผูกอุ้มตลอด · ≤3 ขวบเข้าฟรี (ทางการ/รีวิว)',
+    'จองรอบแรก 09:00–10:00 — คนทึ่มเข้า 9:30–10:00 เป็นกลุ่มใหญ่ รอบแรกสบายสุด (Reddit)',
+    'Azabudai Hills มีห้องให้นม/เปลี่ยนผ้าอ้อม — เป็นย่าน kid-friendly มาก (wanderlog)']},
+   {p:'Maxell Aqua Park 🐬',t:[
+    'โชว์โลมา ~15 นาที/รอบหลายรอบต่อวัน — เช็กบอร์ดตารางก่อนเข้า แล้ววางเดินย้อนจากรอบที่จะดู (TripAdvisor)',
     'ป้อนอาหารโลมา ¥700 หมดไว — อยากได้ซื้อตั้งแต่เข้า · ให้อาหารคาปิบาร่า ¥200 (TripAdvisor FAQ)',
-    'รอบแรกของวันเหมาะกับเด็กเล็กสุด (ก่อนหิว-ง่วง) · คาร์เซลเด็กชอบมาก (japanforkids · Reddit)']},
-   {p:'ไฟ Marunouchi',t:[
-    'ฟรี ทั้งถนนนากะโดริ — ถ่ายหน้าตึกอิฐสถานีฝั่งมารูนอูจิ หลัง 18:00 ไฟเต็มที่สวยสุด (ข้อมูลทั่วไป)']}],
- 7:[{p:'Ameyoko',t:[
-    'เงินสดเป็นหลัก บางร้าน tax-free ยื่นพาสปอร์ต — เตรียมแบงค์ย่อย (Trip.com)',
-    'ร้านเล็กหลายร้านเปิด 10:00–11:00 — ถ้ามาก่อนเวลา เริ่มจากร้านในอาคาร/หน้าสถานีก่อน (guides)',
-    'ของกินทานเล่นเยอะ ราคาถูกเป็นชุด — เช้าเสาร์ก่อน 10:30 ยังไม่แน่น (japan.travel · TripAdvisor)']},
+    'รอบแรกของวันเหมาะกับเด็กเล็กสุด (ก่อนหิว-ง่วง) · คาร์เซลเด็กชอบมาก (japanforkids/Reddit)']}],
+ 6:[{p:'Pokémon Center Mega Tokyo',t:[
+    'สาขาใหญ่สุดในญี่ปุ่น อยู่ Sunshine City — เดินจากสถานี Ikebukuro ~8 นาที ไม่ต้องจอง (ทางการ Pokémon)',
+    'เช้าวันธรรมดาคนน้อยสุด · ของลิมิเต็ตหมุนเวียน — เช็กก่อนซื้อที่สาขาอื่น (รีวิว)',
+    '(ที่เลือกแทน Pokémon Café ที่ต้องลุ้นจอง 31 วันก่อน — ไม่เสี่ยงพลาดแผน) (inference)']},
+   {p:'Optional: Ueno Zoo / Anpanman',t:[
+    'Ueno Zoo: คิวแพนด้ายาวเป็นชั่วโมงช่วงพีค — เข้าเร็วแล้วตรงไปแพนด้าก่อน เลิกขายบัตรเข้าแพนด้า ~16:00 (TripAdvisor/ฟอรัม)',
+    'Anpanman: ต้องจองออนไลน์ล่วงหน้าเท่านั้น ไม่มีขายหน้างาน — ตัดสินใจก่อน ~1 สัปดาห์ (japanforkids/trip.com)',
+    'สองอย่างนี้คือแผนสำรอง — ถ้า Hooga เพลีย พักโรงแรม + ไฟ Marunouchi ก็ครบวันแล้ว (แผนเรา)']},
+   {p:'ไฟ Marunouchi (หน้าบ้าน)',t:[
+    'ฟรี ทั้งถนน Nakadori + หน้าตึกอิฐ — ถ่ายจากฝั่ง Marunouchi หลัง 18:00 ไฟเต็มที่สวยสุด (ข้อมูลทั่วไป)']}],
+ 7:[{p:'Tokyo Character Street',t:[
+    '30+ ร้านการ์ตูนใต้สถานี — Pokémon Store สาขาสถานีมีของลิมิเต็ตเฉพาะสาขา แน่นสุดช่วงกลางวัน มาเช้า (TripAdvisor/Facebook)',
+    'อยู่หน้าโรงแรมพอดี — ยัดของได้ทุกเมื่อก่อนขึ้นรถ แม้แต่วันสุดท้าย (แผนเรา)']},
    {p:'Solamachi (Skytree)',t:[
-    'ของลิมิเต็ด "มีแต่ที่นี่" เยอะมาก — KitKat รสพิเศษ + Tokyo Banana ครบจบในที่เดียว (เว็บทางการ Solamachi)',
+    'ของลิมิเต็ต "มีแต่ที่นี่" เยอะมาก — KitKat รสพิเศษ + Tokyo Banana ครบจบในที่เดียว (เว็บทางการ Solamachi)',
     'ฟู้ดคอร์ทชั้น 10 มีมุมเด็ก/เปลี่ยนผ้าอ้อม · ช่วงเย็นคิวร้านของฝากยาว — แผนเรา 15:45 พอดี (แผนเรา)']},
    {p:'Don Quijote Ueno',t:[
     'เปิด 24 ชม. — คืนก่อนบินยัดของได้สบาย ไม่ต้องรีบ (ข้อมูลร้าน)',
     'tax-free เมื่อยอดรวม ≥¥5,000/ใบเสร็จ ยื่นพาสปอร์ตที่เคาน์เตอร์ (กฎทั่วไป)']}],
 };
-const DAY_SRC={ // source URLs for slide notes (per di)
- 0:['reddit.com/r/JapanTravelTips — Japan trip with infant / stroller epilogue','trip.com Ameyoko guide','japan.travel/en/spot/1706 (Ameyoko)'],
- 1:['tripadvisor.com Ueno Zoo reviews + forum "Ueno Zoo and Pandas"','magical-trip.com/media/ueno-zoological-gardens','japanforkids.jp/places/hanayashiki-amusement-park','tripadvisor.com Asakusa Hanayashiki reviews','japantravel.navitime.com Hanayashiki guide'],
- 2:['tokyodisneyresort.jp/en/ticket + /guide/baby + /guide/child-tdl (official)','reddit.com/r/DisneyPlanning — TDL with 13-month-old','familyintokyo.com/en/blog/tokyo-disney-with-kids','emmajaneexplores.com/tokyo-disney-with-toddlers','lexandrekan.com tokyo-disneyland-planning-tips'],
- 3:['japanforkids.jp/places/yokohama-anpanman-childrens-museum','trip.com Anpanman moments','yokohamajapan.com Anpanman detail','itravelblog.net anpanman-childrens-museum','travelxgirl.com yokohama-anpanman-museum-with-toddler','reddit.com/r/JapanTravelTips — stroller in Kamakura','onedayawaytravel.com/kamakura-with-kids','geminiconnect.com kamakura family guide'],
- 4:['tinytotintokyo.com teamlab-planets-with-kids','tripadvisor.com TeamLab Planets "with a baby" review','reddit.com/r/JapanTravelTips — teamlab with baby','thetokyochapter.com planets-vs-borderless','lunitravels.com/teamlab-planets-tokyo'],
- 5:['tokyo-dome.co.jp/en/asobono/information (official)','tripadvisor.com Asobono reviews','japanforkids.jp asobono guide','klook.com ASOBono tickets'],
- 6:['reddit.com/r/JapanTravelTips — Pokémon Café reservation tips ×3 threads','pokemon-cafe.jp/en/cafe/faq (official)','planmyjapan.com tokyo-station-ramen-street','thetravelpockets.com tokyo-ramen-street','goodtastevice.com ticket machine','tripadvisor.com Maxell Aqua Park + FAQ','japanforkids.jp maxell-aqua-park','japantravel.navitime.com Maxell spot'],
- 7:['en.www.tokyo-solamachi.jp/enjoy/souvenir (official)','trip.com Ameyoko guide','japan.travel/en/spot/1706','ordinarygirlextraordinarydreamer.com ameyoko guide','tripadvisor.com Ameyoko reviews'],
+const DAY_SRC={
+ 0:['reddit.com/r/JapanTravelTips — Japan with infant / stroller epilogue','tokyodisneyresort.jp (tickets/children)','tripadvisor.co.uk — Shibuya Sky sunset forum','klook.com Shibuya Sky (15-day window)','planmyjapan.com Ramen Street'],
+ 1:['tripadvisor.com Asakusa kimono rental reviews','japantravel.navitime.com Asakusa guide','hanayashiki.net official (winter hours)','japanforkids.jp/places/hanayashiki-amusement-park'],
+ 2:['japan-guide.com Kamakura access','reddit.com/r/JapanTravelTips — stroller in Kamakura','onedayawaytravel.com/kamakura-with-kids','geminiconnect.com kamakura family guide'],
+ 3:['tokyodisneyresort.jp/en/ticket + /guide/baby + /guide/child-tdl (official)','reddit.com/r/DisneyPlanning — TDL with 13-month-old','familyintokyo.com/en/blog/tokyo-disney-with-kids','emmajaneexplores.com/tokyo-disney-with-toddlers'],
+ 4:['tripadvisor.com Meiji Jingu reviews','japan-guide.com Harajuku/Omotesando','japan-guide.com Meiji Gaien ginkgo (autumn colors)'],
+ 5:['reddit.com/r/JapanTravelTips — teamLab Borderless with toddlers','roamingcrew.com teamLab Borderless with kids','wanderlog.com Azabudai Hills kids','teamlab.art Borderless official (stroller/tickets)','tripadvisor.com Maxell Aqua Park + FAQ','japanforkids.jp maxell-aqua-park'],
+ 6:['pokemon.co.jp Pokémon Center Mega Tokyo (official)','tripadvisor.com Ueno Zoo pandas forum','japanforkids.jp/places/yokohama-anpanman-childrens-museum','trip.com Anpanman moments'],
+ 7:['tripadvisor.com Tokyo Character Street reviews','en.www.tokyo-solamachi.jp/enjoy/souvenir (official)','donqui.com store hours','japan customs tax-free rule (general)'],
 };
+
 
 // ---- palette (app theme) ----
 const C={ink:'1B2430',teal:'0E5B47',teal2:'12846A',persim:'E0572F',gold:'C99327',
@@ -143,7 +142,7 @@ pres.author='Tokyo Trip Planner'; pres.title='Tokyo Trip 2026 — Day by Day';
   const s=pres.addSlide(); s.background={color:C.navy};
   s.addText('TOKYO · KAMAKURA · YOKOHAMA',{x:0.9,y:1.5,w:11.5,h:0.4,fontSize:14,color:C.gold,charSpacing:4,bold:true,fontFace:'Calibri'});
   s.addText('แผนทริปโตเกียว 2026',{x:0.9,y:1.95,w:11.5,h:1.15,fontSize:54,bold:true,color:'FFFFFF',fontFace:'Calibri'});
-  s.addText('28 พฤศจิกายน – 6 ธันวาคม 2026 · 9 วัน · ค้างอูเอโนะทุกคืน',{x:0.9,y:3.15,w:11.5,h:0.5,fontSize:20,color:'CFE0D8',fontFace:'Calibri'});
+  s.addText('28 พฤศจิกายน – 6 ธันวาคม 2026 · 9 วัน · ค้าง Yaesu ติดสถานีโตเกียว (Sardonyx)',{x:0.9,y:3.15,w:11.5,h:0.5,fontSize:20,color:'CFE0D8',fontFace:'Calibri'});
   const stats=[['9','วัน'],['2+1','ผู้ใหญ่ + เด็กเล็ก'],[yen(grand),'งบรวม (≈฿'+Math.round(grand*S.settings.fx).toLocaleString()+')']];
   stats.forEach((st,i)=>{
     const x=0.9+i*3.55;
@@ -178,11 +177,11 @@ pres.author='Tokyo Trip Planner'; pres.title='Tokyo Trip 2026 — Day by Day';
   s.addText('🔑 จุดเด่นของแผน',{x:9.25,y:1.7,w:3.3,h:0.4,fontSize:15,bold:true,color:C.teal,fontFace:'Calibri'});
   const bu=()=>({code:'25B8',indent:10,color:C.teal2});
   s.addText([
-    {text:'Anpanman + Kamakura วันเดียวจบ (ลงใต้ครั้งเดียว)',options:{bullet:bu(),breakLine:true}},
+    {text:'ฐานเดียว Yaesu ติดสถานีโตเกียว — รถไฟตรงทุกทิศ ≤1 ชม.',options:{bullet:bu(),breakLine:true}},
     {text:'วันสลับหนัก-เบา ทุกวันมีงีบกลางวัน',options:{bullet:bu(),breakLine:true}},
-    {text:'Outdoor เช้า / ในร่มบ่าย (พระอาทิตย์ตก 16:30)',options:{bullet:bu(),breakLine:true}},
-    {text:'Illumination ฤดูหนาว: Dome City, Marunouchi, ริมอ่าวโยโกฮามะ',options:{bullet:bu(),breakLine:true}},
-    {text:'Disney วันจันทร์ (คนน้อยสุด) + ธีมคริสต์มาส',options:{bullet:bu(),breakLine:true}},
+    {text:'กิโมโน Hooga ที่อาซากุสะ + แปะก๊วยทอง Meiji Gaien',options:{bullet:bu(),breakLine:true}},
+    {text:'Optional วันเหลือแรง: Ueno Zoo / Anpanman — เลือกตาม Hooga',options:{bullet:bu(),breakLine:true}},
+    {text:'Disney อังคาร · Maxell + Borderless ในร่มกันหนาว',options:{bullet:bu(),breakLine:true}},
     {text:'เด็กต่ำกว่า 6 ขวบ รถไฟฟรี · ส่วนใหญ่ค่าเข้าฟรี',options:{bullet:bu()}},
   ],{x:9.25,y:2.15,w:3.35,h:4.5,fontSize:12.5,color:C.ink,fontFace:'Calibri',paraSpaceAfter:10,margin:0,valign:'top'});
 }
@@ -212,7 +211,7 @@ S.days.slice(0,8).forEach((d,di)=>{
   s.addText(`งบวันนี้ ${d.inc?yen(dayTotal(d)):'ไม่นับ'}${d.extras&&d.extras.length?`   ·   ⏳ เหลือแรง: ${d.extras[0]}`:''}`,{x:0.5,y:7.02,w:7,h:0.35,fontSize:11,color:C.muted,fontFace:'Calibri',margin:0});
   // map (right top)
   s.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:7.72,y:1.22,w:5.1,h:3.28,rectRadius:0.08,fill:{color:'FFFFFF'},line:{color:C.line,width:1},shadow:{type:'outer',color:'1B2430',blur:7,offset:2,angle:45,opacity:0.16}});
-  s.addImage({path:path.join(ASSETS,`day-${di+1}.png`),x:7.82,y:1.32,w:4.9,h:3.08,sizing:{type:'cover',w:4.9,h:3.08}});
+  s.addImage({path:path.join(ASSETS,`day-${di+1}.jpg`),x:7.82,y:1.32,w:4.9,h:3.08,sizing:{type:'cover',w:4.9,h:3.08}});
   s.addText('เส้นทางจริงของวันนี้ (เดิน = เส้นเขียว · รถไฟ = เส้นน้ำเงินประะ)',{x:7.82,y:4.42,w:4.9,h:0.28,fontSize:9,color:C.muted,fontFace:'Calibri',margin:0,italic:true});
   // food picks (right bottom)
   const meals={};
@@ -300,9 +299,9 @@ S.days.slice(0,8).forEach((d,di)=>{
   s.addText([
     {text:'อากาศ 8–15°C แห้ง ฝนน้อย — แจ็กเก็ตบาง+ผ้าห่มรถเข็นให้ Hooga',options:{bullet:buT(),breakLine:true}},
     {text:'พระอาทิตย์ตก ~16:30 — outdoor ก่อนบ่ายสาม แล้วต่อในร่ม/ดูไฟ',options:{bullet:buT(),breakLine:true}},
-    {text:'Illumination เปิดเต็มที่: Marunouchi (D7) · Dome City (D6) · ริมอ่าวโยโกฮามะ (D4)',options:{bullet:buT(),breakLine:true}},
-    {text:'Disney ธีมคริสต์มาสถึง 25 ธ.ค.',options:{bullet:buT(),breakLine:true}},
-    {text:'วันเสาร์ (D8) คนเยอะสุด — จัดเป็นวันเก็บกระเป๋า+ช้อปใกล้บ้าน',options:{bullet:buT(),breakLine:true}},
+    {text:'ไฟหน้าบ้าน: Marunouchi Illumination (D7) + Tokyo Station ยามค่ำ (D2)',options:{bullet:buT(),breakLine:true}},
+    {text:'Disney ธีมคริสต์มาสถึง 25 ธ.ค. · แปะก๊วยพีคช่วงนี้พอดี',options:{bullet:buT(),breakLine:true}},
+    {text:'วันเสาร์ (D8) คนเยอะสุด — จัดเป็นวันเก็บกระเป๋า+ช้อปหน้าบ้าน→Solamachi',options:{bullet:buT(),breakLine:true}},
     {text:'ปิดปีใหม่เริ่ม ~29 ธ.ค. — ช่วงเราปกติเต็มที่',options:{bullet:buT()}},
   ],{x:7.7,y:1.2,w:5.0,h:3.6,fontSize:13,color:'E8F0EC',fontFace:'Calibri',paraSpaceAfter:9,margin:0,valign:'top'});
   s.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:7.7,y:5.0,w:5.0,h:1.7,rectRadius:0.1,fill:{color:'10604B'},line:{color:'1D7A62',width:1}});

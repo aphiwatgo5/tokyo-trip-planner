@@ -1,41 +1,45 @@
 {
- "เดินเล่น ueno park / ameyoko|ueno park": {
-  "lat": 35.7161484,
-  "lng": 139.777257
+ "เข้าเมือง → tokyo station|haneda → tokyo sta.": {
+  "lat": 35.680596,
+  "lng": 139.7649711
  },
- "ueno zoo|ueno park (เดิน 5 นาที)": {
-  "lat": 35.7153426,
-  "lng": 139.768896
+ "เดินสวน imperial palace east gardens|imperial palace": {
+  "lat": 35.6867006,
+  "lng": 139.7573959
  },
- "asakusa|ueno → asakusa": {
+ "shibuya|tokyo sta. → shibuya": {
+  "lat": 35.6637109,
+  "lng": 139.6976941
+ },
+ "shibuya sky ช่วงพระอาทิตย์ตก|shibuya sky": {
+  "lat": 35.6582857,
+  "lng": 139.7022617
+ },
+ "asakusa|tokyo sta. → asakusa": {
   "lat": 35.7175966,
   "lng": 139.7975626
  },
- "hanayashiki (รวมวันเดียวกับ asakusa)|ถัดจาก senso-ji": {
+ "แต่งกิโมโน (จองร้านล่วงหน้า)|ร้านกิโมโน asakusa": {
+  "lat": 35.7111333,
+  "lng": 139.7963683
+ },
+ "sensō-ji + nakamise ถ่ายรูปชุดกิโมโน|senso-ji": {
+  "lat": 35.7125206,
+  "lng": 139.7965171
+ },
+ "คืนชุดกิโมโน + เดินสั้นๆ|ร้านกิโมโน asakusa": {
+  "lat": 35.7111333,
+  "lng": 139.7963683
+ },
+ "hanayashiki|hanayashiki": {
   "lat": 35.7154975,
   "lng": 139.7946127
  },
- "senso-ji + nakamise ช่วงพลบค่ำ|asakusa": {
-  "lat": 35.7134032,
-  "lng": 139.7955265
+ "เย็นเบาๆ: tokyo station ยามค่ำ + character street หน้าบ้าน|tokyo station": {
+  "lat": 35.6816079,
+  "lng": 139.7683381
  },
- "เข้าสวน + fantasyland + toontown|maihama (เดิน 5 นาที)": {
-  "lat": 35.6364251,
-  "lng": 139.8810001
- },
- "เครื่องเล่นเพิ่ม + พาเหรดคริสต์มาส|ในสวน": {
-  "lat": 35.6364251,
-  "lng": 139.8810001
- },
- "minatomirai|ueno → minatomirai": {
-  "lat": 35.4572917,
-  "lng": 139.6329716
- },
- "anpanman museum|mark is minatomirai": {
-  "lat": 35.4632355,
-  "lng": 139.6289425
- },
- "ลงใต้ต่อ → kamakura|minatomirai → yokohama → kamakura": {
+ "ขบวนตรงไป kamakura|tokyo sta. → kamakura": {
   "lat": 35.319003,
   "lng": 139.5506805
  },
@@ -55,73 +59,69 @@
   "lat": 35.319003,
   "lng": 139.5506805
  },
- "ueno|kamakura → ueno": {
-  "lat": 35.7118212,
-  "lng": 139.7775694
+ "disney|tokyo sta. → maihama": {
+  "lat": 35.6308162,
+  "lng": 139.8811452
  },
- "teamlab|ueno → toyosu": {
-  "lat": 35.64938,
-  "lng": 139.789728
+ "เข้าสวน + fantasyland + toontown|maihama": {
+  "lat": 35.6364251,
+  "lng": 139.8810001
  },
- "teamlab planets|toyosu": {
-  "lat": 35.64938,
-  "lng": 139.789728
+ "เครื่องเล่นเพิ่ม + พาเหรดคริสต์มาส|ในสวน": {
+  "lat": 35.6364251,
+  "lng": 139.8810001
  },
- "เดินเล่น ueno park ช่วงพลบค่ำ|ueno park": {
-  "lat": 35.7161484,
-  "lng": 139.777257
+ "harajuku|tokyo sta. → harajuku": {
+  "lat": 35.6687049,
+  "lng": 139.7053357
  },
- "tokyo dome city|ueno → suidobashi": {
-  "lat": 35.704961,
-  "lng": 139.7525594
+ "meiji jingu ⛩ เช้าเงียบ|meiji jingu": {
+  "lat": 35.6748417,
+  "lng": 139.6996266
  },
- "asobono! สนามเล่นในร่มยักษ์|tokyo dome city": {
-  "lat": 35.704961,
-  "lng": 139.7525594
+ "takeshita + omotesando เดินเบาๆ|harajuku/omotesando": {
+  "lat": 35.6711612,
+  "lng": 139.7049553
  },
- "ueno|suidobashi → ueno": {
-  "lat": 35.7118212,
-  "lng": 139.7775694
+ "meiji gaien|tokyo sta. → shinanomachi": {
+  "lat": 35.6724009,
+  "lng": 139.7209749
  },
- "nihonbashi|ueno → nihonbashi": {
-  "lat": 35.6825055,
-  "lng": 139.7748426
+ "ถนนแปะก๊วย meiji gaien|meiji gaien ginkgo ave": {
+  "lat": 35.6724009,
+  "lng": 139.7209749
  },
- "pokémon café ⚡|nihonbashi takashimaya": {
-  "lat": 35.6804441,
-  "lng": 139.7743669
+ "azabudai hills|tokyo sta. → kamiyacho": {
+  "lat": 35.6614747,
+  "lng": 139.7408267
  },
- "tokyo character street + kitte|tokyo station": {
+ "maxell aqua park|tokyo sta. → shinagawa": {
+  "lat": 35.6278989,
+  "lng": 139.7353316
+ },
+ "maxell aqua park|shinagawa": {
+  "lat": 35.6278989,
+  "lng": 139.7353316
+ },
+ "ikebukuro|tokyo sta. → ikebukuro": {
+  "lat": 35.7303213,
+  "lng": 139.7107697
+ },
+ "pokémon center mega tokyo ⚡ + sunshine city|sunshine city ikebukuro": {
+  "lat": 35.7291388,
+  "lng": 139.7202726
+ },
+ "ช้อป character street + kitte (หน้าบ้าน)|tokyo character street": {
   "lat": 35.6816079,
   "lng": 139.7683381
  },
- "maxell aqua park|ueno → shinagawa": {
-  "lat": 35.6278989,
-  "lng": 139.7353316
- },
- "maxell aqua park|ชินางาวะ": {
-  "lat": 35.6278989,
-  "lng": 139.7353316
- },
- "ueno|tokyo → ueno": {
-  "lat": 35.7118212,
-  "lng": 139.7775694
- },
- "ช้อปของฝาก ameyoko + เก็บของชิ้นเล็ก|ameyoko": {
-  "lat": 35.7100241,
-  "lng": 139.7745414
- },
- "skytree|ueno → tokyo skytree": {
+ "skytree|tokyo sta. → oshiage": {
   "lat": 35.7100543,
   "lng": 139.8107141
  },
- "ช้อปของฝาก tokyo solamachi ️|ใต้ skytree": {
+ "ช้อปของฝาก tokyo solamachi ️|solamachi (skytree)": {
   "lat": 35.7102358,
   "lng": 139.8119453
- },
- "ueno|skytree → ueno": {
-  "lat": 35.7118212,
-  "lng": 139.7775694
  },
  "เดิน oasis 21 + ย่าน sakae ช่วงไฟ|oasis 21": {
   "lat": 35.171088,
@@ -251,6 +251,10 @@
   "lat": 35.6252604,
   "lng": 139.4282753
  },
+ "maxell aqua park|ชินางาวะ": {
+  "lat": 35.6278989,
+  "lng": 139.7353316
+ },
  "ueno zoo|อูเอโนะ": {
   "lat": 35.7153426,
   "lng": 139.768896
@@ -258,6 +262,10 @@
  "sunshine city aquarium + pokémon center|อิเคบุคุโระ": {
   "lat": 35.7291388,
   "lng": 139.7202726
+ },
+ "asobono! สนามเล่นในร่มยักษ์|tokyo dome city": {
+  "lat": 35.704961,
+  "lng": 139.7525594
  },
  "sumida aquarium + skytree|โอชิอาเกะ": {
   "lat": 35.7101011,
@@ -331,8 +339,8 @@
   "lat": 35.8719763,
   "lng": 139.3258264
  },
- "hotel base|ueno": {
-  "lat": 35.7121,
-  "lng": 139.778
+ "hotel base|yaesu": {
+  "lat": 35.681,
+  "lng": 139.771
  }
 }

@@ -394,6 +394,9 @@ const AREA_RULES=[
   ['toyosu',    /toyosu|lalaport|โทโยซุ/i],
   ['dome',      /dome city|suidobashi|laqua|yellow street|ซุอิโดบาชิ|dome/i],
   ['shinagawa', /shinagawa|ชินางาวะ/i],
+  ['harajuku', /harajuku|omotesando|ฮาราจูกุ|meiji|ไมเจะ|ginkgo|แปะก๊วย/i],
+  ['azabudai', /azabudai|kamiyacho|borderless|อะซาบูได/i],
+  ['ikebukuro',/ikebukuro|อิเกบุคุโร|sunshine city|pokémon center mega|pokemon center mega/i],
 ];
 function mealPicks(S, day, row){
   const FP=(S&&S.foodAreas&&Object.keys(S.foodAreas).length)?S.foodAreas:FOOD_PICKS;   // per-trip DB (templates) → global Tokyo fallback
