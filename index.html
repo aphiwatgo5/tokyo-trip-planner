@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="data.js?v=14"></script>
+<script src="data-trips.js?v=2"></script>
 <script src="app.js?v=14"></script>
 <style>
   :root{
@@ -350,6 +351,11 @@ function renderSheet(){
         <button class="icobtn" data-daydown="${di}" title="เลื่อนวันลง">↓</button>
         <button class="icobtn" data-daydel="${di}" title="ลบวันนี้">🗑</button>
       </span></td></tr>`;
+    // empty-day onboarding hint
+    if(!rows.length){
+      html+=`<tr class="ghost"><td colspan="15" style="color:var(--muted); font-size:12px; padding:3px 9px 8px;">
+        วันนี้ยังว่าง — พิมพ์ในแถว ＋ ด้านล่างเพื่อเพิ่มกิจกรรม · กด <b>🤖 AI</b> บนแถบเครื่องมือเพื่อให้ AI ร่างแผนให้ · หรือ <b>📂 โหลดจาก Excel</b></td></tr>`;
+    }
     // activity rows
     rows.forEach((r,ri)=>{
       const isSkip=!(r.inc&&day.inc);
@@ -735,14 +741,8 @@ function wireFiles(){
   tsel.onchange=()=>{
     if(tsel.value==='__new'){
       tsel.value=Trips.get().activeId;
-      const name=prompt('ชื่อทริปใหม่:','ทริปใหม่');
-      if(!name) return;
-      const id=Trips.create(name);
-      Trips.saveData(id,{meta:{filename:'',loadedAt:new Date().toISOString(),source:'seed',schema:2},
-        settings:JSON.parse(JSON.stringify(SEED.settings)),
-        days:[{date:new Date().toISOString().slice(0,10),d:thaiDate(new Date().toISOString().slice(0,10)),dow:'วันที่ 1',tag:'วันกลาง',pace:'med',inc:true,title:'วันแรกของทริป',sub:'',activeVariant:0,variants:[{name:'แผนหลัก',rows:[]}]}],
-        routes:[],checks:[]});
-      rebuildAll(); return;
+      openTemplatePicker();
+      return;
     }
     Trips.setActive(tsel.value); rebuildAll();
   };
@@ -869,6 +869,46 @@ function wireAI(){
   };
 }
 
+
+// ================= TRIP TEMPLATES (สร้างทริปใหม่จากฐานข้อมูลเทมเพลต) =================
+function openTemplatePicker(){
+  let ov=document.getElementById('tpl-overlay'); if(ov) ov.remove();
+  ov=document.createElement('div'); ov.id='tpl-overlay';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(12,22,18,.55);z-index:1500;display:flex;align-items:center;justify-content:center;padding:16px;';
+  const tpls=(typeof TRIP_TEMPLATES!=='undefined')?TRIP_TEMPLATES:[];
+  const card=(icon,name,blurb,i)=>`<div data-i="${i}" style="background:#fff;border-radius:14px;padding:16px;width:min(300px,92vw);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.18);border:2px solid transparent;" onmouseover="this.style.borderColor='#0E5B47'" onmouseout="this.style.borderColor='transparent'"><div style="font-size:30px">${icon}</div><div style="font-family:Mitr;font-weight:600;font-size:16px;margin:6px 0 4px">${name}</div><div style="font-size:12.5px;color:#69758A;line-height:1.55">${blurb}</div></div>`;
+  ov.innerHTML=`<div style="background:#F5F2EA;border-radius:18px;padding:22px;max-width:780px;width:100%;max-height:86vh;overflow:auto;">
+    <div style="font-family:Mitr;font-weight:600;font-size:20px;">สร้างทริปใหม่ 🗺️</div>
+    <div style="font-size:13px;color:#69758A;margin:4px 0 14px;">เลือกเทมเพลตหรือเริ่มว่างๆ — สร้างแล้วแก้ได้ทุกอย่างในตาราง · sync Excel สองทาง · ใช้ 🤖 AI ช่วยร่าง/ปรับต่อได้</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      ${tpls.map((t,i)=>card(t.icon,t.name,t.blurb,i)).join('')}
+      ${card('✏️','เริ่มว่างๆ','ตารางเปล่า 1 วัน — วางแผนเองทั้งหมด (หรือให้ AI ร่างให้)',-1)}
+    </div>
+    <div style="text-align:right;margin-top:14px"><button id="tpl-x" style="border:0;background:#1B2430;color:#fff;font-family:Mitr;border-radius:8px;padding:8px 16px;cursor:pointer">ยกเลิก</button></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  ov.addEventListener('click',e=>{
+    if(e.target===ov) return close();
+    if(e.target.id==='tpl-x') return close();
+    const c=e.target.closest('[data-i]'); if(!c) return;
+    const i=+c.dataset.i; close();
+    if(i<0){
+      const name=prompt('ชื่อทริปใหม่:','ทริปใหม่'); if(!name) return;
+      const id=Trips.create(name);
+      const today=new Date().toISOString().slice(0,10);
+      Trips.saveData(id,{meta:{filename:'',loadedAt:new Date().toISOString(),source:'seed',schema:11},
+        settings:JSON.parse(JSON.stringify(SEED.settings)),
+        days:[{date:today,d:thaiDate(today),dow:'วันที่ 1',tag:'วันกลาง',pace:'med',inc:true,title:'วันแรกของทริป',sub:'',activeVariant:0,variants:[{name:'แผนหลัก',rows:[]}]}],
+        routes:[],checks:[]});
+      rebuildAll(); return;
+    }
+    const t=TRIP_TEMPLATES[i], id=Trips.create(t.name);
+    Trips.saveData(id, mkState(t));
+    rebuildAll();
+    APP.toast('สร้าง "'+t.name+'" แล้ว ✓ แก้ได้ทุกช่องในตาราง');
+  });
+}
 
 // ================= INIT =================
 initBudget();
