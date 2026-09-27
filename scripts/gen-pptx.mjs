@@ -26,7 +26,7 @@ const AREA_RULES=[
   ['tokyostation',/tokyo station|marunouchi|nihonbashi|character street|ramen street|หน้าสถานี|กลางเมือง/i],
   ['yokohama',/minatomirai|yokohama|mark is|โยโกฮามะ/i],['kamakura',/kamakura|hase|komachi|คามาคุระ/i],
   ['disney',/maihama|disney|ikspiari|ไมฮามะ/i],['toyosu',/toyosu|lalaport|โทโยซุ/i],
-  ['dome',/dome city|suidobashi|laqua|yellow street|ซุอิโดบาชิ|dome/i],['shinagawa',/shinagawa|ชินางาวะ/i],['harajuku',/harajuku|omotesando|ฮาราจูกุ|meiji|ไมเจะ|ginkgo|แปะก๊วย/i],['azabudai',/azabudai|kamiyacho|borderless|อะซาบูได/i],['ikebukuro',/ikebukuro|อิเกบุคุโร|sunshine city|pok[eé]mon center mega/i]];
+  ['dome',/dome city|suidobashi|laqua|yellow street|ซุอิโดบาชิ|dome/i],['shinagawa',/shinagawa|ชินางาวะ/i],['harajuku',/harajuku|omotesando|ฮาราจูกุ|meiji|ไมเจะ|ginkgo|แปะก๊วย/i],['shinjuku',/shinjuku|ชินจูกุ|gyoen/i],['azabudai',/azabudai|kamiyacho|borderless|อะซาบูได/i],['ikebukuro',/ikebukuro|อิเกบุคุโร|sunshine city|pok[eé]mon center mega/i]];
 function mealInfo(day,row){
   const t1=`${row.ft||''} ${row.act||''}`;
   const t2=`${t1} ${day.zone||''}`;

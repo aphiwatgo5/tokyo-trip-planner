@@ -218,7 +218,7 @@ const V4_DAYS=[
 // Sat shopping · Sun fly home. All transits ≤1h from Tokyo Station (Yaesu).
 const V5_BASE={name:"โรงแรม Sardonyx Tokyo (Yaesu)", geo:{lat:35.6810,lng:139.7710}};
 const V5_CHECKS=[
-  ["จอง Shibuya SKY (รอบ sunset 28 พ.ย.)","เปิดจอง 14 วันก่อน เที่ยงคืน JST — รอบ sunset หมดใน ~3 นาที","14 พ.ย. 23:00 (ไทย)","w-now","ยังไม่ได้ทำ"],
+  ["จอง Shibuya SKY (อาทิตย์ 29 พ.ย. รอบ sunset)","หอชมวิวเดียวของทริป — sunset อาทิตย์แรงสุด! จอง 14 วันก่อนเที่ยงคืน JST หมดใน ~3 นาที · สำรอง: จองรอบบ่ายแล้วอยู่ถึง sunset","15 พ.ย. 23:00 (ไทย)","w-now","ยังไม่ได้ทำ"],
   ["จองตั๋ว Disneyland (อังคาร 1 ธ.ค.)","ซื้อล่วงหน้าระบุวัน · Hooga <4 ขวบเข้าฟรี","~2 เดือนก่อน","w-pre","ยังไม่ได้ทำ"],
   ["จองร้านกิโมโน Asakusa (อาทิตย์ 29 พ.ย.)","เลือกร้านที่มีชุดเด็ก 1–2 ขวบ + จองช่วง 09:30","~1 เดือนก่อน","w-pre","ยังไม่ได้ทำ"],
   ["ซื้อบัตร teamLab Borderless (รอบ 09:00–10:00)","เว็บทางการ — รอบแรกคนน้อยสุด · ≤3 ขวบฟรี","~1 เดือนก่อน","w-pre","ยังไม่ได้ทำ"],
@@ -233,6 +233,7 @@ const V5_ROUTES=[
   ["Tokyo Sta. → Kamakura","JR Yokosuka (ตรง)","~57 นาที",990,0],
   ["Tokyo Sta. → Harajuku","JR Yamanote","~17 นาที",210,0],
   ["Tokyo Sta. → Shibuya","JR Yamanote","~15 นาที",210,0],
+    ["Tokyo Sta. → Shinjuku (Gyoen)","JR Chuo (ตรง)","~15 นาที",220,0],
   ["Tokyo Sta. → Ikebukuro","Marunouchi Line (ตรง)","~18 นาที",210,0],
   ["Tokyo Sta. → Shinagawa (Maxell)","JR Yamanote","~7 นาที",170,0],
   ["Tokyo Sta. → Kamiyacho (teamLab)","Marunouchi → Hibiya","~20 นาที",190,0],
@@ -240,52 +241,56 @@ const V5_ROUTES=[
   ["Tokyo Sta. → Oshiage (Skytree)","Marunouchi → Hanzomon","~25 นาที",280,0],
 ];
 const V5_DAYS=[
-{date:"2026-11-28", d:"28 พ.ย.", dow:"เสาร์ · D1", tag:"วันพัก", pace:"rest", zone:"Yaesu (หน้าสถานีโตเกียว)",
+{date:"2026-11-28", d:"28 พ.ย.", dow:"เสาร์ · D1", tag:"วันพัก", pace:"rest", zone:"Yaesu → Ikebukuro (เช้า) → หน้าบ้าน",
   extras:["Ginza เดินเย็นถ้ายังไหว","นอนเร็วให้พร้อมพรุ่งนี้"],
-  title:"ถึงโตเกียว · เช็กอิน 15:00", sub:"Haneda 06:55 · ฐานใหม่ติดสถานีโตเกียว (Yaesu)", activeVariant:0, inc:true,
+  title:"ถึงโตเกียว · เช็กอิน 15:00 + Pokémon เช้า", sub:"Haneda 06:55 · Pokémon Ikebukuro ตอนเปิด 10:00 — บ่ายพักหน้าบ้าน", activeVariant:0, inc:true,
   variants:[{name:"แผนหลัก", rows:[
     R("06:55–08:00","เครื่องลง Haneda (T3) + ตม.","Haneda","","~1 ชม.",0,0,"logistic","ผ่าน ตม. + รับกระเป๋า ~60 นาที",415,65),
     R("08:30–09:20","เข้าเมือง → Tokyo Station","Haneda → Tokyo Sta.","Keikyu → Shinagawa → JR Yamanote","~50 นาที",560,0,"logistic","ตั้ง Suica ในมือถือก่อนออกจากสนามบิน",510,50),
     R("09:30–10:00","ฝากกระเป๋าที่โรงแรม (Yaesu)","โรงแรม (Yaesu)","เดิน","30 นาที",0,0,"rest","Sardonyx Tokyo — เช็กอิน 15:00 ฝากของก่อน",570,30),
-    R("10:15–11:45","เดินสวน Imperial Palace East Gardens","Imperial Palace","เดิน","1.5 ชม.",0,0,"attraction","สวนฟรีใกล้โรงแรม — เดินเบาๆ ปรับ jetlag",615,90),
-    R("12:00–13:00","มื้อกลางวัน Ramen Street (B1 สถานี)","Tokyo Station (B1)","เดิน","1 ชม.",0,1200,"food","ใต้สถานีตรงข้ามโรงแรม — ซื้อบัตรที่ตู้ก่อนเข้าคิว",720,60),
-    R("13:30–15:00","งีบรอเช็กอิน","โรงแรม (Yaesu)","","",0,0,"rest","เช็กอิน 15:00",810,90),
+    R("10:00–10:25","ไป Ikebukuro","Tokyo Sta. → Ikebukuro","Marunouchi (ตรง ~18 นาที)","25 นาที",210,0,"logistic","",600,25),
+    R("10:25–12:00","Pokémon Center Mega Tokyo ⚡ (ตอนเปิด)","Sunshine City Ikebukuro","","1.5 ชม.",0,0,"shopping","เปิด 10:00 — มาตอนเปิดคิวสั้นสุด · ใหญ่สุดในญี่ปุ่น ไม่ต้องจอง",625,95),
+    R("12:00–13:00","มื้อกลางวัน Ikebukuro","Sunshine City Alpa/ฟู้ดคอร์ท","","1 ชม.",0,1500,"food","ในตึกเดียวกัน — เดินต่อได้เลย",720,60),
+    R("13:15–13:40","กลับโรงแรม","Ikebukuro → Tokyo Sta.","Marunouchi","",210,0,"logistic","",795,25),
+    R("13:40–15:00","งีบรอเช็กอิน","โรงแรม (Yaesu)","","",0,0,"rest","เช็กอิน 15:00",820,80),
     R("15:00–15:30","เช็กอิน + พักห้อง","โรงแรม (Yaesu)","","",0,0,"rest","",900,30),
-    R("15:45–16:15","ไป Shibuya","Tokyo Sta. → Shibuya","JR Yamanote","",210,0,"logistic","",945,30),
-    R("16:30–17:30","Shibuya SKY ช่วงพระอาทิตย์ตก 🌆","Shibuya Sky","","1 ชม.",0,4600,"attraction","จอง 14 วันก่อน เที่ยงคืน JST — รอบ sunset หมดไวมาก",990,60),
-    R("18:00–19:00","มื้อเย็น Shibuya + Hachiko","ย่าน Shibuya","","1 ชม.",0,1500,"food","",1080,60),
-    R("19:15–19:45","กลับโรงแรม","Shibuya → Tokyo Sta.","JR Yamanote","",210,0,"logistic","",1155,30),
+    R("15:45–17:15","เดินเบาหน้าบ้าน: Tokyo Station ยามค่ำ + Character Street","Tokyo Station","เดิน","1.5 ชม.",0,0,"view","วันแรกไม่เดินไกล — ตึกอิฐช่วงไฟเปิดสวย · Ginza ถ้าแรงเหลือ",945,90),
+    R("17:45–18:45","มื้อเย็น Yaesu","ย่าน Yaesu","","1 ชม.",0,1500,"food","กินใกล้บ้าน นอนเร็ว",1065,60),
+    R("19:00–19:30","พัก + นอนเร็ว","โรงแรม (Yaesu)","","",0,0,"rest","เก็บแรงไว้พรุ่งนี้",1140,30),
   ]}]},
-{date:"2026-11-29", d:"29 พ.ย.", dow:"อาทิตย์ · D2", tag:"วันกลาง", pace:"med", zone:"อาซากุสะ (แต่งกิโมโน)",
-  extras:["Nakamise ขนมถนน (ningyo-yaki)","Kaminarimon ถ่ายรูปชุดกิโมโน"],
-  title:"อาซากุสะ · แต่งกิโมโน Hooga 👘", sub:"Sensō-ji ชุดกิโมโน + Hanayashiki", activeVariant:0, inc:true,
+{date:"2026-11-29", d:"29 พ.ย.", dow:"อาทิตย์ · D2", tag:"วันกลาง", pace:"med", zone:"อาซากุสะ (กิโมโน) + Shibuya เย็น",
+  extras:["Nakamise ขนมถนน (ningyo-yaki)","Hachiko + ชุมทางคนข้ามถนนถ้าแรงเหลือ"],
+  title:"อาซากุสะ แต่งกิโมโน + Shibuya SKY 🌆", sub:"Sensō-ji ชุดกิโมโน + Hanayashiki — เย็น Shibuya SKY รอบ sunset", activeVariant:0, inc:true,
   variants:[{name:"แผนหลัก", rows:[
     R("08:30–09:00","อาหารเช้า","คาเฟ่/konbini","","",0,500,"food","",510,30),
     R("09:00–09:35","ไป Asakusa","Tokyo Sta. → Asakusa","Marunouchi → Ginza Line","",220,0,"logistic","",540,35),
     R("09:45–10:30","แต่งกิโมโน 👘 (จองร้านล่วงหน้า)","ร้านกิโมโน Asakusa","","45 นาที",0,6000,"attraction","เลือกร้านที่มีชุดเด็ก 1–2 ขวบ — จองช่วง 09:30-09:45",585,45),
     R("10:30–12:00","Sensō-ji + Nakamise ถ่ายรูปชุดกิโมโน 📸","Senso-ji","เดิน","1.5 ชม.",0,0,"attraction","แสงเช้าสวย คนน้อยกว่า — จุดถ่าย Kaminarimon + หอใหญ่",630,90),
     R("12:00–12:45","มื้อกลางวันอาซากุสะ","ย่าน Asakusa","","45 นาที",0,1500,"food","",720,45),
-    R("12:45–13:15","คืนชุดกิโมโน + เดินสั้นๆ","ร้านกิโมโน Asakusa","","30 นาที",0,0,"rest","",765,30),
-    R("13:15–14:00","Hanayashiki 🎡","Hanayashiki","","45 นาที",0,1500,"attraction","หน้าหนาวปิด 16:00 — มาช่วงบ่ายแรกพอดี · เด็ก≤4 ขวบขึ้นฟรีส่วนใหญ่",795,45),
+    R("12:45–13:15","คืนชุดกิโมโน","ร้านกิโมโน Asakusa","","30 นาที",0,0,"rest","",765,30),
+    R("13:15–14:00","Hanayashiki 🎡","Hanayashiki","","45 นาที",0,1500,"attraction","หน้าหนาวปิด 16:00 — ช่วงบ่ายแรกพอดี · เด็ก≤4 ขวบขึ้นฟรีส่วนใหญ่",795,45),
     R("14:15–15:00","กลับโรงแรม","Asakusa → Tokyo Sta.","Ginza → Marunouchi","",220,0,"logistic","",855,45),
-    R("15:00–16:30","งีบ","โรงแรม (Yaesu)","","",0,0,"rest","",900,90),
-    R("16:45–17:45","เย็นเบาๆ: Tokyo Station ยามค่ำ + Character Street หน้าบ้าน","Tokyo Station","เดิน","1 ชม.",0,0,"view","ตึกอิฐสวยช่วงไฟเปิด — เดิน 3 นาทีถึงบ้าน",1005,60),
-    R("18:15–19:15","มื้อเย็น Yaesu/Ginza","ย่าน Yaesu","","1 ชม.",0,1500,"food","",1095,60),
+    R("15:00–15:50","งีบ","โรงแรม (Yaesu)","","",0,0,"rest","",900,50),
+    R("16:00–16:25","ไป Shibuya","Tokyo Sta. → Shibuya","JR Yamanote (ตรง ~15 นาที)","25 นาที",210,0,"logistic","",960,25),
+    R("16:30–17:45","Shibuya SKY 🌆 รอบพระอาทิตย์ตก (หอชมวิวประจำทริป)","Shibuya Sky","","1 ชม. 15 นาที",0,4600,"attraction","เข้าก่อน sunset 30–45 นาที — sunset ~16:30 · มุมก้มเห็นชุมทางคนข้ามถนน · ลมแรงผ้าห่ม Hooga",990,75),
+    R("18:00–19:00","มื้อเย็น Shibuya + Hachiko ถ้าแรงเหลือ","ย่าน Shibuya","","1 ชม.",0,1800,"food","",1080,60),
+    R("19:15–19:40","กลับโรงแรม","Shibuya → Tokyo Sta.","JR Yamanote","",210,0,"logistic","",1155,25),
   ]}]},
-{date:"2026-11-30", d:"30 พ.ย.", dow:"จันทร์ · D3", tag:"วันหนัก", pace:"big", zone:"ใต้: คามาคุระ (ขบวนตรง)",
-  extras:["Enoden นั่งเล่น 1–2 สถานีถ้าแรงเหลือ","Komachi ของว่างทางกลับ"],
-  title:"คามาคุระตรงจาก Tokyo Sta.", sub:"Yokosuka line 57 นาที · Hase-dera + พระใหญ่", activeVariant:0, inc:true,
+{date:"2026-11-30", d:"30 พ.ย.", dow:"จันทร์ · D3", tag:"วันหนัก", pace:"big", zone:"ใต้: คามาคุระเต็มวัน (ขบวนตรง)",
+  extras:["Enoden นั่งเล่น 1–2 สถานีถ้าแรงเหลือ","ขนมถนน Komachi ลองทีละอย่าง"],
+  title:"คามาคุระเต็มวัน 🗿", sub:"Yokosuka ตรง 57 นาที — Hase-dera + พระใหญ่ + Hachimangu + Komachi", activeVariant:0, inc:true,
   variants:[{name:"แผนหลัก", rows:[
     R("08:00–08:30","อาหารเช้าเร็ว","konbini/โรงแรม","","",0,500,"food","",480,30),
     R("08:30–09:30","ขบวนตรงไป Kamakura","Tokyo Sta. → Kamakura","JR Yokosuka (ตรง)","~57 นาที",990,0,"logistic","ไม่ต้องเปลี่ยนรถ — Hooga นั่งสบาย",510,60),
-    R("09:40–10:00","Enoden ไป Hase","Kamakura → Hase","Enoden 1 สถานี","",190,0,"logistic","",580,20),
+    R("09:40–10:00","Enoden ไป Hase","Kamakura → Hase","Enoden 1 สถานี","",190,0,"logistic","รถไฟริมทะเลสายดัง — ถ้าคิวยาวเดินได้",580,20),
     R("10:00–11:00","Hase-dera","Hase","","1 ชม.",0,400,"attraction","วิวทะเลจากยอดเนิน · บันได — ผูกอุ้ม Hooga",600,60),
     R("11:05–11:45","Great Buddha (Kotoku-in) 🗿","Hase","","40 นาที",0,600,"attraction","พระบรอนซ์กลางแจ้ง เดินรอบสั้น รถเข็นไหลได้",665,40),
     R("11:45–12:45","มื้อกลางวัน Hase","ย่าน Hase","","1 ชม.",0,1500,"food","Kua'Aina เบอร์เกอร์ / โซบะท้องถิ่น",705,60),
-    R("13:00–13:25","กลับสถานี Kamakura (ผ่าน Komachi)","Hase → Kamakura Sta.","เดิน/Enoden","",0,0,"food","ของกินถนน Komachi ถ้าผ่าน — ไม่ตั้งใจ",780,25),
-    R("13:30–14:30","กลับโตเกียว (งีบบนรถ)","Kamakura → Tokyo Sta.","JR Yokosuka (ตรง)","~57 นาที",990,0,"logistic","",810,60),
-    R("14:45–16:15","งีบโรงแรม","โรงแรม (Yaesu)","","",0,0,"rest","วันเดียวที่ไกล — ให้เวลาพักเต็มที่",885,90),
-    R("17:00–18:00","ชิลหน้าบ้าน: คาเฟ่/Ginza เดินเบา","ย่าน Ginza/Yaesu","","1 ชม.",0,0,"view","",1020,60),
+    R("13:00–13:25","Enoden กลับสถานี Kamakura","Hase → Kamakura Sta.","Enoden","",190,0,"logistic","",780,25),
+    R("13:30–14:30","Tsurugaoka Hachimangu ⛩ (ศาลเจ้าหลัก)","Kamakura","","1 ชม.",0,0,"attraction","เดินจากสถานีผ่านถนน Komachi ~15 นาที · ลานกว้าง รถเข็นได้",810,60),
+    R("14:30–15:45","Komachi-dori ของกินถนน + กาเฟ่พัก","Komachi-dori","","1 ชม. 15 นาที",0,800,"rest","Hooga งีบในรถเข็นช่วงนี้ได้ — พักก่อนกลับ",870,75),
+    R("16:00–17:00","ขบวนตรงกลับโตเกียว (งีบบนรถ)","Kamakura → Tokyo Sta.","JR Yokosuka (ตรง)","~57 นาที",990,0,"logistic","",960,60),
+    R("17:15–18:00","พักโรงแรม / อาบน้ำเตรียมมื้อเย็น","โรงแรม (Yaesu)","","",0,0,"rest","",1035,45),
     R("18:30–19:30","มื้อเย็น","ย่าน Yaesu","","1 ชม.",0,1500,"food","",1110,60),
   ]}]},
 {date:"2026-12-01", d:"1 ธ.ค.", dow:"อังคาร · D4", tag:"วันหนัก", pace:"big", zone:"ไมฮามะ (Disney)",
@@ -301,49 +306,50 @@ const V5_DAYS=[
     R("18:00–19:00","มื้อเย็นในสวน","ในสวน / Citywalk","","1 ชม.",0,2000,"food","ถ้าเพลีย ออกก่อนได้",1080,60),
     R("19:10–19:45","กลับโรงแรม","Maihama → Tokyo Sta.","JR Keiyo","",220,0,"logistic","",1150,35),
   ]}]},
-{date:"2026-12-02", d:"2 ธ.ค.", dow:"พุธ · D5", tag:"วันกลาง", pace:"med", zone:"ชิบุยะ–ฮาราจูกุ (แปะก๊วยทอง)",
-  extras:["KITTE หลังคาชมสถานี","Ginza ช่วงไฟถ้าแรงเหลือ"],
-  title:"Meiji Jingu + Harajuku + แปะก๊วยทอง 🍁", sub:"พีคเหลืองปลาย พ.ย.–ต้น ธ.ค. พอดี", activeVariant:0, inc:true,
+{date:"2026-12-02", d:"2 ธ.ค.", dow:"พุธ · D5", tag:"วันกลาง", pace:"med", zone:"ไมเจะ–ชินจูกุ (เช้า) + ชินางาวะ (บ่าย)",
+  extras:["Takeshita/Omotesando เดินเสริมถ้าเช้าเร็ว","KITTE หลังคาชมสถานี"],
+  title:"Meiji Jingu + Gyoen + Maxell 🐬", sub:"เช้าวัด+สวน บ่ายพิพิธภัณฑ์ปลา — จบไม่เย็น ~19:00", activeVariant:0, inc:true,
   variants:[{name:"แผนหลัก", rows:[
     R("08:30–09:00","อาหารเช้า","คาเฟ่/konbini","","",0,500,"food","",510,30),
     R("09:05–09:25","ไป Harajuku","Tokyo Sta. → Harajuku","JR Yamanote","",210,0,"logistic","",545,20),
-    R("09:30–11:00","Meiji Jingu ⛩ เช้าเงียบ","Meiji Jingu","","1.5 ชม.",0,0,"attraction","ป่าในกลางเมือง — ทางเดินกว้าง รถเข็นสบาย",570,90),
-    R("11:00–12:15","Takeshita + Omotesando เดินเบาๆ","Harajuku/Omotesando","เดิน","1 ชม. 15 นาที",0,0,"shopping","Omotesando Hills แวะเดินเบา",660,75),
-    R("12:15–13:15","มื้อกลางวัน Harajuku","ย่าน Harajuku","","1 ชม.",0,1500,"food","Maisen โทนคัตสึ / เกี๊ยว Lou",735,60),
-    R("13:35–14:00","กลับโรงแรม","Harajuku → Tokyo Sta.","JR Yamanote","",210,0,"logistic","",815,25),
-    R("14:00–15:30","งีบ","โรงแรม (Yaesu)","","",0,0,"rest","",840,90),
-    R("15:45–16:00","ไป Meiji Gaien","Tokyo Sta. → Shinanomachi","JR Chuo-Sobu","",160,0,"logistic","",945,15),
-    R("16:00–17:00","ถนนแปะก๊วย Meiji Gaien 🍁","Meiji Gaien Ginkgo Ave","","1 ชม.",0,0,"view","ไฟส้มยามเย็นสวยสุด ~16:00-16:30 ก่อนพระอาทิตย์ตก",960,60),
-    R("17:15–18:00","กลับ + พัก","Shinanomachi → Tokyo Sta.","JR Chuo-Sobu","",160,0,"logistic","",1035,45),
-    R("18:30–19:30","มื้อเย็น","ย่าน Yaesu","","1 ชม.",0,1500,"food","",1110,60),
+    R("09:30–10:45","Meiji Jingu ⛩ เช้าเงียบ","Meiji Jingu","","1 ชม. 15 นาที",0,0,"attraction","ป่าในกลางเมือง — ทางเดินกว้าง รถเข็นสบาย",570,75),
+    R("10:50–11:05","ต่อไป Shinjuku Gyoen","Harajuku → Shinjuku","JR Yamanote (2 นาที)","15 นาที",150,0,"logistic","ใกล้กันมาก — คนละทิศเดินวันเดียวจบ",650,15),
+    R("11:05–12:20","Shinjuku Gyoen National Garden 🌳","Shinjuku Gyoen","","1 ชม. 15 นาที",0,1000,"attraction","สวน 3 สไตล์ แปะก๊วย/เมเปิล — จัดไว้กลางทริปก่อนถึงวันท้าย",665,75),
+    R("12:30–13:20","มื้อกลางวัน Shinjuku (depachika)","ย่าน Shinjuku (Takashimaya)","","50 นาที",0,1500,"food","ชั้นอาหารใต้ดิน — ข้าวกล่องเลือกง่าย",750,50),
+    R("13:35–14:00","กลับโรงแรม","Shinjuku → Tokyo Sta.","JR Chuo","",210,0,"logistic","",815,25),
+    R("14:00–15:00","งีบ","โรงแรม (Yaesu)","","",0,0,"rest","",840,60),
+    R("15:10–15:25","ไป Maxell Aqua Park","Tokyo Sta. → Shinagawa","JR Yamanote","",170,0,"logistic","ติดสถานีชินางาวะ ออกปุ๊บถึง",910,15),
+    R("15:30–17:30","Maxell Aqua Park 🐬","Shinagawa","","2 ชม.",0,5200,"attraction","เช็กตารางโชว์โลมาก่อนเดิน · คาร์เซลเด็กชอบ — จบ 17:30 ไม่เย็นเกิน",930,120),
+    R("17:45–18:45","มื้อเย็น Shinagawa ekinaka","ย่าน Shinagawa","","1 ชม.",0,1500,"food","เลือกง่าย ใกล้ Maxell มาก",1065,60),
+    R("18:55–19:10","กลับโรงแรม","Shinagawa → Tokyo Sta.","JR Yamanote","",170,0,"logistic","",1135,15),
   ]}]},
-{date:"2026-12-03", d:"3 ธ.ค.", dow:"พฤหัสบดี · D6", tag:"วันกลาง", pace:"med", zone:"อะซาบูได–ชินางาวะ",
-  extras:["Azabudai Garden Plaza เดินเบา","ของว่าง ekinaka Shinagawa"],
-  title:"teamLab Borderless + Maxell 🐬", sub:"ครึ่งวันละจุด — ในร่มทั้งคู่ กันอากาศหนาว", activeVariant:0, inc:true,
+{date:"2026-12-03", d:"3 ธ.ค.", dow:"พฤหัสบดี · D6", tag:"วันกลาง", pace:"med", zone:"อะซาบูได (เช้า) + แปะก๊วย Gaien (เย็น)",
+  extras:["Azabudai Garden Plaza เดินเบา","Ginza ช่วงไฟถ้าแรงเหลือ"],
+  title:"teamLab Borderless + แปะก๊วยทอง 🍁", sub:"รอบแรก Borderless 9:30 — เย็นไฟส้มแปะก๊วย Meiji Gaien", activeVariant:0, inc:true,
   variants:[{name:"แผนหลัก", rows:[
     R("08:30–09:00","อาหารเช้า","โรงแรม/konbini","","",0,500,"food","",510,30),
     R("09:05–09:30","ไป Azabudai Hills","Tokyo Sta. → Kamiyacho","Marunouchi → Hibiya","",190,0,"logistic","",545,25),
     R("09:30–11:30","teamLab Borderless 🎨 (รอบแรก)","Azabudai Hills","","2 ชม.",0,6400,"attraction","ไม่มีน้ำเหมาะเด็กกว่า Planets · อุ้มแทนรถเข็น (ห้ามเข็นใน) · ≤3 ขวบฟรี",570,120),
     R("11:45–12:45","มื้อกลางวัน Azabudai Hills","Azabudai Hills Market","","1 ชม.",0,1500,"food","ฟู้ดฮอลล์เลือกเยอะ มีมุมเด็ก",705,60),
     R("13:05–13:30","กลับโรงแรม","Kamiyacho → Tokyo Sta.","Hibiya → Marunouchi","",190,0,"logistic","",785,25),
-    R("13:30–15:15","งีบ","โรงแรม (Yaesu)","","",0,0,"rest","",810,105),
-    R("15:35–15:50","ไป Maxell Aqua Park","Tokyo Sta. → Shinagawa","JR Yamanote","",170,0,"logistic","ติดสถานีชินางาวะ ออกปุ๊บถึง",935,15),
-    R("16:00–18:00","Maxell Aqua Park 🐬","Shinagawa","","2 ชม.",0,5200,"attraction","เช็กตารางโชว์โลมา (~15 นาที/รอบ) แล้ววางแผนเดิน · คาร์เซลเด็กชอบ",960,120),
-    R("18:15–19:15","มื้อเย็น Shinagawa ekinaka","ย่าน Shinagawa","","1 ชม.",0,1500,"food","เลือกง่าย ใกล้ Maxell มาก",1095,60),
-    R("19:25–19:40","กลับโรงแรม","Shinagawa → Tokyo Sta.","JR Yamanote","",170,0,"logistic","",1165,15),
+    R("13:30–15:00","งีบ","โรงแรม (Yaesu)","","",0,0,"rest","",810,90),
+    R("15:20–15:35","ไป Meiji Gaien","Tokyo Sta. → Shinanomachi","JR Chuo-Sobu","",160,0,"logistic","",920,15),
+    R("15:45–17:00","ถนนแปะก๊วย Meiji Gaien 🍁","Meiji Gaien Ginkgo Ave","","1 ชม. 15 นาที",0,0,"view","ไฟส้มยามเย็นสวยสุด ~16:00–16:30 ก่อนพระอาทิตย์ตก — พีคเหลืองช่วงนี้พอดี",945,75),
+    R("17:15–18:00","กลับ + พัก","Shinanomachi → Tokyo Sta.","JR Chuo-Sobu","",160,0,"logistic","",1035,45),
+    R("18:30–19:30","มื้อเย็น","ย่าน Yaesu","","1 ชม.",0,1500,"food","",1110,60),
   ]}]},
-{date:"2026-12-04", d:"4 ธ.ค.", dow:"ศุกร์ · D7", tag:"วันกลาง", pace:"med", zone:"อิเกบุคุโร + optional (วันเหลือแรง)",
-  extras:["Sunshine City ร้านของเล่นรอบๆ","Animate อิเกบุคุโรถ้าผู้ใหญ่อยาก"],
-  title:"Pokémon Mega Ikebukuro + วันเหลือแรง", sub:"Optional: Ueno Zoo / Anpanman — เลือกตามแรงวันนั้น", activeVariant:0, inc:true,
+{date:"2026-12-04", d:"4 ธ.ค.", dow:"ศุกร์ · D7", tag:"วันกลาง", pace:"med", zone:"อุเอโนะเช้า + ฟรีไทม์เลือกเองบ่าย",
+  extras:["Ginza เดินเล่นถ้าไม่ไปไหน","Ameyoko ของว่าง"],
+  title:"Ueno Zoo 🐼 + ฟรีไทม์เลือกเอง", sub:"แพนด้าตอนเปิด → งีบ → บ่ายว่างเลือกเอง (Anpanman/Ginza/พัก)", activeVariant:0, inc:true,
   variants:[{name:"แผนหลัก", rows:[
     R("08:30–09:00","อาหารเช้า","โรงแรม/konbini","","",0,500,"food","",510,30),
-    R("09:05–09:30","ไป Ikebukuro","Tokyo Sta. → Ikebukuro","Marunouchi (ตรง ~18 นาที)","25 นาที",210,0,"logistic","",545,25),
-    R("09:30–11:30","Pokémon Center Mega Tokyo ⚡ + Sunshine City","Sunshine City Ikebukuro","","2 ชม.",0,0,"shopping","ใหญ่สุดในญี่ปุ่น ไม่ต้องจอง — ทดแทน Pokémon Café ที่ต้องลุ้นจอง",570,120),
-    R("11:45–12:45","มื้อกลางวัน Ikebukuro","Sunshine City Alpa/ฟู้ดคอร์ท","","1 ชม.",0,1500,"food","ในตึกเดียวกัน — ไม่ต้องแพ็กของ",705,60),
-    R("13:05–13:30","กลับโรงแรม","Ikebukuro → Tokyo Sta.","Marunouchi","",210,0,"logistic","",785,25),
-    R("13:30–15:00","งีบ","โรงแรม (Yaesu)","","",0,0,"rest","",810,90),
-    R("15:15–17:00","⏳ Optional เลือกตามแรง: Ueno Zoo / Anpanman / พัก","Ueno (Zoo) หรือ Yokohama (Anpanman)","","1 ชม. 45 นาที",0,1200,"attraction","Zoo: รีบไปแพนด้าก่อนเข้าสุดท้าย ~16:00 (JR 8 นาที) · Anpanman: ต้องจองออนไลน์ล่วงหน้า",915,105),
-    R("17:20–18:00","กลับ + พัก","→ Tokyo Sta.","JR","",210,0,"logistic","",1040,40),
+    R("09:05–09:20","ไป Ueno","Tokyo Sta. → Ueno","JR Yamanote (8 นาที)","15 นาที",170,0,"logistic","",545,15),
+    R("09:30–11:30","Ueno Zoo 🐼 (ตรงไปแพนด้าก่อน)","Ueno Zoo","","2 ชม.",0,1200,"attraction","เปิด 9:30 — คิวแพนด้าช่วงเปิดสั้นสุด · ทางเดินกว้าง รถเข็นสะดวก",570,120),
+    R("11:45–12:45","มื้อกลางวัน Ueno","ย่าน Ueno","","1 ชม.",0,1200,"food","",705,60),
+    R("13:00–13:20","กลับโรงแรม","Ueno → Tokyo Sta.","JR Yamanote","",170,0,"logistic","",780,20),
+    R("13:20–15:00","งีบ","โรงแรม (Yaesu)","","",0,0,"rest","",800,100),
+    R("15:15–17:00","⏳ ฟรีไทม์เลือกเอง: Anpanman โยโกฮามะ / Ginza เดินเล่น / พักโรงแรม","Yokohama / Ginza / โรงแรม","","1 ชม. 45 นาที",0,0,"attraction","บ่ายว่างของทริป — เลือกตามแรง Hooga วันนั้น · Anpanman ต้องจองออนไลน์ล่วงหน้า",915,105),
+    R("17:20–18:00","กลับ + พัก","→ Tokyo Sta.","JR Yamanote","",210,0,"logistic","",1040,40),
     R("18:00–18:45","ไฟ Marunouchi Illumination 🎆 (หน้าบ้าน)","Marunouchi","เดิน","45 นาที",0,0,"view","mid-พ.ย.–ก.พ. ฟรี — ตึกอิฐ + ถนน Nakadori สวยสุดหลัง 18:00",1080,45),
     R("19:00–20:00","มื้อเย็นปิดสัปดาห์","ย่าน Yaesu","","1 ชม.",0,1800,"food","",1140,60),
   ]}]},
@@ -358,8 +364,7 @@ const V5_DAYS=[
     R("13:15–14:45","งีบบ่ายสุดท้าย","โรงแรม (Yaesu)","","",0,0,"rest","",795,90),
     R("15:00–15:35","ไป Skytree","Tokyo Sta. → Oshiage","Marunouchi → Hanzomon","~35 นาที",280,0,"logistic","",900,35),
     R("15:35–17:30","ช้อปของฝาก Tokyo Solamachi 🛍️","Solamachi (Skytree)","","~2 ชม.",0,0,"shopping","KitKat Tokyo · Tokyo Banana · ร้านการ์ตูน — ครบจบที่เดียว รถเข็นสบาย",935,115),
-    R("17:45–18:45","มื้อเย็นพิเศษส่งท้าย","Solamachi (food court/ร้านในมอลล์)","","1 ชม.",0,2500,"food","มื้อส่งท้ายทริป เลือกตามใจ",1065,60),
-    R("19:00–19:45","เดินชมไฟ Skytree รอบตึก","Skytree บริเวณรอบตึก","เดิน","45 นาที",0,0,"view","ไฟประดับตึกสวย · ถ่ายรูปรอบๆ พอ",1140,45),
+    R("17:45–19:15","มื้อเย็นพิเศษส่งท้าย + เดินไฟ Skytree รอบตึก","Solamachi (food court/ร้านในมอลล์)","","1 ชม. 30 นาที",0,2500,"food","มื้อส่งท้ายทริป + เดินชมไฟ Skytree รอบตึก",1065,90),
     R("19:55–20:40","กลับ + Don Quijote Ueno รอบสุดท้าย","Oshiage → Ueno → Tokyo Sta.","Hanzomon/Asakusa Line + JR","~45 นาที",220,0,"shopping","Donki Ueno เปิด 24 ชม. — ทางผ่านกลับบ้าน",1195,45),
   ]}]},
 {date:"2026-12-06", d:"6 ธ.ค.", dow:"อาทิตย์ · D9", tag:"กลับ", pace:"rest", zone:"กลับกรุงเทพฯ",
@@ -373,13 +378,13 @@ const V5_DAYS=[
 ];
 
 const SEED = {
-  meta: { filename: "Tokyo_Trip_Working_Plan_2026.xlsx", loadedAt: "2026-09-06T00:00:00Z", source: "seed", schema: 6 },
+  meta: { filename: "Tokyo_Trip_Working_Plan_2026.xlsx", loadedAt: "2026-09-06T00:00:00Z", source: "seed", schema: 11 },
   settings: {
     fx: 0.23, foodStyle: "กลาง", hotelTokyo: 13000, nightsTokyo: 8,
-    hotelShizuoka: 12000, nightsShizuoka: 0, adults: 2, children: 1
+    hotelShizuoka: 12000, nightsShizuoka: 0, adults: 2, children: 1,
+    base: JSON.parse(JSON.stringify(V5_BASE))
   },
   days: JSON.parse(JSON.stringify(V5_DAYS)),
-  base: JSON.parse(JSON.stringify(V5_BASE)),
   routes: JSON.parse(JSON.stringify(V5_ROUTES)),
   checks: JSON.parse(JSON.stringify(V5_CHECKS))
 };
@@ -587,6 +592,11 @@ const FOOD_PICKS={
     {n:"Momo Paradise Solamachi",kind:"🍲 ชาบู",price:2200,note:"ชาบุหม้อเดี่ยว เด็กกินผักได้ง่าย"},
     {n:"Sky Restaurant 634",kind:"🌆 ชมวิว",price:4500,note:"มื้อพิเศษบนชั้นสูง — ถ้าอยากเว่อร์ปิดทริป"},
   ]},
+  shinjuku:{label:'Shinjuku',items:[
+    {n:'Depachika Takashimaya Shinjuku',price:1200,note:'ชั้นอาหารใต้ดิน — ข้าวกล่องเลือกเยอะ'},
+    {n:'Ichiran Shinjuku',price:1000,note:'บูธส่วนตัว คิวเดินเร็ว'},
+    {n:'Ootoya Shinjuku',price:1200,note:'เทโชกุรสเรียบง่าย เมนูเด็กมี'},
+    {n:'Saizeriya Shinjuku',price:800,note:'โต๊ะกว้าง รถเข็นเข้าได้'}]},
   harajuku:{label:'Harajuku/Omotesando',items:[
     {n:'Maisen Tonkatsu (Omotesando)',price:1600,note:'โทนคัตสึดัง · มีเมนูเด็ก'},
     {n:'Harajuku Gyoza Lou',price:800,note:'เกี๊ยวซ่า คิวเร็ว เด็กกินง่าย'},
@@ -641,6 +651,61 @@ const Trips = {
 function migrate(state){
   if(!state || !state.days) return state;
   state.meta=state.meta||{};
+  // ---- v10→v11: Shibuya SKY → D2 อาทิตย์, ศุกร์กลายเป็นฟรีไทม์แท้ — guard: first date of THIS trip only ----
+  if((state.meta.schema||0)<11){
+    if(state.days&&state.days[0]&&state.days[0].date==='2026-11-28'){
+      state.days=JSON.parse(JSON.stringify(V5_DAYS));
+      state.checks=JSON.parse(JSON.stringify(V5_CHECKS));
+      state.routes=JSON.parse(JSON.stringify(V5_ROUTES));
+      state.settings.base=JSON.parse(JSON.stringify(V5_BASE));
+      state.__mig=state.__mig||'v11-sky-to-sunday';
+    }
+    state.meta.schema=11; return state;
+  }
+  // ---- v9→v10: drop Skytree deck (Sun→Ginza evening), Shibuya SKY ยืนยันเป็นหอเดียวของทริป — guard: first date of THIS trip only ----
+  if((state.meta.schema||0)<10){
+    if(state.days&&state.days[0]&&state.days[0].date==='2026-11-28'){
+      state.days=JSON.parse(JSON.stringify(V5_DAYS));
+      state.checks=JSON.parse(JSON.stringify(V5_CHECKS));
+      state.routes=JSON.parse(JSON.stringify(V5_ROUTES));
+      state.settings.base=JSON.parse(JSON.stringify(V5_BASE));
+      state.__mig=state.__mig||'v10-shibuya-only';
+    }
+    state.meta.schema=10; return state;
+  }
+  // ---- v8→v9: Kamakura full-day, Sun+Skytree, Maxell→Wed(+Gyoen), Ginkgo→Thu — guard: first date of THIS trip only ----
+  if((state.meta.schema||0)<9){
+    if(state.days&&state.days[0]&&state.days[0].date==='2026-11-28'){
+      state.days=JSON.parse(JSON.stringify(V5_DAYS));
+      state.checks=JSON.parse(JSON.stringify(V5_CHECKS));
+      state.routes=JSON.parse(JSON.stringify(V5_ROUTES));
+      state.settings.base=JSON.parse(JSON.stringify(V5_BASE));
+      state.__mig=state.__mig||'v9-restructure';
+    }
+    state.meta.schema=9; return state;
+  }
+  // ---- v7→v8: D1 Pokémon-morning (no Shinjuku) + Gyoen→Friday free-time — guard: first date of THIS trip only ----
+  if((state.meta.schema||0)<8){
+    if(state.days&&state.days[0]&&state.days[0].date==='2026-11-28'){
+      state.days=JSON.parse(JSON.stringify(V5_DAYS));
+      state.checks=JSON.parse(JSON.stringify(V5_CHECKS));
+      state.routes=JSON.parse(JSON.stringify(V5_ROUTES));
+      state.settings.base=JSON.parse(JSON.stringify(V5_BASE));
+      state.__mig=state.__mig||'v8-pokemon-morning';
+    }
+    state.meta.schema=8; return state;
+  }
+  // ---- v6→v7: user-tuned D1 (Gyoen+Pokémon) & D7 (Ueno Zoo + free-time) — guard: first date of THIS trip only ----
+  if((state.meta.schema||0)<7){
+    if(state.days&&state.days[0]&&state.days[0].date==='2026-11-28'){
+      state.days=JSON.parse(JSON.stringify(V5_DAYS));
+      state.checks=JSON.parse(JSON.stringify(V5_CHECKS));
+      state.routes=JSON.parse(JSON.stringify(V5_ROUTES));
+      state.settings.base=JSON.parse(JSON.stringify(V5_BASE));
+      state.__mig=state.__mig||'v7-tuned';
+    }
+    state.meta.schema=7; return state;
+  }
   // ---- v5→v6: Yaesu-base replan (Sardonyx Tokyo, 2026-09-28) — guard: first date of THIS trip only ----
   if((state.meta.schema||0)<6){
     if(state.days&&state.days[0]&&state.days[0].date==='2026-11-28'){

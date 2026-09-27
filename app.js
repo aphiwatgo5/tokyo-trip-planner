@@ -395,6 +395,7 @@ const AREA_RULES=[
   ['dome',      /dome city|suidobashi|laqua|yellow street|ซุอิโดบาชิ|dome/i],
   ['shinagawa', /shinagawa|ชินางาวะ/i],
   ['harajuku', /harajuku|omotesando|ฮาราจูกุ|meiji|ไมเจะ|ginkgo|แปะก๊วย/i],
+  ['shinjuku', /shinjuku|ชินจูกุ|gyoen/i],
   ['azabudai', /azabudai|kamiyacho|borderless|อะซาบูได/i],
   ['ikebukuro',/ikebukuro|อิเกบุคุโร|sunshine city|pokémon center mega|pokemon center mega/i],
 ];

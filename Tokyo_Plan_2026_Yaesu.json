@@ -1,0 +1,1586 @@
+{
+ "meta": {
+  "filename": "Tokyo_Plan_2026_Yaesu.json",
+  "loadedAt": "2026-09-06T00:00:00Z",
+  "source": "seed",
+  "schema": 7
+ },
+ "settings": {
+  "fx": 0.23,
+  "foodStyle": "กลาง",
+  "hotelTokyo": 13000,
+  "nightsTokyo": 8,
+  "hotelShizuoka": 12000,
+  "nightsShizuoka": 0,
+  "adults": 2,
+  "children": 1
+ },
+ "days": [
+  {
+   "date": "2026-11-28",
+   "d": "28 พ.ย.",
+   "dow": "เสาร์ · D1",
+   "tag": "วันพัก",
+   "pace": "rest",
+   "zone": "Yaesu → Shinjuku → Ikebukuro",
+   "extras": [
+    "ถ้ายังไหว: Tokyo Station ยามค่ำ หน้าบ้าน",
+    "นอนเร็วให้พร้อมพรุ่งนี้"
+   ],
+   "title": "ถึงโตเกียว · เช็กอิน 15:00 + Pokémon",
+   "sub": "Haneda 06:55 · Gyoen เช้า — Pokémon Ikebukuro บ่าย",
+   "activeVariant": 0,
+   "inc": true,
+   "variants": [
+    {
+     "name": "แผนหลัก",
+     "rows": [
+      {
+       "time": "06:55–08:00",
+       "act": "เครื่องลง Haneda (T3) + ตม.",
+       "ft": "Haneda",
+       "line": "",
+       "dur": "~1 ชม.",
+       "train": 0,
+       "cost": 0,
+       "type": "logistic",
+       "note": "ผ่าน ตม. + รับกระเป๋า ~60 นาที",
+       "inc": true,
+       "start": 415,
+       "durMin": 65
+      },
+      {
+       "time": "08:30–09:20",
+       "act": "เข้าเมือง → Tokyo Station",
+       "ft": "Haneda → Tokyo Sta.",
+       "line": "Keikyu → Shinagawa → JR Yamanote",
+       "dur": "~50 นาที",
+       "train": 560,
+       "cost": 0,
+       "type": "logistic",
+       "note": "ตั้ง Suica ในมือถือก่อนออกจากสนามบิน",
+       "inc": true,
+       "start": 510,
+       "durMin": 50
+      },
+      {
+       "time": "09:30–10:00",
+       "act": "ฝากกระเป๋าที่โรงแรม (Yaesu)",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "เดิน",
+       "dur": "30 นาที",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "Sardonyx Tokyo — เช็กอิน 15:00 ฝากของก่อน",
+       "inc": true,
+       "start": 570,
+       "durMin": 30
+      },
+      {
+       "time": "10:10–10:30",
+       "act": "ไป Shinjuku Gyoen",
+       "ft": "Tokyo Sta. → Shinjuku",
+       "line": "JR Chuo (ตรง)",
+       "dur": "~15 นาที",
+       "train": 220,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 610,
+       "durMin": 20
+      },
+      {
+       "time": "10:30–12:00",
+       "act": "Shinjuku Gyoen National Garden 🌳",
+       "ft": "Shinjuku Gyoen",
+       "line": "",
+       "dur": "1.5 ชม.",
+       "train": 0,
+       "cost": 1000,
+       "type": "attraction",
+       "note": "สวนใหญ่ 3 สไตล์ แปะก๊วย/เมเปิล — เดินเบาๆ ปรับ jetlag · หน้าหนาวปิด ~16:30",
+       "inc": true,
+       "start": 630,
+       "durMin": 90
+      },
+      {
+       "time": "12:10–13:00",
+       "act": "มื้อกลางวัน Shinjuku",
+       "ft": "ย่าน Shinjuku (Takashimaya depachika)",
+       "line": "",
+       "dur": "50 นาที",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "ชั้นอาหารใต้ดิน — ข้าวกล่องเลือกง่าย",
+       "inc": true,
+       "start": 730,
+       "durMin": 50
+      },
+      {
+       "time": "13:15–13:40",
+       "act": "กลับโรงแรม",
+       "ft": "Shinjuku → Tokyo Sta.",
+       "line": "JR Chuo",
+       "dur": "",
+       "train": 220,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 795,
+       "durMin": 25
+      },
+      {
+       "time": "13:40–15:00",
+       "act": "งีบรอเช็กอิน",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "เช็กอิน 15:00",
+       "inc": true,
+       "start": 820,
+       "durMin": 80
+      },
+      {
+       "time": "15:00–15:30",
+       "act": "เช็กอิน + พักห้อง",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "",
+       "inc": true,
+       "start": 900,
+       "durMin": 30
+      },
+      {
+       "time": "15:45–16:10",
+       "act": "ไป Ikebukuro",
+       "ft": "Tokyo Sta. → Ikebukuro",
+       "line": "Marunouchi (ตรง ~18 นาที)",
+       "dur": "25 นาที",
+       "train": 210,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 945,
+       "durMin": 25
+      },
+      {
+       "time": "16:15–17:45",
+       "act": "Pokémon Center Mega Tokyo ⚡",
+       "ft": "Sunshine City Ikebukuro",
+       "line": "",
+       "dur": "1.5 ชม.",
+       "train": 0,
+       "cost": 0,
+       "type": "shopping",
+       "note": "ใหญ่สุดในญี่ปุ่น ไม่ต้องจอง เปิดถึงค่ำ — วันแรกไปเลย",
+       "inc": true,
+       "start": 975,
+       "durMin": 90
+      },
+      {
+       "time": "18:00–19:00",
+       "act": "มื้อเย็น Ikebukuro",
+       "ft": "Sunshine City Alpa/ฟู้ดคอร์ท",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "ในตึกเดียวกัน — จบเร็ว กลับมานอนเร็ว",
+       "inc": true,
+       "start": 1080,
+       "durMin": 60
+      },
+      {
+       "time": "19:10–19:40",
+       "act": "กลับโรงแรม",
+       "ft": "Ikebukuro → Tokyo Sta.",
+       "line": "Marunouchi",
+       "dur": "",
+       "train": 210,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 1150,
+       "durMin": 30
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-11-29",
+   "d": "29 พ.ย.",
+   "dow": "อาทิตย์ · D2",
+   "tag": "วันกลาง",
+   "pace": "med",
+   "zone": "อาซากุสะ (แต่งกิโมโน)",
+   "extras": [
+    "Nakamise ขนมถนน (ningyo-yaki)",
+    "Kaminarimon ถ่ายรูปชุดกิโมโน"
+   ],
+   "title": "อาซากุสะ · แต่งกิโมโน Hooga 👘",
+   "sub": "Sensō-ji ชุดกิโมโน + Hanayashiki",
+   "activeVariant": 0,
+   "inc": true,
+   "variants": [
+    {
+     "name": "แผนหลัก",
+     "rows": [
+      {
+       "time": "08:30–09:00",
+       "act": "อาหารเช้า",
+       "ft": "คาเฟ่/konbini",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 510,
+       "durMin": 30
+      },
+      {
+       "time": "09:00–09:35",
+       "act": "ไป Asakusa",
+       "ft": "Tokyo Sta. → Asakusa",
+       "line": "Marunouchi → Ginza Line",
+       "dur": "",
+       "train": 220,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 540,
+       "durMin": 35
+      },
+      {
+       "time": "09:45–10:30",
+       "act": "แต่งกิโมโน 👘 (จองร้านล่วงหน้า)",
+       "ft": "ร้านกิโมโน Asakusa",
+       "line": "",
+       "dur": "45 นาที",
+       "train": 0,
+       "cost": 6000,
+       "type": "attraction",
+       "note": "เลือกร้านที่มีชุดเด็ก 1–2 ขวบ — จองช่วง 09:30-09:45",
+       "inc": true,
+       "start": 585,
+       "durMin": 45
+      },
+      {
+       "time": "10:30–12:00",
+       "act": "Sensō-ji + Nakamise ถ่ายรูปชุดกิโมโน 📸",
+       "ft": "Senso-ji",
+       "line": "เดิน",
+       "dur": "1.5 ชม.",
+       "train": 0,
+       "cost": 0,
+       "type": "attraction",
+       "note": "แสงเช้าสวย คนน้อยกว่า — จุดถ่าย Kaminarimon + หอใหญ่",
+       "inc": true,
+       "start": 630,
+       "durMin": 90
+      },
+      {
+       "time": "12:00–12:45",
+       "act": "มื้อกลางวันอาซากุสะ",
+       "ft": "ย่าน Asakusa",
+       "line": "",
+       "dur": "45 นาที",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 720,
+       "durMin": 45
+      },
+      {
+       "time": "12:45–13:15",
+       "act": "คืนชุดกิโมโน + เดินสั้นๆ",
+       "ft": "ร้านกิโมโน Asakusa",
+       "line": "",
+       "dur": "30 นาที",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "",
+       "inc": true,
+       "start": 765,
+       "durMin": 30
+      },
+      {
+       "time": "13:15–14:00",
+       "act": "Hanayashiki 🎡",
+       "ft": "Hanayashiki",
+       "line": "",
+       "dur": "45 นาที",
+       "train": 0,
+       "cost": 1500,
+       "type": "attraction",
+       "note": "หน้าหนาวปิด 16:00 — มาช่วงบ่ายแรกพอดี · เด็ก≤4 ขวบขึ้นฟรีส่วนใหญ่",
+       "inc": true,
+       "start": 795,
+       "durMin": 45
+      },
+      {
+       "time": "14:15–15:00",
+       "act": "กลับโรงแรม",
+       "ft": "Asakusa → Tokyo Sta.",
+       "line": "Ginza → Marunouchi",
+       "dur": "",
+       "train": 220,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 855,
+       "durMin": 45
+      },
+      {
+       "time": "15:00–16:30",
+       "act": "งีบ",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "",
+       "inc": true,
+       "start": 900,
+       "durMin": 90
+      },
+      {
+       "time": "16:45–17:45",
+       "act": "เย็นเบาๆ: Tokyo Station ยามค่ำ + Character Street หน้าบ้าน",
+       "ft": "Tokyo Station",
+       "line": "เดิน",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 0,
+       "type": "view",
+       "note": "ตึกอิฐสวยช่วงไฟเปิด — เดิน 3 นาทีถึงบ้าน",
+       "inc": true,
+       "start": 1005,
+       "durMin": 60
+      },
+      {
+       "time": "18:15–19:15",
+       "act": "มื้อเย็น Yaesu/Ginza",
+       "ft": "ย่าน Yaesu",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 1095,
+       "durMin": 60
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-11-30",
+   "d": "30 พ.ย.",
+   "dow": "จันทร์ · D3",
+   "tag": "วันหนัก",
+   "pace": "big",
+   "zone": "ใต้: คามาคุระ (ขบวนตรง)",
+   "extras": [
+    "Enoden นั่งเล่น 1–2 สถานีถ้าแรงเหลือ",
+    "Komachi ของว่างทางกลับ"
+   ],
+   "title": "คามาคุระตรงจาก Tokyo Sta.",
+   "sub": "Yokosuka line 57 นาที · Hase-dera + พระใหญ่",
+   "activeVariant": 0,
+   "inc": true,
+   "variants": [
+    {
+     "name": "แผนหลัก",
+     "rows": [
+      {
+       "time": "08:00–08:30",
+       "act": "อาหารเช้าเร็ว",
+       "ft": "konbini/โรงแรม",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 480,
+       "durMin": 30
+      },
+      {
+       "time": "08:30–09:30",
+       "act": "ขบวนตรงไป Kamakura",
+       "ft": "Tokyo Sta. → Kamakura",
+       "line": "JR Yokosuka (ตรง)",
+       "dur": "~57 นาที",
+       "train": 990,
+       "cost": 0,
+       "type": "logistic",
+       "note": "ไม่ต้องเปลี่ยนรถ — Hooga นั่งสบาย",
+       "inc": true,
+       "start": 510,
+       "durMin": 60
+      },
+      {
+       "time": "09:40–10:00",
+       "act": "Enoden ไป Hase",
+       "ft": "Kamakura → Hase",
+       "line": "Enoden 1 สถานี",
+       "dur": "",
+       "train": 190,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 580,
+       "durMin": 20
+      },
+      {
+       "time": "10:00–11:00",
+       "act": "Hase-dera",
+       "ft": "Hase",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 400,
+       "type": "attraction",
+       "note": "วิวทะเลจากยอดเนิน · บันได — ผูกอุ้ม Hooga",
+       "inc": true,
+       "start": 600,
+       "durMin": 60
+      },
+      {
+       "time": "11:05–11:45",
+       "act": "Great Buddha (Kotoku-in) 🗿",
+       "ft": "Hase",
+       "line": "",
+       "dur": "40 นาที",
+       "train": 0,
+       "cost": 600,
+       "type": "attraction",
+       "note": "พระบรอนซ์กลางแจ้ง เดินรอบสั้น รถเข็นไหลได้",
+       "inc": true,
+       "start": 665,
+       "durMin": 40
+      },
+      {
+       "time": "11:45–12:45",
+       "act": "มื้อกลางวัน Hase",
+       "ft": "ย่าน Hase",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "Kua'Aina เบอร์เกอร์ / โซบะท้องถิ่น",
+       "inc": true,
+       "start": 705,
+       "durMin": 60
+      },
+      {
+       "time": "13:00–13:25",
+       "act": "กลับสถานี Kamakura (ผ่าน Komachi)",
+       "ft": "Hase → Kamakura Sta.",
+       "line": "เดิน/Enoden",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "food",
+       "note": "ของกินถนน Komachi ถ้าผ่าน — ไม่ตั้งใจ",
+       "inc": true,
+       "start": 780,
+       "durMin": 25
+      },
+      {
+       "time": "13:30–14:30",
+       "act": "กลับโตเกียว (งีบบนรถ)",
+       "ft": "Kamakura → Tokyo Sta.",
+       "line": "JR Yokosuka (ตรง)",
+       "dur": "~57 นาที",
+       "train": 990,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 810,
+       "durMin": 60
+      },
+      {
+       "time": "14:45–16:15",
+       "act": "งีบโรงแรม",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "วันเดียวที่ไกล — ให้เวลาพักเต็มที่",
+       "inc": true,
+       "start": 885,
+       "durMin": 90
+      },
+      {
+       "time": "17:00–18:00",
+       "act": "ชิลหน้าบ้าน: คาเฟ่/Ginza เดินเบา",
+       "ft": "ย่าน Ginza/Yaesu",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 0,
+       "type": "view",
+       "note": "",
+       "inc": true,
+       "start": 1020,
+       "durMin": 60
+      },
+      {
+       "time": "18:30–19:30",
+       "act": "มื้อเย็น",
+       "ft": "ย่าน Yaesu",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 1110,
+       "durMin": 60
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-12-01",
+   "d": "1 ธ.ค.",
+   "dow": "อังคาร · D4",
+   "tag": "วันหนัก",
+   "pace": "big",
+   "zone": "ไมฮามะ (Disney)",
+   "extras": [
+    "ป๊อปคอร์นรสตามฤดู",
+    "ออกก่อนพาเหรดถ้า Hooga เพลีย"
+   ],
+   "title": "Tokyo Disneyland 🎢 (คริสต์มาส)",
+   "sub": "Keiyo ตรง 15 นาทีจากหน้าบ้าน — สั้นสุดในแผน",
+   "activeVariant": 0,
+   "inc": true,
+   "variants": [
+    {
+     "name": "แผนหลัก",
+     "rows": [
+      {
+       "time": "07:30–08:00",
+       "act": "อาหารเช้าเร็ว",
+       "ft": "konbini/โรงแรม",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 450,
+       "durMin": 30
+      },
+      {
+       "time": "08:00–08:35",
+       "act": "ไป Disney",
+       "ft": "Tokyo Sta. → Maihama",
+       "line": "JR Keiyo (ตรง ~15 นาที)",
+       "dur": "35 นาที",
+       "train": 220,
+       "cost": 0,
+       "type": "logistic",
+       "note": "ชานชาลา Keiyo ไกล — เผื่อเดิน",
+       "inc": true,
+       "start": 480,
+       "durMin": 35
+      },
+      {
+       "time": "09:00–12:00",
+       "act": "เข้าสวน + Fantasyland + Toontown",
+       "ft": "Maihama",
+       "line": "",
+       "dur": "3 ชม.",
+       "train": 0,
+       "cost": 17200,
+       "type": "attraction",
+       "note": "บัตร 2 ผู้ใหญ่ (ซื้อล่วงหน้าระบุวัน) · Hooga <4 ขวบฟรี · เช่ารถเข็นในสวน",
+       "inc": true,
+       "start": 540,
+       "durMin": 180
+      },
+      {
+       "time": "12:00–13:00",
+       "act": "มื้อกลางวันในสวน",
+       "ft": "ร้านในสวน",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 2500,
+       "type": "food",
+       "note": "จองรอบอาหารผ่านแอปตั้งแต่เช้า",
+       "inc": true,
+       "start": 720,
+       "durMin": 60
+      },
+      {
+       "time": "13:00–15:00",
+       "act": "งีบในรถเข็น + เครื่องเล่นเด็ก",
+       "ft": "ในสวน",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "",
+       "note": "Baby Center: เปลี่ยนผ้าอ้อม/อุ่มนม",
+       "inc": true,
+       "start": 780,
+       "durMin": 120
+      },
+      {
+       "time": "15:00–18:00",
+       "act": "เครื่องเล่นเพิ่ม + พาเหรดคริสต์มาส",
+       "ft": "ในสวน",
+       "line": "",
+       "dur": "3 ชม.",
+       "train": 0,
+       "cost": 0,
+       "type": "attraction",
+       "note": "ธีมคริสต์มาสถึง 25 ธ.ค. — ยืนดูริมทางเดินหลัก",
+       "inc": true,
+       "start": 900,
+       "durMin": 180
+      },
+      {
+       "time": "18:00–19:00",
+       "act": "มื้อเย็นในสวน",
+       "ft": "ในสวน / Citywalk",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 2000,
+       "type": "food",
+       "note": "ถ้าเพลีย ออกก่อนได้",
+       "inc": true,
+       "start": 1080,
+       "durMin": 60
+      },
+      {
+       "time": "19:10–19:45",
+       "act": "กลับโรงแรม",
+       "ft": "Maihama → Tokyo Sta.",
+       "line": "JR Keiyo",
+       "dur": "",
+       "train": 220,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 1150,
+       "durMin": 35
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-12-02",
+   "d": "2 ธ.ค.",
+   "dow": "พุธ · D5",
+   "tag": "วันกลาง",
+   "pace": "med",
+   "zone": "ชิบุยะ–ฮาราจูกุ (แปะก๊วยทอง)",
+   "extras": [
+    "KITTE หลังคาชมสถานี",
+    "Ginza ช่วงไฟถ้าแรงเหลือ"
+   ],
+   "title": "Meiji Jingu + Harajuku + แปะก๊วยทอง 🍁",
+   "sub": "พีคเหลืองปลาย พ.ย.–ต้น ธ.ค. พอดี",
+   "activeVariant": 0,
+   "inc": true,
+   "variants": [
+    {
+     "name": "แผนหลัก",
+     "rows": [
+      {
+       "time": "08:30–09:00",
+       "act": "อาหารเช้า",
+       "ft": "คาเฟ่/konbini",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 510,
+       "durMin": 30
+      },
+      {
+       "time": "09:05–09:25",
+       "act": "ไป Harajuku",
+       "ft": "Tokyo Sta. → Harajuku",
+       "line": "JR Yamanote",
+       "dur": "",
+       "train": 210,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 545,
+       "durMin": 20
+      },
+      {
+       "time": "09:30–11:00",
+       "act": "Meiji Jingu ⛩ เช้าเงียบ",
+       "ft": "Meiji Jingu",
+       "line": "",
+       "dur": "1.5 ชม.",
+       "train": 0,
+       "cost": 0,
+       "type": "attraction",
+       "note": "ป่าในกลางเมือง — ทางเดินกว้าง รถเข็นสบาย",
+       "inc": true,
+       "start": 570,
+       "durMin": 90
+      },
+      {
+       "time": "11:00–12:15",
+       "act": "Takeshita + Omotesando เดินเบาๆ",
+       "ft": "Harajuku/Omotesando",
+       "line": "เดิน",
+       "dur": "1 ชม. 15 นาที",
+       "train": 0,
+       "cost": 0,
+       "type": "shopping",
+       "note": "Omotesando Hills แวะเดินเบา",
+       "inc": true,
+       "start": 660,
+       "durMin": 75
+      },
+      {
+       "time": "12:15–13:15",
+       "act": "มื้อกลางวัน Harajuku",
+       "ft": "ย่าน Harajuku",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "Maisen โทนคัตสึ / เกี๊ยว Lou",
+       "inc": true,
+       "start": 735,
+       "durMin": 60
+      },
+      {
+       "time": "13:35–14:00",
+       "act": "กลับโรงแรม",
+       "ft": "Harajuku → Tokyo Sta.",
+       "line": "JR Yamanote",
+       "dur": "",
+       "train": 210,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 815,
+       "durMin": 25
+      },
+      {
+       "time": "14:00–15:30",
+       "act": "งีบ",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "",
+       "inc": true,
+       "start": 840,
+       "durMin": 90
+      },
+      {
+       "time": "15:45–16:00",
+       "act": "ไป Meiji Gaien",
+       "ft": "Tokyo Sta. → Shinanomachi",
+       "line": "JR Chuo-Sobu",
+       "dur": "",
+       "train": 160,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 945,
+       "durMin": 15
+      },
+      {
+       "time": "16:00–17:00",
+       "act": "ถนนแปะก๊วย Meiji Gaien 🍁",
+       "ft": "Meiji Gaien Ginkgo Ave",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 0,
+       "type": "view",
+       "note": "ไฟส้มยามเย็นสวยสุด ~16:00-16:30 ก่อนพระอาทิตย์ตก",
+       "inc": true,
+       "start": 960,
+       "durMin": 60
+      },
+      {
+       "time": "17:15–18:00",
+       "act": "กลับ + พัก",
+       "ft": "Shinanomachi → Tokyo Sta.",
+       "line": "JR Chuo-Sobu",
+       "dur": "",
+       "train": 160,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 1035,
+       "durMin": 45
+      },
+      {
+       "time": "18:30–19:30",
+       "act": "มื้อเย็น",
+       "ft": "ย่าน Yaesu",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 1110,
+       "durMin": 60
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-12-03",
+   "d": "3 ธ.ค.",
+   "dow": "พฤหัสบดี · D6",
+   "tag": "วันกลาง",
+   "pace": "med",
+   "zone": "อะซาบูได–ชินางาวะ",
+   "extras": [
+    "Azabudai Garden Plaza เดินเบา",
+    "ของว่าง ekinaka Shinagawa"
+   ],
+   "title": "teamLab Borderless + Maxell 🐬",
+   "sub": "ครึ่งวันละจุด — ในร่มทั้งคู่ กันอากาศหนาว",
+   "activeVariant": 0,
+   "inc": true,
+   "variants": [
+    {
+     "name": "แผนหลัก",
+     "rows": [
+      {
+       "time": "08:30–09:00",
+       "act": "อาหารเช้า",
+       "ft": "โรงแรม/konbini",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 510,
+       "durMin": 30
+      },
+      {
+       "time": "09:05–09:30",
+       "act": "ไป Azabudai Hills",
+       "ft": "Tokyo Sta. → Kamiyacho",
+       "line": "Marunouchi → Hibiya",
+       "dur": "",
+       "train": 190,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 545,
+       "durMin": 25
+      },
+      {
+       "time": "09:30–11:30",
+       "act": "teamLab Borderless 🎨 (รอบแรก)",
+       "ft": "Azabudai Hills",
+       "line": "",
+       "dur": "2 ชม.",
+       "train": 0,
+       "cost": 6400,
+       "type": "attraction",
+       "note": "ไม่มีน้ำเหมาะเด็กกว่า Planets · อุ้มแทนรถเข็น (ห้ามเข็นใน) · ≤3 ขวบฟรี",
+       "inc": true,
+       "start": 570,
+       "durMin": 120
+      },
+      {
+       "time": "11:45–12:45",
+       "act": "มื้อกลางวัน Azabudai Hills",
+       "ft": "Azabudai Hills Market",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "ฟู้ดฮอลล์เลือกเยอะ มีมุมเด็ก",
+       "inc": true,
+       "start": 705,
+       "durMin": 60
+      },
+      {
+       "time": "13:05–13:30",
+       "act": "กลับโรงแรม",
+       "ft": "Kamiyacho → Tokyo Sta.",
+       "line": "Hibiya → Marunouchi",
+       "dur": "",
+       "train": 190,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 785,
+       "durMin": 25
+      },
+      {
+       "time": "13:30–15:15",
+       "act": "งีบ",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "",
+       "inc": true,
+       "start": 810,
+       "durMin": 105
+      },
+      {
+       "time": "15:35–15:50",
+       "act": "ไป Maxell Aqua Park",
+       "ft": "Tokyo Sta. → Shinagawa",
+       "line": "JR Yamanote",
+       "dur": "",
+       "train": 170,
+       "cost": 0,
+       "type": "logistic",
+       "note": "ติดสถานีชินางาวะ ออกปุ๊บถึง",
+       "inc": true,
+       "start": 935,
+       "durMin": 15
+      },
+      {
+       "time": "16:00–18:00",
+       "act": "Maxell Aqua Park 🐬",
+       "ft": "Shinagawa",
+       "line": "",
+       "dur": "2 ชม.",
+       "train": 0,
+       "cost": 5200,
+       "type": "attraction",
+       "note": "เช็กตารางโชว์โลมา (~15 นาที/รอบ) แล้ววางแผนเดิน · คาร์เซลเด็กชอบ",
+       "inc": true,
+       "start": 960,
+       "durMin": 120
+      },
+      {
+       "time": "18:15–19:15",
+       "act": "มื้อเย็น Shinagawa ekinaka",
+       "ft": "ย่าน Shinagawa",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "เลือกง่าย ใกล้ Maxell มาก",
+       "inc": true,
+       "start": 1095,
+       "durMin": 60
+      },
+      {
+       "time": "19:25–19:40",
+       "act": "กลับโรงแรม",
+       "ft": "Shinagawa → Tokyo Sta.",
+       "line": "JR Yamanote",
+       "dur": "",
+       "train": 170,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 1165,
+       "durMin": 15
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-12-04",
+   "d": "4 ธ.ค.",
+   "dow": "ศุกร์ · D7",
+   "tag": "วันกลาง",
+   "pace": "med",
+   "zone": "อุเอโนะเช้า + ฟรีไทม์เลือกเองบ่าย",
+   "extras": [
+    "Ginza เดินเล่นถ้าไม่ไปไหน",
+    "Ameyoko ของว่าง"
+   ],
+   "title": "Ueno Zoo 🐼 + ฟรีไทม์เลือกเอง",
+   "sub": "แพนด้าตอนเปิด → งีบ → เลือก: Shibuya SKY sunset / Anpanman / พัก",
+   "activeVariant": 0,
+   "inc": true,
+   "variants": [
+    {
+     "name": "แผนหลัก",
+     "rows": [
+      {
+       "time": "08:30–09:00",
+       "act": "อาหารเช้า",
+       "ft": "โรงแรม/konbini",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 510,
+       "durMin": 30
+      },
+      {
+       "time": "09:05–09:20",
+       "act": "ไป Ueno",
+       "ft": "Tokyo Sta. → Ueno",
+       "line": "JR Yamanote (8 นาที)",
+       "dur": "15 นาที",
+       "train": 170,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 545,
+       "durMin": 15
+      },
+      {
+       "time": "09:30–11:30",
+       "act": "Ueno Zoo 🐼 (ตรงไปแพนด้าก่อน)",
+       "ft": "Ueno Zoo",
+       "line": "",
+       "dur": "2 ชม.",
+       "train": 0,
+       "cost": 1200,
+       "type": "attraction",
+       "note": "เปิด 9:30 — คิวแพนด้าช่วงเปิดสั้นสุด · ทางเดินกว้าง รถเข็นสะดวก",
+       "inc": true,
+       "start": 570,
+       "durMin": 120
+      },
+      {
+       "time": "11:45–12:45",
+       "act": "มื้อกลางวัน Ueno",
+       "ft": "ย่าน Ueno",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1200,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 705,
+       "durMin": 60
+      },
+      {
+       "time": "13:00–13:20",
+       "act": "กลับโรงแรม",
+       "ft": "Ueno → Tokyo Sta.",
+       "line": "JR Yamanote",
+       "dur": "",
+       "train": 170,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 780,
+       "durMin": 20
+      },
+      {
+       "time": "13:20–15:00",
+       "act": "งีบ",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "",
+       "inc": true,
+       "start": 800,
+       "durMin": 100
+      },
+      {
+       "time": "15:15–17:00",
+       "act": "⏳ ฟรีไทม์เลือกเอง: Shibuya SKY sunset / Anpanman / พัก",
+       "ft": "Shibuya Sky (หรือ Yokohama)",
+       "line": "",
+       "dur": "1 ชม. 45 นาที",
+       "train": 0,
+       "cost": 4600,
+       "type": "attraction",
+       "note": "แนะนำ Shibuya SKY รอบ 16:00 พระอาทิตย์ตก ~16:30 — ถ้าไม่ไป: Anpanman (จองออนไลน์) หรือพักโรงแรม",
+       "inc": true,
+       "start": 915,
+       "durMin": 105
+      },
+      {
+       "time": "17:20–18:00",
+       "act": "กลับ + พัก",
+       "ft": "→ Tokyo Sta.",
+       "line": "JR Yamanote",
+       "dur": "",
+       "train": 210,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 1040,
+       "durMin": 40
+      },
+      {
+       "time": "18:00–18:45",
+       "act": "ไฟ Marunouchi Illumination 🎆 (หน้าบ้าน)",
+       "ft": "Marunouchi",
+       "line": "เดิน",
+       "dur": "45 นาที",
+       "train": 0,
+       "cost": 0,
+       "type": "view",
+       "note": "mid-พ.ย.–ก.พ. ฟรี — ตึกอิฐ + ถนน Nakadori สวยสุดหลัง 18:00",
+       "inc": true,
+       "start": 1080,
+       "durMin": 45
+      },
+      {
+       "time": "19:00–20:00",
+       "act": "มื้อเย็นปิดสัปดาห์",
+       "ft": "ย่าน Yaesu",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1800,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 1140,
+       "durMin": 60
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-12-05",
+   "d": "5 ธ.ค.",
+   "dow": "เสาร์ · D8",
+   "tag": "วันเบา",
+   "pace": "light",
+   "zone": "ช้อป: Tokyo Sta. + Skytree",
+   "extras": [
+    "หอ Skytree ขึ้นชมถ้าอยาก",
+    "ไฟหน้าสถานีอีกรอบก่อนนอน"
+   ],
+   "title": "เก็บกระเป๋า + ช้อปของฝากสุดท้าย 🛍️",
+   "sub": "Character Street หน้าบ้าน → Solamachi จบในที่เดียว",
+   "activeVariant": 0,
+   "inc": true,
+   "variants": [
+    {
+     "name": "แผนหลัก",
+     "rows": [
+      {
+       "time": "08:30–09:00",
+       "act": "อาหารเช้า",
+       "ft": "คาเฟ่ใกล้โรงแรม",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 510,
+       "durMin": 30
+      },
+      {
+       "time": "09:15–11:00",
+       "act": "ช้อป Character Street + KITTE (หน้าบ้าน)",
+       "ft": "Tokyo Character Street",
+       "line": "",
+       "dur": "1 ชม. 45 นาที",
+       "train": 0,
+       "cost": 0,
+       "type": "shopping",
+       "note": "เช้าเสาร์ยังโล่ง · Pokémon Store สาขาสถานีอยู่ตรงนี้ด้วย · งบของฝากแยกต่างหาก",
+       "inc": true,
+       "start": 555,
+       "durMin": 105
+      },
+      {
+       "time": "11:00–12:00",
+       "act": "เก็บกระเป๋า + พัก",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "แพ็กให้เสร็จก่อนออกรอบเย็น — พรุ่งนี้บิน 10:35",
+       "inc": true,
+       "start": 660,
+       "durMin": 60
+      },
+      {
+       "time": "12:00–13:00",
+       "act": "มื้อกลางวัน",
+       "ft": "ย่าน Yaesu",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 1500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 720,
+       "durMin": 60
+      },
+      {
+       "time": "13:15–14:45",
+       "act": "งีบบ่ายสุดท้าย",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 0,
+       "type": "rest",
+       "note": "",
+       "inc": true,
+       "start": 795,
+       "durMin": 90
+      },
+      {
+       "time": "15:00–15:35",
+       "act": "ไป Skytree",
+       "ft": "Tokyo Sta. → Oshiage",
+       "line": "Marunouchi → Hanzomon",
+       "dur": "~35 นาที",
+       "train": 280,
+       "cost": 0,
+       "type": "logistic",
+       "note": "",
+       "inc": true,
+       "start": 900,
+       "durMin": 35
+      },
+      {
+       "time": "15:35–17:30",
+       "act": "ช้อปของฝาก Tokyo Solamachi 🛍️",
+       "ft": "Solamachi (Skytree)",
+       "line": "",
+       "dur": "~2 ชม.",
+       "train": 0,
+       "cost": 0,
+       "type": "shopping",
+       "note": "KitKat Tokyo · Tokyo Banana · ร้านการ์ตูน — ครบจบที่เดียว รถเข็นสบาย",
+       "inc": true,
+       "start": 935,
+       "durMin": 115
+      },
+      {
+       "time": "17:45–18:45",
+       "act": "มื้อเย็นพิเศษส่งท้าย",
+       "ft": "Solamachi (food court/ร้านในมอลล์)",
+       "line": "",
+       "dur": "1 ชม.",
+       "train": 0,
+       "cost": 2500,
+       "type": "food",
+       "note": "มื้อส่งท้ายทริป เลือกตามใจ",
+       "inc": true,
+       "start": 1065,
+       "durMin": 60
+      },
+      {
+       "time": "19:00–19:45",
+       "act": "เดินชมไฟ Skytree รอบตึก",
+       "ft": "Skytree บริเวณรอบตึก",
+       "line": "เดิน",
+       "dur": "45 นาที",
+       "train": 0,
+       "cost": 0,
+       "type": "view",
+       "note": "ไฟประดับตึกสวย · ถ่ายรูปรอบๆ พอ",
+       "inc": true,
+       "start": 1140,
+       "durMin": 45
+      },
+      {
+       "time": "19:55–20:40",
+       "act": "กลับ + Don Quijote Ueno รอบสุดท้าย",
+       "ft": "Oshiage → Ueno → Tokyo Sta.",
+       "line": "Hanzomon/Asakusa Line + JR",
+       "dur": "~45 นาที",
+       "train": 220,
+       "cost": 0,
+       "type": "shopping",
+       "note": "Donki Ueno เปิด 24 ชม. — ทางผ่านกลับบ้าน",
+       "inc": true,
+       "start": 1195,
+       "durMin": 45
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-12-06",
+   "d": "6 ธ.ค.",
+   "dow": "อาทิตย์ · D9",
+   "tag": "กลับ",
+   "pace": "rest",
+   "zone": "กลับกรุงเทพฯ",
+   "extras": [],
+   "title": "กลับกรุงเทพฯ ✈️",
+   "sub": "TG683 10:35 · Tokyo Sta. → Haneda ~40 นาที",
+   "activeVariant": 0,
+   "inc": true,
+   "variants": [
+    {
+     "name": "แผนหลัก",
+     "rows": [
+      {
+       "time": "07:00–07:30",
+       "act": "เช้าเร็ว + เช็กเอาท์",
+       "ft": "โรงแรม (Yaesu)",
+       "line": "",
+       "dur": "",
+       "train": 0,
+       "cost": 500,
+       "type": "food",
+       "note": "",
+       "inc": true,
+       "start": 420,
+       "durMin": 30
+      },
+      {
+       "time": "07:30–08:20",
+       "act": "ไปสนามบิน",
+       "ft": "Tokyo Sta. → Haneda",
+       "line": "Yamanote → Hamamatsucho → Keikyu/Monorail",
+       "dur": "~40 นาที",
+       "train": 500,
+       "cost": 0,
+       "type": "logistic",
+       "note": "เผื่อ check-in 2 ชม.",
+       "inc": true,
+       "start": 450,
+       "durMin": 50
+      },
+      {
+       "time": "10:35–15:40",
+       "act": "TG683 ออกเดินทาง ✈️",
+       "ft": "Haneda → BKK",
+       "line": "",
+       "dur": "~5 ชม.",
+       "train": 0,
+       "cost": 0,
+       "type": "logistic",
+       "note": "ถึง BKK 15:40 (เวลาไทย)",
+       "inc": true,
+       "start": 635,
+       "durMin": 295
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "base": {
+  "name": "โรงแรม Sardonyx Tokyo (Yaesu)",
+  "geo": {
+   "lat": 35.681,
+   "lng": 139.771
+  }
+ },
+ "routes": [
+  [
+   "Tokyo Sta. → Haneda",
+   "JR Yamanote → Hamamatsucho → Keikyu/Monorail",
+   "~40 นาที",
+   500,
+   0
+  ],
+  [
+   "Tokyo Sta. → Maihama (Disney)",
+   "JR Keiyo (ตรงจากสถานีโตเกียว)",
+   "~15 นาที",
+   220,
+   0
+  ],
+  [
+   "Tokyo Sta. → Kamakura",
+   "JR Yokosuka (ตรง)",
+   "~57 นาที",
+   990,
+   0
+  ],
+  [
+   "Tokyo Sta. → Harajuku",
+   "JR Yamanote",
+   "~17 นาที",
+   210,
+   0
+  ],
+  [
+   "Tokyo Sta. → Shibuya",
+   "JR Yamanote",
+   "~15 นาที",
+   210,
+   0
+  ],
+  [
+   "Tokyo Sta. → Shinjuku (Gyoen)",
+   "JR Chuo (ตรง)",
+   "~15 นาที",
+   220,
+   0
+  ],
+  [
+   "Tokyo Sta. → Ikebukuro",
+   "Marunouchi Line (ตรง)",
+   "~18 นาที",
+   210,
+   0
+  ],
+  [
+   "Tokyo Sta. → Shinagawa (Maxell)",
+   "JR Yamanote",
+   "~7 นาที",
+   170,
+   0
+  ],
+  [
+   "Tokyo Sta. → Kamiyacho (teamLab)",
+   "Marunouchi → Hibiya",
+   "~20 นาที",
+   190,
+   0
+  ],
+  [
+   "Tokyo Sta. → Yokohama (Anpanman — optional)",
+   "JR Keihin-Tohoku ตรง",
+   "~25 นาที",
+   330,
+   0
+  ],
+  [
+   "Tokyo Sta. → Oshiage (Skytree)",
+   "Marunouchi → Hanzomon",
+   "~25 นาที",
+   280,
+   0
+  ]
+ ],
+ "checks": [
+  [
+   "(ฟรีไทม์ศุกร์) Shibuya SKY รอบ sunset",
+   "จอง 14 วันก่อน เที่ยงคืน JST หมดไว — ถ้าไม่ไปเลือก Anpanman/พักแทน",
+   "20 พ.ย. 23:00 (ไทย) ถ้าจะไป",
+   "w-now",
+   "รอตัดสินใจ"
+  ],
+  [
+   "จองตั๋ว Disneyland (อังคาร 1 ธ.ค.)",
+   "ซื้อล่วงหน้าระบุวัน · Hooga <4 ขวบเข้าฟรี",
+   "~2 เดือนก่อน",
+   "w-pre",
+   "ยังไม่ได้ทำ"
+  ],
+  [
+   "จองร้านกิโมโน Asakusa (อาทิตย์ 29 พ.ย.)",
+   "เลือกร้านที่มีชุดเด็ก 1–2 ขวบ + จองช่วง 09:30",
+   "~1 เดือนก่อน",
+   "w-pre",
+   "ยังไม่ได้ทำ"
+  ],
+  [
+   "ซื้อบัตร teamLab Borderless (รอบ 09:00–10:00)",
+   "เว็บทางการ — รอบแรกคนน้อยสุด · ≤3 ขวบฟรี",
+   "~1 เดือนก่อน",
+   "w-pre",
+   "ยังไม่ได้ทำ"
+  ],
+  [
+   "ซื้อบัตร Maxell Aqua Park (พฤหัส)",
+   "ออนไลน์ลดเล็กน้อย · เช็กตารางโชว์โลมาก่อนเข้า",
+   "~2 สัปดาห์",
+   "w-pre",
+   "ยังไม่ได้ทำ"
+  ],
+  [
+   "(Optional) บัตร Anpanman Museum",
+   "จองออนไลน์เท่านั้น — เผื่อวันศุกร์แรงเหลือ",
+   "ถ้าจะไป",
+   "w-pre",
+   "รอตัดสินใจ"
+  ],
+  [
+   "จองโรงแรม Sardonyx Tokyo (Yaesu) 8 คืน",
+   "free cancellation + แจ้งยืมเปลเด็ก",
+   "~2 เดือนก่อน",
+   "w-pre",
+   "ยังไม่ได้ทำ"
+  ],
+  [
+   "เตรียม Suica + eSIM/pocket wifi + ประกันเดินทาง",
+   "ตั้ง Suica ในมือถือก่อนบิน",
+   "ก่อนบิน",
+   "w-pre",
+   "ยังไม่ได้ทำ"
+  ]
+ ]
+}
