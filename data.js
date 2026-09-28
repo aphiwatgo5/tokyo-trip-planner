@@ -377,16 +377,215 @@ const V5_DAYS=[
   ]}]},
 ];
 
+// ================= V6 — My Maps master ("Autumn Japan 2026 | Tokyo with HOOGA", synced 2026-09-28) =================
+// โครงวัน/กิจกรรมตาม Google My Maps ของเจ้าของทริป (53 หมุด): D1 Maxell+Anpanman · D2 Asakusa+Ginkgo
+// D3 Kamakura · D4 Disney · D5 Harajuku/Gyoen (ถอด Maxell ออก) · D6 Ueno+teamLab+ShibuyaSKY
+// D7 ช้อป Ueno(KAKEYA/Ameyoko/Akachan)+Skytree · D8 ฟรี+Hibiya Illumination · D9 บินกลับ
+// Kawaguchiko (8 หมุด) ยังไม่เข้าแผน → คลังไอเดียพร้อมพิกัด · พิกัด Ueno Zoo และโรงแรมแก้ตาม OSM/ยืนยันแล้ว
+const V6_BASE={name:"โรงแรม Sardonyx Tokyo (Yaesu)", geo:{lat:35.67669,lng:139.77879}};
+const V6_CHECKS=[
+  ["จอง Shibuya SKY (พฤหัส 3 ธ.ค. รอบ sunset ~16:15)","หอชมวิวเดียวของทริป — sunset ~16:45 จอง 14 วันก่อนเที่ยงคืน JST หมดใน ~3 นาที · สำรอง: จองรอบก่อนหน้าแล้วรอ sunset บนหอ","19 พ.ย. 23:00 (ไทย)","w-now","ยังไม่ได้ทำ"],
+  ["จองตั๋ว Disneyland (อังคาร 1 ธ.ค.)","ซื้อล่วงหน้าระบุวัน · Hooga <4 ขวบเข้าฟรี","~2 เดือนก่อน","w-pre","ยังไม่ได้ทำ"],
+  ["จองร้านกิโมโน Asakusa (อาทิตย์ 29 พ.ย.)","เลือกร้านที่มีชุดเด็ก 1–2 ขวบ + จองช่วง 09:30","~1 เดือนก่อน","w-pre","ยังไม่ได้ทำ"],
+  ["ซื้อบัตร teamLab Borderless (รอบ ~12:45 พฤหัส 3 ธ.ค.)","เว็บทางการ — รอบกลางวันหลัง Ueno Zoo · ≤3 ขวบฟรี","~1 เดือนก่อน","w-pre","ยังไม่ได้ทำ"],
+  ["ซื้อบัตร Maxell Aqua Park (เสาร์ 28 พ.ย. บ่าย)","ออนไลน์ลดเล็กน้อย · เช็กตารางโชว์โลมาก่อนเข้า","~2 สัปดาห์","w-pre","ยังไม่ได้ทำ"],
+  ["ซื้อบัตร Anpanman Museum Yokohama (เสาร์ 28 พ.ย. ~16:15)","จองออนไลน์เท่านั้น — ตอนนี้อยู่ในแผน D1 แล้ว (เดิมเป็น optional) · ปิดรับ ~17:00","~2 สัปดาห์","w-pre","ยังไม่ได้ทำ"],
+  ["จองโรงแรม Sardonyx Tokyo (Yaesu) 8 คืน","free cancellation + แจ้งยืมเปลเด็ก","~2 เดือนก่อน","w-pre","ยังไม่ได้ทำ"],
+  ["ตัดสินใจ: ค้าม APA Nishi Shinjuku บางคืน?","มีหมุดใน My Maps แต่ยังไม่ได้ใส่แผน — ถ้าค้ามต้องรีจอง/ยกเลิกบางคืนของ Sardonyx","เร็ว ๆ นี้","w-now","รอตัดสินใจ"],
+  ["เตรียม Suica + eSIM/pocket wifi + ประกันเดินทาง","ตั้ง Suica ในมือถือก่อนบิน","ก่อนบิน","w-pre","ยังไม่ได้ทำ"],
+];
+const V6_ROUTES=[
+  ["Tokyo Sta. → Haneda","JR Yamanote → Hamamatsucho → Keikyu/Monorail","~40 นาที",500,0],
+  ["Tokyo Sta. → Maihama (Disney)","JR Keiyo (ตรงจากสถานีโตเกียว)","~15 นาที",220,0],
+  ["Tokyo Sta. → Kamakura","JR Yokosuka (ตรง)","~57 นาที",990,0],
+  ["Tokyo Sta. → Harajuku","JR Yamanote","~17 นาที",210,0],
+  ["Tokyo Sta. → Shibuya","JR Yamanote","~15 นาที",210,0],
+  ["Tokyo Sta. → Shinjuku (Gyoen)","JR Chuo (ตรง)","~15 นาที",220,0],
+  ["Tokyo Sta. → Ikebukuro","Marunouchi Line (ตรง)","~18 นาที",210,0],
+  ["Tokyo Sta. → Shinagawa (Maxell)","JR Yamanote","~7 นาที",170,0],
+  ["Tokyo Sta. → Kamiyacho (teamLab)","Marunouchi → Hibiya","~20 นาที",190,0],
+  ["Tokyo Sta. → Yokohama (Anpanman)","JR Keihin-Tohoku ตรง","~25 นาที",330,0],
+  ["Tokyo Sta. → Oshiage (Skytree)","Marunouchi → Hanzomon","~25 นาที",280,0],
+  ["Ikebukuro → Shinagawa","JR Yamanote","~30 นาที",210,0],
+  ["Ueno → Kamiyacho (teamLab)","Ginza Line (ตรง)","~25 นาที",190,0],
+  ["Ueno → Kinshicho (Akachan Honpo)","JR Sobu","~10 นาที",150,0],
+];
+const V6_DAYS=[
+{date:"2026-11-28", d:"28 พ.ย.", dow:"เสาร์ · D1", tag:"วันหนัก", pace:"big", zone:"Ikebukuro → ชินางาวะ → โยโกฮามะ (ไล่ลงใต้ทั้งวัน)",
+  extras:["ตัด Anpanman ได้ถ้าวันแรกเหนื่อยเกิน","Ginza ตอนกลับถ้ายังไหว"],
+  title:"ถึงโตเกียว · Pokémon + Maxell + Anpanman", sub:"Haneda 06:55 → Pokémon เช้า → Maxell บ่าย → Anpanman โยโกฮามะก่อนปิด (ตาม My Maps)", activeVariant:0, inc:true,
+  variants:[{name:"แผนหลัก", rows:[
+    R("06:55–08:00","เครื่องลง Haneda (T3) + ตม.","Haneda","","~1 ชม.",0,0,"logistic","ผ่าน ตม. + รับกระเป๋า ~60 นาที",415,65),
+    R("08:30–09:20","เข้าเมือง → Tokyo Station","Haneda → Tokyo Sta.","Keikyu → Shinagawa → JR Yamanote","~50 นาที",560,0,"logistic","ตั้ง Suica ในมือถือก่อนออกจากสนามบิน",510,50),
+    R("09:30–10:00","ฝากกระเป๋าที่โรงแรม (Yaesu)","โรงแรม (Yaesu)","เดิน","30 นาที",0,0,"rest","Sardonyx Tokyo — เช็กอิน 15:00 ฝากของก่อน",570,30),
+    R("10:00–10:25","ไป Ikebukuro","Tokyo Sta. → Ikebukuro","Marunouchi (ตรง ~18 นาที)","25 นาที",210,0,"logistic","",600,25),
+    R("10:25–12:00","Pokémon Center Mega Tokyo ⚡ (ตอนเปิด)","Sunshine City Ikebukuro","","1.5 ชม.",0,0,"shopping","เปิด 10:00 — มาตอนเปิดคิวสั้นสุด · ใหญ่สุดในญี่ปุ่น ไม่ต้องจอง",625,95),
+    R("12:00–13:00","มื้อกลางวัน Ikebukuro","Sunshine City Alpa/ฟู้ดคอร์ท","","1 ชม.",0,1500,"food","ในตึกเดียวกัน — Mutekiya ก็อยู่ย่านนี้ (คลังไอเดีย)",720,60),
+    R("13:05–13:40","ไป Shinagawa","Ikebukuro → Shinagawa","JR Yamanote (~30 นาที)","35 นาที",210,0,"logistic","Hooga งีบรถไฟช่วงนี้ได้",785,35),
+    R("13:40–15:40","Maxell Aqua Park 🐬","Shinagawa","","2 ชม.",0,5200,"attraction","ติดสถานีชินางาวะ · เช็กตารางโชว์โลมาก่อนเข้า",820,120),
+    R("15:45–16:15","ไป Yokohama","Shinagawa → Yokohama","JR Keihin-Tohoku (~20 นาที)","30 นาที",330,0,"logistic","",945,30),
+    R("16:15–17:15","Yokohama Anpanman Children's Museum 🦁","Yokohama (Minato Mirai)","","1 ชม.",0,6000,"attraction","ปิดรับบัตรสุดท้าย ~17:00 — วันแรกเหนื่อย ตัดได้ (จองออนไลน์เท่านั้น)",975,60),
+    R("17:30–18:30","มื้อเย็น Yokohama","ย่าน Minato Mirai","","1 ชม.",0,1800,"food","World Porters/Mark is ฟู้ดคอร์ทเด็กได้",1050,60),
+    R("18:45–19:35","กลับโรงแรม","Yokohama → Tokyo Sta.","JR Keihin-Tohoku (~25 นาที)","50 นาที",330,0,"logistic","Hooga งีบบนรถ",1125,50),
+    R("19:45–20:15","พัก + นอนเร็ว","โรงแรม (Yaesu)","","",0,0,"rest","วันแรกยาว — เก็บแรง",1185,30),
+  ]}]},
+{date:"2026-11-29", d:"29 พ.ย.", dow:"อาทิตย์ · D2", tag:"วันกลาง", pace:"med", zone:"อาซากุสะ (เช้า) → แปะก๊วย Gaien (เย็น)",
+  extras:["Nakamise ขนมถนน (ningyo-yaki)","เดินสวนสาธารณะหลังหอถ้าแรงเหลือ"],
+  title:"อาซากุสะ แต่งกิโมโน + Hanayashiki + แปะก๊วย 🍁", sub:"กิโมโน + Sensō-ji + Hanayashiki — เย็นไฟส้มแปะก๊วย Meiji Gaien (ตาม My Maps)", activeVariant:0, inc:true,
+  variants:[{name:"แผนหลัก", rows:[
+    R("08:30–09:00","อาหารเช้า","คาเฟ่/konbini","","",0,500,"food","",510,30),
+    R("09:00–09:35","ไป Asakusa","Tokyo Sta. → Asakusa","Marunouchi → Ginza Line","",220,0,"logistic","",540,35),
+    R("09:45–10:30","แต่งกิโมโน 👘 (จองร้านล่วงหน้า)","ร้านกิโมโน Asakusa","","45 นาที",0,6000,"attraction","เลือกร้านที่มีชุดเด็ก 1–2 ขวบ — จองช่วง 09:30-09:45",585,45),
+    R("10:30–12:00","Sensō-ji + Nakamise ถ่ายรูปชุดกิโมโน 📸","Senso-ji","เดิน","1.5 ชม.",0,0,"attraction","แสงเช้าสวย คนน้อยกว่า — จุดถ่าย Kaminarimon + หอใหญ่",630,90),
+    R("12:00–12:45","มื้อกลางวันอาซากุสะ","ย่าน Asakusa","","45 นาที",0,1500,"food","Gyukatsu/Daikokuya อยู่คลังไอเดีย (พิกัดพร้อม)",720,45),
+    R("12:45–13:15","คืนชุดกิโมโน","ร้านกิโมโน Asakusa","","30 นาที",0,0,"rest","",765,30),
+    R("13:15–14:00","Hanayashiki 🎡","Hanayashiki","","45 นาที",0,1500,"attraction","สวนสนุกเก่าแก่ข้างวัด — เด็ก≤4 ขวบขึ้นฟรีส่วนใหญ่",795,45),
+    R("14:15–15:00","กลับโรงแรม","Asakusa → Tokyo Sta.","Ginza → Marunouchi","",220,0,"logistic","",855,45),
+    R("15:00–16:00","งีบ","โรงแรม (Yaesu)","","",0,0,"rest","พักก่อนออกรอบเย็น",900,60),
+    R("16:00–16:40","ไป Meiji Gaien","Tokyo Sta. → Shinanomachi","JR Chuo-Sobu (~15 นาที)","40 นาที",160,0,"logistic","",960,40),
+    R("16:40–17:45","ถนนแปะก๊วย Meiji Gaien 🍁","Meiji Gaien Ginkgo Ave","","1 ชม. 5 นาที",0,0,"view","ไฟส้มยามเย็นสวยสุด ~16:30 ก่อนพระอาทิตย์ตก ~16:45 — พีคเหลืองช่วงนี้พอดี",1000,65),
+    R("18:00–18:45","กลับ + พัก","Shinanomachi → Tokyo Sta.","JR Chuo-Sobu","",160,0,"logistic","",1080,45),
+    R("19:00–20:00","มื้อเย็น","ย่าน Yaesu","","1 ชม.",0,1500,"food","",1140,60),
+  ]}]},
+{date:"2026-11-30", d:"30 พ.ย.", dow:"จันทร์ · D3", tag:"วันหนัก", pace:"big", zone:"ใต้: คามาคุระเต็มวัน (ขบวนตรง)",
+  extras:["Enoden นั่งเล่น 1–2 สถานีถ้าแรงเหลือ","ขนมถนน Komachi ลองทีละอย่าง"],
+  title:"คามาคุระเต็มวัน 🗿", sub:"Yokosuka ตรง 57 นาที — Hase-dera + พระใหญ่ + Hachimangu + Komachi", activeVariant:0, inc:true,
+  variants:[{name:"แผนหลัก", rows:[
+    R("08:00–08:30","อาหารเช้าเร็ว","konbini/โรงแรม","","",0,500,"food","",480,30),
+    R("08:30–09:30","ขบวนตรงไป Kamakura","Tokyo Sta. → Kamakura","JR Yokosuka (ตรง)","~57 นาที",990,0,"logistic","ไม่ต้องเปลี่ยนรถ — Hooga นั่งสบาย",510,60),
+    R("09:40–10:00","Enoden ไป Hase","Kamakura → Hase","Enoden 1 สถานี","",190,0,"logistic","รถไฟริมทะเลสายดัง — ถ้าคิวยาวเดินได้",580,20),
+    R("10:00–11:00","Hase-dera","Hase","","1 ชม.",0,400,"attraction","วิวทะเลจากยอดเนิน · บันได — ผูกอุ้ม Hooga",600,60),
+    R("11:05–11:45","Great Buddha (Kotoku-in) 🗿","Hase","","40 นาที",0,600,"attraction","พระบรอนซ์กลางแจ้ง เดินรอบสั้น รถเข็นไหลได้",665,40),
+    R("11:45–12:45","มื้อกลางวัน Hase","ย่าน Hase","","1 ชม.",0,1500,"food","Kua'Aina เบอร์เกอร์ / โซบะท้องถิ่น",705,60),
+    R("13:00–13:25","Enoden กลับสถานี Kamakura","Hase → Kamakura Sta.","Enoden","",190,0,"logistic","",780,25),
+    R("13:30–14:30","Tsurugaoka Hachimangu ⛩ (ศาลเจ้าหลัก)","Kamakura","","1 ชม.",0,0,"attraction","เดินจากสถานีผ่านถนน Komachi ~15 นาที · ลานกว้าง รถเข็นได้",810,60),
+    R("14:30–15:45","Komachi-dori ของกินถนน + กาเฟ่พัก","Komachi-dori","","1 ชม. 15 นาที",0,800,"rest","Hooga งีบในรถเข็นช่วงนี้ได้ — พักก่อนกลับ",870,75),
+    R("16:00–17:00","ขบวนตรงกลับโตเกียว (งีบบนรถ)","Kamakura → Tokyo Sta.","JR Yokosuka (ตรง)","~57 นาที",990,0,"logistic","",960,60),
+    R("17:15–18:00","พักโรงแรม / อาบน้ำเตรียมมื้อเย็น","โรงแรม (Yaesu)","","",0,0,"rest","",1035,45),
+    R("18:30–19:30","มื้อเย็น","ย่าน Yaesu","","1 ชม.",0,1500,"food","",1110,60),
+  ]}]},
+{date:"2026-12-01", d:"1 ธ.ค.", dow:"อังคาร · D4", tag:"วันหนัก", pace:"big", zone:"ไมฮามะ (Disney)",
+  extras:["ป๊อปคอร์นรสตามฤดู","ออกก่อนพาเหรดถ้า Hooga เพลีย"],
+  title:"Tokyo Disneyland 🎢 (คริสต์มาส)", sub:"Keiyo ตรง 15 นาทีจากหน้าบ้าน — สั้นสุดในแผน", activeVariant:0, inc:true,
+  variants:[{name:"แผนหลัก", rows:[
+    R("07:30–08:00","อาหารเช้าเร็ว","konbini/โรงแรม","","",0,500,"food","",450,30),
+    R("08:00–08:35","ไป Disney","Tokyo Sta. → Maihama","JR Keiyo (ตรง ~15 นาที)","35 นาที",220,0,"logistic","ชานชาลา Keiyo ไกล — เผื่อเดิน",480,35),
+    R("09:00–12:00","เข้าสวน + Fantasyland + Toontown","Maihama","","3 ชม.",0,17200,"attraction","บัตร 2 ผู้ใหญ่ (ซื้อล่วงหน้าระบุวัน) · Hooga <4 ขวบฟรี · เช่ารถเข็นในสวน",540,180),
+    R("12:00–13:00","มื้อกลางวันในสวน","ร้านในสวน","","1 ชม.",0,2500,"food","จองรอบอาหารผ่านแอปตั้งแต่เช้า",720,60),
+    R("13:00–15:00","งีบในรถเข็น + เครื่องเล่นเด็ก","ในสวน","","",0,0,"","Baby Center: เปลี่ยนผ้าอ้อม/อุ่นนม",780,120),
+    R("15:00–18:00","เครื่องเล่นเพิ่ม + พาเหรดคริสต์มาส","ในสวน","","3 ชม.",0,0,"attraction","ธีมคริสต์มาสถึง 25 ธ.ค. — ยืนดูริมทางเดินหลัก",900,180),
+    R("18:00–19:00","มื้อเย็นในสวน","ในสวน / Citywalk","","1 ชม.",0,2000,"food","ถ้าเพลีย ออกก่อนได้",1080,60),
+    R("19:10–19:45","กลับโรงแรม","Maihama → Tokyo Sta.","JR Keiyo","",220,0,"logistic","",1150,35),
+  ]}]},
+{date:"2026-12-02", d:"2 ธ.ค.", dow:"พุธ · D5", tag:"วันกลาง", pace:"med", zone:"ไมเจะ–โอโมเตะซันโด–ชินจูกุ",
+  extras:["Takeshita เช้า ๆ คนน้อย","KITTE หลังคาชมสถานี"],
+  title:"Meiji Jingu + Harajuku + Omotesando + Gyoen", sub:"เช้าวัด+ถนนฮาราจูกุ · เที่ยง Omotesando · บ่าย Gyoen (ตาม My Maps — ไม่มี Maxell แล้ว)", activeVariant:0, inc:true,
+  variants:[{name:"แผนหลัก", rows:[
+    R("08:30–09:00","อาหารเช้า","คาเฟ่/konbini","","",0,500,"food","",510,30),
+    R("09:05–09:25","ไป Harajuku","Tokyo Sta. → Harajuku","JR Yamanote","",210,0,"logistic","",545,20),
+    R("09:30–10:45","Meiji Jingu ⛩ เช้าเงียบ","Meiji Jingu","","1 ชม. 15 นาที",0,0,"attraction","ป่าในกลางเมือง — ทางเดินกว้าง รถเข็นสบาย",570,75),
+    R("10:45–11:45","Harajuku: Takeshita + ถนนอูระฮาราจูกุ","Harajuku","","1 ชม.",0,0,"shopping","ร้านการ์ตูน/ขนม — รถเข็นผ่านได้เลือกจังหวะ",645,60),
+    R("11:45–13:00","มื้อกลางวัน Omotesando","ย่าน Omotesando","","1 ชม. 15 นาที",0,1800,"food","AFURI / Cheese Cake Johann อยู่คลังไอเดีย (พิกัดพร้อม)",705,75),
+    R("13:00–13:45","Omotesando Hills 🏬 (เดินเบา + ร้านเด็ก)","Omotesando Hills","","45 นาที",0,0,"shopping","ลิฟต์/ห้องนมสะดวก — เผื่ออากาศไม่ฝั่ง",780,45),
+    R("13:50–14:05","ต่อไป Shinjuku Gyoen","Harajuku → Shinjuku","JR Yamanote (2 นาที)","15 นาที",150,0,"logistic","ใกล้กันมาก",830,15),
+    R("14:05–15:45","Shinjuku Gyoen National Garden 🌳","Shinjuku Gyoen","","1 ชม. 40 นาที",0,1000,"attraction","สวน 3 สไตล์ แปะก๊วย/เมเปิล — หน้าหนาวปิด ~16:30 ถึงก่อนได้",845,100),
+    R("16:00–16:30","กลับโรงแรม","Shinjuku → Tokyo Sta.","JR Chuo","",210,0,"logistic","",960,30),
+    R("16:30–17:30","งีบ","โรงแรม (Yaesu)","","",0,0,"rest","",990,60),
+    R("18:00–19:00","มื้อเย็น","ย่าน Yaesu","","1 ชม.",0,1500,"food","",1080,60),
+  ]}]},
+{date:"2026-12-03", d:"3 ธ.ค.", dow:"พฤหัสบดี · D6", tag:"วันหนัก", pace:"big", zone:"อุเอโนะ (เช้า) → อะซาบูได (บ่าย) → ชิบูยะ (เย็น)",
+  extras:["Kahaku ไดโนเสาร์ถ้า Zoo จบเร็ว","Hachiko + ชุมทางคนข้ามถนนหลังหอ"],
+  title:"Ueno Zoo + teamLab Borderless + Shibuya SKY", sub:"แพนด้าตอนเปิด → teamLab รอบ 12:45 → Shibuya SKY รอบ sunset (ตาม My Maps)", activeVariant:0, inc:true,
+  variants:[{name:"แผนหลัก", rows:[
+    R("08:00–08:30","อาหารเช้าเร็ว","konbini/โรงแรม","","",0,500,"food","",480,30),
+    R("08:35–08:50","ไป Ueno","Tokyo Sta. → Ueno","JR Yamanote (8 นาที)","15 นาที",170,0,"logistic","",515,15),
+    R("09:00–11:00","Ueno Zoo 🐼 (ตรงไปแพนด้าก่อน)","Ueno Zoo","","2 ชม.",0,1200,"attraction","เปิด 9:30 — คิวแพนด้าช่วงเปิดสั้นสุด · ทางเดินกว้าง รถเข็นสะดวก",540,120),
+    R("11:00–11:45","มื้อกลางวัน Ueno","ย่าน Ueno","","45 นาที",0,1200,"food","",660,45),
+    R("11:50–12:25","ไป Azabudai Hills","Ueno → Kamiyacho","Ginza Line (ตรง ~25 นาที)","35 นาที",190,0,"logistic","",710,35),
+    R("12:45–14:45","teamLab Borderless 🎨 (รอบ 12:45)","Azabudai Hills","","2 ชม.",0,6400,"attraction","อุ้มแทนรถเข็น (ห้ามเข็นใน) · ≤3 ขวบฟรี",765,120),
+    R("15:00–15:40","ไป Shibuya","Kamiyacho → Shibuya","Hibiya → Ginza Line","40 นาที",190,0,"logistic","Hooga งีบรถไฟช่วงนี้ได้",900,40),
+    R("15:40–16:15","กาเฟ่พัก Shibuya + ขนม Hooga","ย่าน Shibuya","","35 นาที",0,600,"rest","Little Nap / Camelback อยู่คลังไอเดีย — พักก่อนขึ้นหอ",940,35),
+    R("16:15–17:30","Shibuya SKY 🌆 รอบพระอาทิตย์ตก (หอชมวิวประจำทริป)","Shibuya Sky","","1 ชม. 15 นาที",0,4600,"attraction","sunset ~16:45 · มุมก้มเห็นชุมทางคนข้ามถนน · ลมแรงผ้าห่ม Hooga",975,75),
+    R("17:45–18:45","มื้อเย็น Shibuya","ย่าน Shibuya","","1 ชม.",0,1800,"food","Sushi no Midori อยู่คลังไอเดีย (พิกัดพร้อม)",1065,60),
+    R("19:00–19:30","กลับโรงแรม","Shibuya → Tokyo Sta.","JR Yamanote","",210,0,"logistic","",1140,30),
+  ]}]},
+{date:"2026-12-04", d:"4 ธ.ค.", dow:"ศุกร์ · D7", tag:"วันเบา", pace:"light", zone:"ช้อป: Ueno → คินชิโช → Skytree",
+  extras:["หอ Skytree ขึ้นชมถ้าอยาก","Donki รอบสุดท้ายกลับทาง"],
+  title:"วันช้อปของฝาก: TAKEYA + Ameyoko + Akachan + Solamachi", sub:"ตามเลเยอร์ช้อปใน My Maps — จบที่ Skytree เย็น", activeVariant:0, inc:true,
+  variants:[{name:"แผนหลัก", rows:[
+    R("08:30–09:00","อาหารเช้า","คาเฟ่ใกล้โรงแรม","","",0,500,"food","",510,30),
+    R("09:05–09:20","ไป Ueno","Tokyo Sta. → Ueno","JR Yamanote (8 นาที)","15 นาที",170,0,"logistic","",545,15),
+    R("09:30–10:00","กาเฟ่ Ueno เบา ๆ รอร้านเปิด","ย่าน Ueno","","30 นาที",0,600,"food","ร้านส่วนใหญ่เปิด 10:00 — ไม่ต้องรีบ",570,30),
+    R("10:00–12:00","TAKEYA 🛍️ + Ameyoko ช้อปของฝาก","TAKEYA / Ameyoko","","2 ชม.",0,0,"shopping","ห้ามิชุดถูก + ตลาดถนน — งบของฝากแยกต่างหาก · Hooga งีบรถเข็นได้",600,120),
+    R("12:00–13:00","มื้อกลางวัน Ueno","ย่าน Ueno","","1 ชม.",0,1500,"food","",720,60),
+    R("13:10–13:45","ไป Akachan Honpo คินชิโช","Ueno → Kinshicho","JR Sobu (~10 นาที)","35 นาที",150,0,"logistic","",790,35),
+    R("13:45–15:00","Akachan Honpo 👶 (ร้านของเด็กใหญ่สุด)","Kinshicho","","1 ชม. 15 นาที",0,0,"shopping","ของใช้เด็ก/ของฝากเด็ก — จุดจบของของฝากเด็ก",825,75),
+    R("15:05–15:30","ไป Skytree","Kinshicho → Oshiage","~15 นาที","25 นาที",170,0,"logistic","",905,25),
+    R("15:30–17:30","ช้อปของฝาก Tokyo Solamachi 🛍️","Solamachi (Skytree)","","~2 ชม.",0,0,"shopping","KitKat Tokyo · Tokyo Banana · ร้านการ์ตูน — ครบจบที่เดียว รถเข็นสบาย",930,120),
+    R("17:45–19:15","มื้อเย็นพิเศษ + เดินไฟ Skytree รอบตึก","Solamachi (food court/ร้านในมอลล์)","","1 ชม. 30 นาที",0,2500,"food","มื้อส่งท้ายสัปดาห์",1065,90),
+    R("19:55–20:40","กลับ + Don Quijote Ueno รอบสุดท้าย","Oshiage → Ueno → Tokyo Sta.","Hanzomon/Asakusa Line + JR","~45 นาที",220,0,"shopping","Donki Ueno เปิด 24 ชม. — ทางผ่านกลับบ้าน",1195,45),
+  ]}]},
+{date:"2026-12-05", d:"5 ธ.ค.", dow:"เสาร์ · D8", tag:"วันเบา", pace:"light", zone:"หน้าบ้าน + Hibiya",
+  extras:["Ginza window shopping ถ้าแรงเหลือ","Toshima Kids Park (ในร่ม) ถ้าฝน"],
+  title:"เก็บกระเป๋า + Character Street + Hibiya Illumination", sub:"เช้าช้อปหน้าบ้าน · บ่ายฟรีไทม์ · เย็นไฟ Hibiya Magic Time (จาก My Maps optional)", activeVariant:0, inc:true,
+  variants:[{name:"แผนหลัก", rows:[
+    R("08:30–09:00","อาหารเช้า","คาเฟ่ใกล้โรงแรม","","",0,500,"food","",510,30),
+    R("09:15–11:00","ช้อป Character Street + KITTE (หน้าบ้าน)","Tokyo Character Street","","1 ชม. 45 นาที",0,0,"shopping","เช้าเสาร์ยังโล่ง · Pokémon Store สาขาสถานีอยู่ตรงนี้ด้วย",555,105),
+    R("11:00–12:00","เก็บกระเป๋า + พัก","โรงแรม (Yaesu)","","",0,0,"rest","แพ็กให้เสร็จก่อนออกรอบเย็น — พรุ่งนี้บิน 10:35",660,60),
+    R("12:00–13:00","มื้อกลางวัน","ย่าน Yaesu","","1 ชม.",0,1500,"food","",720,60),
+    R("13:15–14:45","งีบบ่ายสุดท้าย","โรงแรม (Yaesu)","","",0,0,"rest","",795,90),
+    R("15:00–16:30","⏳ ฟรีไทม์เลือกเอง: Ginza / Toshima Kids Park (ในร่ม) / พัก","Ginza / Ikebukuro / โรงแรม","","1 ชม. 30 นาที",0,0,"attraction","บ่ายว่าง — เลือกตามแรง Hooga วันนั้น",915,90),
+    R("16:45–17:30","ไป Hibiya + เดินสวน Hibiya Park","Hibiya Park","เดิน/Yurakucho","45 นาที",0,0,"view","สวนหน้าพระราชวัง — เดินเบาก่อนไฟเปิดเต็ม",1005,45),
+    R("17:30–18:30","HIBIYA Magic Time Illumination 🎆","Hibiya/Marunouchi","","1 ชม.",0,0,"view","mid-พ.ย.–ธ.ค. ฟรี — ตึกแก้ว + สวนสวยหลัง 17:30 ไฟเปิดเต็ม",1050,60),
+    R("18:45–19:00","กลับโรงแรม","Hibiya → Tokyo Sta.","เดิน 10 นาที","15 นาที",0,0,"logistic","ใกล้บ้านมาก",1125,15),
+    R("19:00–20:00","มื้อเย็นปิดสัปดาห์","ย่าน Yaesu","","1 ชม.",0,1800,"food","",1140,60),
+  ]}]},
+{date:"2026-12-06", d:"6 ธ.ค.", dow:"อาทิตย์ · D9", tag:"กลับ", pace:"rest", zone:"กลับกรุงเทพฯ",
+  extras:[],
+  title:"กลับกรุงเทพฯ ✈️", sub:"TG683 10:35 · Tokyo Sta. → Haneda ~40 นาที", activeVariant:0, inc:true,
+  variants:[{name:"แผนหลัก", rows:[
+    R("07:00–07:30","เช้าเร็ว + เช็กเอาท์","โรงแรม (Yaesu)","","",0,500,"food","",420,30),
+    R("07:30–08:20","ไปสนามบิน","Tokyo Sta. → Haneda","Yamanote → Hamamatsucho → Keikyu/Monorail","~40 นาที",500,0,"logistic","เผื่อ check-in 2 ชม.",450,50),
+    R("10:35–15:40","TG683 ออกเดินทาง ✈️","Haneda → BKK","","~5 ชม.",0,0,"logistic","ถึง BKK 15:40 (เวลาไทย)",635,295),
+  ]}]},
+];
+// พิกัดจาก Google My Maps "Autumn Japan 2026 | Tokyo with HOOGA" (53 หมุด)
+// แก้ 2 จุดตามการยืนยันจริง: Ueno Zoo → OSM 35.71534,139.76890 (หมุดเดิมหลุด ~330 ม.) · Sardonyx → 35.67669,139.77879
+const V6_GEO={
+  "Pokémon Center Mega Tokyo":[35.72891,139.71932],
+  "Maxell Aqua Park":[35.62828,139.73490],
+  "Anpanman Children's Museum":[35.46340,139.62892],
+  "Sensō-ji":[35.71477,139.79666],
+  "Hanayashiki 🎡":[35.71546,139.79488],
+  "Meiji Gaien Ginkgo":[35.67272,139.72057],
+  "Kamakura":[35.31921,139.54667],
+  "Tokyo Disneyland 🎢":[35.63290,139.88039],
+  "Meiji Jingu ⛩":[35.67640,139.69933],
+  "Harajuku: Takeshita":[35.66997,139.70901],
+  "Omotesando Hills":[35.66777,139.70746],
+  "Shinjuku Gyoen":[35.68518,139.71005],
+  "Ueno Zoo 🐼":[35.71534,139.76890],
+  "teamLab Borderless":[35.66207,139.74327],
+  "Shibuya SKY":[35.65860,139.70221],
+  "TAKEYA":[35.70743,139.77659],
+  "Ameyoko":[35.70898,139.77472],
+  "Akachan Honpo 👶":[35.68243,139.82557],
+  "Hibiya Park":[35.67361,139.75588],
+  "Magic Time Illumination":[35.67386,139.75987],
+  "Tokyo Character Street":[35.68130,139.76707],
+};
+V6_DAYS.forEach(d=>d.variants[0].rows.forEach(r=>{ for(const k in V6_GEO){ if(r.act.includes(k)){ r.geo=V6_GEO[k]; break; } } }));
+
 const SEED = {
-  meta: { filename: "Tokyo_Trip_Working_Plan_2026.xlsx", loadedAt: "2026-09-06T00:00:00Z", source: "seed", schema: 11 },
+  meta: { filename: "Tokyo_Trip_Working_Plan_2026.xlsx", loadedAt: "2026-09-06T00:00:00Z", source: "seed", schema: 12 },
   settings: {
     fx: 0.23, foodStyle: "กลาง", hotelTokyo: 13000, nightsTokyo: 8,
     hotelShizuoka: 12000, nightsShizuoka: 0, adults: 2, children: 1,
-    base: JSON.parse(JSON.stringify(V5_BASE))
+    base: JSON.parse(JSON.stringify(V6_BASE))
   },
-  days: JSON.parse(JSON.stringify(V5_DAYS)),
-  routes: JSON.parse(JSON.stringify(V5_ROUTES)),
-  checks: JSON.parse(JSON.stringify(V5_CHECKS))
+  days: JSON.parse(JSON.stringify(V6_DAYS)),
+  routes: JSON.parse(JSON.stringify(V6_ROUTES)),
+  checks: JSON.parse(JSON.stringify(V6_CHECKS))
 };
 
 // ================= TIME UTILS =================
@@ -449,8 +648,37 @@ function normalizeTags(state){
 // ================= IDEA LIBRARY (not yet in the plan) =================
 // est = ¥ for 2 adults combined (0 = free / varies)
 const IDEAS=[
-  {n:"Kawaguchiko Momiji Corridor 🍁", area:"ทะเลสาบคาวากุจิโกะ", tag:"attraction", est:0, note:"เมเปิลริมทะเลสาบ พีค ~กลาง พ.ย. — จาก Shinjuku ~2 ชม. เกินเกณฑ์ 1 ชม.ของแผน เก็บไว้ทริปหน้า"},
-  {n:"Chureito Pagoda 🗼", area:"คาวากุจิโกะ/ฟุจิโยชิดะ", tag:"attraction", est:0, note:"หอ 5 ชั้นมุมถ่ายฟูจิ — บันได ~400 ขั้น ผูกอุ้มเท่านั้น"},
+  {n:"Kawaguchiko Momiji Corridor 🍁", area:"ทะเลสาบคาวากุจิโกะ", tag:"attraction", est:0, note:"เมเปิลริมทะเลสาบ พีค ~กลาง พ.ย. — จาก Shinjuku ~2 ชม. เก็บไว้ทริปหน้า", geo:[35.52582,138.76233]},
+  {n:"Chureito Pagoda 🗼", area:"คาวากุจิโกะ/ฟุจิโยชิดะ", tag:"attraction", est:0, note:"หอ 5 ชั้นมุมถ่ายฟูจิ — บันได ~400 ขั้น ผูกอุ้มเท่านั้น", geo:[35.50126,138.80139]},
+  // ---- Kawaguchiko เพิ่มเติม + optional จาก Google My Maps "Autumn Japan 2026" (พิกัดพร้อมใช้) ----
+  {n:"Kawaguchiko Ropeway 🚡", area:"คาวากุจิโกะ", tag:"attraction", est:800, note:"จุดชมฟูจิจากยอดเนิน — เข้าที่ Ropeway-iriguchi", geo:[35.50438,138.77168]},
+  {n:"Momijitei-Hoto 🍲", area:"คาวากุจิโกะ", tag:"food", est:2400, note:"ฮูโตข้าวต้มยอดนิยมริมทะเลสาบ — คิวยาว มาตอนเปิด", geo:[35.52515,138.76347]},
+  {n:"Nagasaki Park (คาวากุจิโกะ)", area:"คาวากุจิโกะ", tag:"view", est:0, note:"สวนริมทะเลสาบมุมสงบ — ปิกนิกได้", geo:[35.52155,138.75735]},
+  {n:"Kawaguchiko Natural Living Center 🧺", area:"คาวากุจิโกะ", tag:"shopping", est:0, note:"ร้านของฝาก/งานฝีมือริมทะเลสาวฝั่งเหนือ", geo:[35.52285,138.74549]},
+  {n:"Cafe Troisieme Marche ☕", area:"คาวากุจิโกะ", tag:"food", est:1200, note:"คาเฟ่ขนมปัง/เค้ก — จาก My Maps", geo:[35.52186,138.77351]},
+  {n:"Fujisan Shokupan 🍞", area:"ฟุจิโยชิดะ", tag:"food", est:1000, note:"ช็อกปังของดังปากทาง Kawaguchiko", geo:[35.49890,138.76524]},
+  {n:"Shira-Ito Waterfall 💧", area:"ฟุจิ (ทางผ่านคาวากุจิโกะ)", tag:"attraction", est:0, note:"น้ำตกเส้นผมพรายจากฟูจิ — จุดพักระหว่างทางถ้าไป Kawaguchiko", geo:[35.31278,138.58750]},
+  {n:"Toshima Kids Park 🛝", area:"Ikebukuro (ในร่ม)", tag:"attraction", est:600, note:"สนามเด็กในร่ม — ตัวสำรองวันฝน/วันแรงเหลือ", geo:[35.72730,139.72135]},
+  {n:"Mitsui Outlet Park Yokohama Bayside 🛍️", area:"โยโกฮามะ", tag:"shopping", est:0, note:"เอาต์เลตริมอ่าว — ค่อนข้างไกล เก็บไว้ทริปหน้า", geo:[35.37990,139.64641]},
+  {n:"UNIQLO PARK Yokohama 👕", area:"โยโกฮามะ Bayside", tag:"shopping", est:0, note:"สาขาใหญ่พร้อมสนามเด็กบนดาดฟ้า — อยู่ติด Mitsui Outlet", geo:[35.38133,139.64679]},
+  // ---- ร้านอาหารจาก My Maps (เลเยอร์ Food — พิกัดพร้อม กด ＋ ใส่แผนได้เลย) ----
+  {n:"Mutekiya 🍜", area:"Ikebukuro", tag:"food", est:1500, note:"ราเมนต้นตำรับอุเอโนะสาขาอิเกบุคุโร — รอคิวนาน (จาก My Maps)", geo:[35.72691,139.71166]},
+  {n:"Sushi no Midori 🍣", area:"Shibuya", tag:"food", est:2500, note:"ซูชิแน่นเนื้อราคาดี — ต่อคิวออนไลน์ได้ (จาก My Maps)", geo:[35.65835,139.69899]},
+  {n:"Asakusa Gyukatsu 🥩", area:"Asakusa", tag:"food", est:2000, note:"เกียวคัทสึ (เนื้อทอด) — จาก My Maps", geo:[35.71079,139.79594]},
+  {n:"Daikokuya Tempura 🍤", area:"Asakusa", tag:"food", est:2000, note:"เทมปุระหม้อน้ำมันเก่าแก่ข้าง Sensō-ji — จาก My Maps", geo:[35.71274,139.79557]},
+  {n:"Miuramisaki Kou 🦈", area:"Tsukiji", tag:"food", est:3000, note:"ร้านปลา/หมึก Tsukiji — จาก My Maps", geo:[35.71087,139.77499]},
+  {n:"Yoroiya Ramen 🍥", area:"Asakusa", tag:"food", est:1200, note:"ราเมนชิ้นหมูยักษ์ย่านอาซากุสะ — จาก My Maps", geo:[35.71276,139.79681]},
+  {n:"AFURI Harajuku 🍜", area:"Harajuku", tag:"food", est:1300, note:"ราเมนน้ำใสส้มยูซุ — เบา ๆ ก่อนเดินต่อ (จาก My Maps)", geo:[35.67301,139.70380]},
+  {n:"Nakiryu 🍜", area:"Otsuka", tag:"food", est:1400, note:"ราเมนมิชลินแดนซึเมน — รอคิวนาน (จาก My Maps)", geo:[35.72868,139.73034]},
+  {n:"Ore-no French & Italian Aoyama 🍷", area:"Omotesando/Aoyama", tag:"food", est:4000, note:"สแตนดิ้งร้านฝรั่งเศสราคาชาวบ้าน — จาก My Maps", geo:[35.66405,139.71070]},
+  {n:"Sushi Dai 🍣", area:"Toyosu", tag:"food", est:4000, note:"ซูชิตำนานตลาด — ปัจจุบันอยู่ Toyosu ต่อคิวเช้า (จาก My Maps)", geo:[35.64442,139.78230]},
+  {n:"Little Nap Coffee Stand ☕", area:"Yoyogi/Harajuku", tag:"food", est:800, note:"คาเฟ่เล็กข้าง Yoyogi Park — จาก My Maps", geo:[35.67209,139.69059]},
+  {n:"from afar ☕", area:"Kiyosumi-Shirakawa", tag:"food", est:900, note:"คาเฟ่เจลาโต้โรสเตอรี่ — จาก My Maps", geo:[35.70915,139.78947]},
+  {n:"Camelback Rich Valley ☕", area:"Tomigaya (Shibuya)", tag:"food", est:900, note:"คาเฟ่ขาเท้าเขา ย่านโทมิงายะ — จาก My Maps", geo:[35.66873,139.68987]},
+  {n:"Kitsuneya 🐟", area:"Tsukiji", tag:"food", est:1500, note:"ข้าวหน้าปลาดิบท้องถิ่น Tsukiji — จาก My Maps", geo:[35.66573,139.76984]},
+  {n:"Cheese Cake Johann 🍰", area:"Minami-Aoyama", tag:"food", est:900, note:"ชีสเค้กอร่อยเลื่องชื่อ — จาก My Maps", geo:[35.64578,139.69856]},
+  {n:"Azabu Kadowaki 🍱", area:"Azabudai", tag:"food", est:2500, note:"เดลิ/เบนโตะคุณภาพสูงย่านอะซาบู — จาก My Maps", geo:[35.65594,139.73361]},
+  {n:"Pokémon Café ⚡ (Nihombashi)", area:"Nihombashi", tag:"food", est:4000, note:"ต้องจองล่วงหน้าเฉพาะวันที่เปิดจอย — จาก My Maps (ยังไม่อยู่ในแผน)", geo:[35.68064,139.77444]},
   // ---- attractions ----
   {n:"Ghibli Museum 🎈",area:"Mitaka",tag:"attraction",est:2000,note:"ต้องซื้อบัตรล่วงหน้าที่ Lawson ตั้งแต่วันที่ 10 ของเดือนก่อน — หมดเร็วมาก"},
   {n:"teamLab Borderless 🎨",area:"Azabudai Hills",tag:"attraction",est:6400,note:"พี่น้องของ Planets ที่อยู่ในแผน — สวยสำหรับเด็กเช่นกัน"},
@@ -651,6 +879,17 @@ const Trips = {
 function migrate(state){
   if(!state || !state.days) return state;
   state.meta=state.meta||{};
+  // ---- v11→v12: My Maps master sync ("Autumn Japan 2026 | Tokyo with HOOGA") — guard: first date of THIS trip only ----
+  if((state.meta.schema||0)<12){
+    if(state.days && state.days[0] && state.days[0].date==='2026-11-28'){
+      state.days=JSON.parse(JSON.stringify(V6_DAYS));
+      state.checks=JSON.parse(JSON.stringify(V6_CHECKS));
+      state.routes=JSON.parse(JSON.stringify(V6_ROUTES));
+      state.settings.base=JSON.parse(JSON.stringify(V6_BASE));
+      state.__mig=state.__mig||'v12-mymaps';
+    }
+    state.meta.schema=12; return state;
+  }
   // ---- v10→v11: Shibuya SKY → D2 อาทิตย์, ศุกร์กลายเป็นฟรีไทม์แท้ — guard: first date of THIS trip only ----
   if((state.meta.schema||0)<11){
     if(state.days&&state.days[0]&&state.days[0].date==='2026-11-28'){

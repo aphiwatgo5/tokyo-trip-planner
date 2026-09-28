@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@300;400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="data.js?v=14"></script>
+<script src="data.js?v=15"></script>
 <script src="app.js?v=14"></script>
 <style>
   :root{
@@ -112,7 +112,7 @@
   </div>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="routing.js?v=8"></script>
+<script src="routing.js?v=9"></script>
 <script>
 // ================= STATE =================
 let S=tpLoad();
@@ -151,9 +151,12 @@ async function loadDay(forceRefresh){
   $('status').textContent='กำลังโหลด…';
   stopAnim();
   clearLayers();
-  const base=(S.settings.baseGeo&&isFinite(S.settings.baseGeo[0]))
-    ? {name:S.settings.baseName||'โรงแรม', geo:{lat:S.settings.baseGeo[0],lng:S.settings.baseGeo[1]}}
-    : {name:S.settings.baseName||'โรงแรม Ueno', geo:{lat:35.7121,lng:139.7780}};
+  const st=S.settings;
+  const base=(st.base&&st.base.geo&&isFinite(st.base.geo.lat))
+    ? {name:st.base.name||'โรงแรม', geo:{lat:st.base.geo.lat,lng:st.base.geo.lng}}
+    : ((st.baseGeo&&isFinite(st.baseGeo[0]))
+      ? {name:st.baseName||'โรงแรม', geo:{lat:st.baseGeo[0],lng:st.baseGeo[1]}}
+      : {name:st.baseName||'โรงแรม Sardonyx Tokyo (Yaesu)', geo:{lat:35.67669,lng:139.77879}});
   if(forceRefresh){
     try{ localStorage.removeItem('tp-routes-v1'); }catch(e){}
   }

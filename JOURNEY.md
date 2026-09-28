@@ -50,3 +50,11 @@
 - curated spots ใน map.html มี dayRef ตามแผนเก่าบางจุด — live plan layer เป็นความจริงกลาง
 - เวลาเปิดจริง ราคา ยังเป็นประมาณการ — AI ช่วยเช็คเว็บได้แต่ต้องยืนยันก่อนจ่ายเงินเสมอ
 
+## v12 — My Maps sync (2026-09-28)
+ผู้ใช้แชร์ Google My Maps "Autumn Japan 2026 | Tokyo with HOOGA" (53 หมุด) → รับเป็นแผนหลัก (schema v12):
+- รีสตรัคเจอร์วันตาม My Maps: D1 +Maxell+Anpanman · D2 +Hanayashiki+Ginkgo (Shibuya SKY ย้ายไป D6) · D5 ถอด Maxell · D6 = Ueno+teamLab+ShibuyaSKY · D7 ช้อป TAKEYA/Ameyoko/Akachan+Skytree · D8 ฟรี+Hibiya Illumination · Kawaguchiko (8 หมุด) เข้าคลังไอเดียพร้อมพิกัด (ยังไม่เอาเข้าแผนตามคำตัดสินใจ)
+- พิกัด 53 จุดผูกเข้าแถว (row.geo) + places.json · **แก้ 2 จุดตามการยืนยันจริง: Ueno Zoo หลุด ~330 ม. → 35.71534,139.76890 (OSM) · โรงแรม Sardonyx ใน seed เพี้ยน ~800 ม. → 35.67669,139.77879**
+- คลังไอเดีย +29 รายการพร้อมพิกัด (ร้านอาหาร 16 จาก My Maps + Kawaguchiko/optional) — กด ＋ ใส่แผนแล้วพิกัดตามไป
+- แก้บั๊ก route.html จุดเริ่มเส้นทาง (อ่าน settings.base ผิด key ตก fallback โรงแรม Ueno เก่า)
+- งบรวมใหม่ ¥195,240 · เช็กลิสต์อัปเดต (Shibuya SKY→3 ธ.ค., Maxell→28 พ.ย., Anpanman จาก optional เป็นแผนหลัก + รายการตัดสินใจ APA Nishi Shinjuku)
+

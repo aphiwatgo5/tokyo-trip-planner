@@ -342,5 +342,217 @@
  "hotel base|yaesu": {
   "lat": 35.681,
   "lng": 139.771
+ },
+ "pokémon center mega tokyo & pikachu sweets|": {
+  "lat": 35.7289056,
+  "lng": 139.7193245
+ },
+ "tokyo station|": {
+  "lat": 35.6812996,
+  "lng": 139.7670658
+ },
+ "maxell aqua park shinagawa|": {
+  "lat": 35.6282839,
+  "lng": 139.734896
+ },
+ "yokohama anpanman children's museum|": {
+  "lat": 35.4633953,
+  "lng": 139.6289171
+ },
+ "sensō-ji|": {
+  "lat": 35.7147651,
+  "lng": 139.7966553
+ },
+ "asakusa hanayashiki|": {
+  "lat": 35.7154609,
+  "lng": 139.7948774
+ },
+ "meiji jingu gaien ginkgo avenue|": {
+  "lat": 35.6727172,
+  "lng": 139.7205745
+ },
+ "kamakura|": {
+  "lat": 35.3192128,
+  "lng": 139.5466731
+ },
+ "tokyo disneyland|": {
+  "lat": 35.6328964,
+  "lng": 139.8803943
+ },
+ "meiji jingu|": {
+  "lat": 35.6763976,
+  "lng": 139.6993259
+ },
+ "harajuku|": {
+  "lat": 35.6699682,
+  "lng": 139.709008
+ },
+ "omotesando hills|": {
+  "lat": 35.667767,
+  "lng": 139.707456
+ },
+ "shinjuku gyoen national garden|": {
+  "lat": 35.6851763,
+  "lng": 139.7100517
+ },
+ "ueno zoological gardens|": {
+  "lat": 35.71534,
+  "lng": 139.7689
+ },
+ "teamlab borderless: mori building digital art museum|": {
+  "lat": 35.6620689,
+  "lng": 139.7432671
+ },
+ "shibuya sky|": {
+  "lat": 35.6585976,
+  "lng": 139.7022128
+ },
+ "chureito pagoda|": {
+  "lat": 35.5012626,
+  "lng": 138.8013852
+ },
+ "ropeway-iriguchi|": {
+  "lat": 35.504379,
+  "lng": 138.77168
+ },
+ "momijitei-hoto|": {
+  "lat": 35.525149,
+  "lng": 138.763474
+ },
+ "momiji corridor lake kawaguchi|": {
+  "lat": 35.525818,
+  "lng": 138.7623326
+ },
+ "nagasaki park|": {
+  "lat": 35.5215516,
+  "lng": 138.7573478
+ },
+ "kawaguchiko natural living center|": {
+  "lat": 35.5228512,
+  "lng": 138.7454934
+ },
+ "cafe troisieme marche|": {
+  "lat": 35.5218585,
+  "lng": 138.7735092
+ },
+ "fujisan shokupan|": {
+  "lat": 35.4988983,
+  "lng": 138.7652371
+ },
+ "mutekiya|": {
+  "lat": 35.7269133,
+  "lng": 139.7116557
+ },
+ "sushi no midori|": {
+  "lat": 35.6583453,
+  "lng": 139.6989875
+ },
+ "asakusa gyukatsu|": {
+  "lat": 35.7107894,
+  "lng": 139.7959419
+ },
+ "daikokuya tempura|": {
+  "lat": 35.7127383,
+  "lng": 139.79557
+ },
+ "miuramisaki kou|": {
+  "lat": 35.7108659,
+  "lng": 139.7749852
+ },
+ "yoroiya ramen|": {
+  "lat": 35.7127625,
+  "lng": 139.7968093
+ },
+ "afuri harajuku|": {
+  "lat": 35.6730053,
+  "lng": 139.7038019
+ },
+ "nakiryu|": {
+  "lat": 35.7286762,
+  "lng": 139.7303427
+ },
+ "ore-no french&italian aoyama|": {
+  "lat": 35.6640465,
+  "lng": 139.7106992
+ },
+ "sushi dai|": {
+  "lat": 35.6444158,
+  "lng": 139.7822951
+ },
+ "little nap coffee stand|": {
+  "lat": 35.6720937,
+  "lng": 139.6905932
+ },
+ "from afar|": {
+  "lat": 35.7091486,
+  "lng": 139.7894726
+ },
+ "camelback rich valley|": {
+  "lat": 35.668732,
+  "lng": 139.689872
+ },
+ "kitsuneya|": {
+  "lat": 35.6657341,
+  "lng": 139.7698435
+ },
+ "cheese cake johann|": {
+  "lat": 35.645775,
+  "lng": 139.6985629
+ },
+ "azabu kadowaki|": {
+  "lat": 35.6559393,
+  "lng": 139.7336107
+ },
+ "hibiya park|": {
+  "lat": 35.6736115,
+  "lng": 139.7558769
+ },
+ "shira-ito waterfall|": {
+  "lat": 35.3127778,
+  "lng": 138.5875
+ },
+ "toshima kids park|": {
+  "lat": 35.7272976,
+  "lng": 139.7213453
+ },
+ "hibiya magic time illumination|": {
+  "lat": 35.6738633,
+  "lng": 139.7598695
+ },
+ "mitsui outlet park yokohama bayside|": {
+  "lat": 35.3798991,
+  "lng": 139.6464076
+ },
+ "uniqlo park|": {
+  "lat": 35.3813258,
+  "lng": 139.6467897
+ },
+ "pokemon cafe tokyo nihombashi|": {
+  "lat": 35.6806372,
+  "lng": 139.7744369
+ },
+ "haneda airport terminal 3 station|": {
+  "lat": 35.5446693,
+  "lng": 139.7676181
+ },
+ "hotel sardonyx tokyo|": {
+  "lat": 35.67669,
+  "lng": 139.77879
+ },
+ "apa hotel nishi shinjuku gochome eki tower|": {
+  "lat": 35.68975,
+  "lng": 139.6834836
+ },
+ "takeya|": {
+  "lat": 35.707434,
+  "lng": 139.7765921
+ },
+ "ameyoko shopping street|": {
+  "lat": 35.708978,
+  "lng": 139.7747155
+ },
+ "akachan honpo|": {
+  "lat": 35.6824308,
+  "lng": 139.8255654
  }
 }
