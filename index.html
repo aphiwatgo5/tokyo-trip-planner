@@ -10,7 +10,7 @@
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="data.js?v=15"></script>
 <script src="data-trips.js?v=2"></script>
-<script src="app.js?v=14"></script>
+<script src="app.js?v=15"></script>
 <style>
   :root{
     --ink:#1B2430; --muted:#69758A; --paper:#F5F2EA; --card:#FFFFFF;
@@ -133,6 +133,13 @@
   .diffbox .dh{padding:8px 12px; background:#F0F2EE; font-family:"Mitr"; font-weight:600; font-size:12.5px;}
   .diffbox ul{margin:0; padding:8px 12px 10px 30px;}
   .diffbox li{margin-bottom:2px;}
+  .cloud-ok{color:var(--pine2);}
+  .cloud-wait{color:var(--straw);}
+  .cloud-err{color:var(--momiji);}
+  .cloudfld{width:100%; border:1px solid var(--line); border-radius:9px; padding:8px 10px; font-family:"Sarabun"; font-size:13px; background:#FBFCFA; box-sizing:border-box;}
+  .cloudfld:focus{outline:none; border-color:var(--pine2);}
+  .cloudrow{margin-bottom:10px;}
+  .cloudrow label{font-size:11px; color:var(--muted); font-family:"Mitr"; display:block; margin-bottom:3px;}
   #dayjump{display:none; gap:6px; overflow-x:auto; padding:8px 4px 4px; -webkit-overflow-scrolling:touch;}
   #dayjump button{flex:0 0 auto; font-family:"Mitr"; font-size:11.5px; border:1px solid var(--line); background:#fff;
     border-radius:16px; padding:5px 11px; cursor:pointer; white-space:nowrap;}
@@ -166,6 +173,7 @@
     <button class="tbtn" id="btn-json">⬇︎ JSON</button>
     <button class="tbtn" id="btn-jsonin">⬆︎ JSON</button>
     <input type="file" id="file-json" accept=".json" hidden>
+    <button class="tbtn" id="btn-cloud" title="ซิงก์แผนกับ Google Sheets (คลาวด์) — ตั้งค่า/สถานะ">☁️</button>
     <button class="tbtn" id="btn-ai" title="ส่งแผนให้ AI (เช่น z.ai) ช่วยปรับ แล้วรับกลับมาดู diff">🤖 AI</button>
     <button class="tbtn" id="btn-check" title="ตรวจแผนปัจจุบันตามกฎ QA (เวลาทับ/เรียง/ข้ามคืน)">✓ ตรวจแผน</button>
     <button class="tbtn danger" id="btn-reset">↺ รีเซ็ต</button>
@@ -279,6 +287,35 @@
   </div>
 </div>
 
+<div class="aiwrap" id="cloudwrap">
+  <div class="aim" style="width:min(560px,96vw);">
+    <div class="aim-head"><h3>☁️ ซิงก์ Google Sheets</h3><button class="x" onclick="cloudClose()">✕</button></div>
+    <div class="aim-body">
+      <div id="cloud-status" style="border:1px solid var(--line); border-radius:10px; padding:9px 12px; margin-bottom:12px; font-size:12.5px; color:var(--muted);"></div>
+      <div class="cloudrow"><label>Web App URL (จากขั้นตอน Deploy — ลงท้าย /exec)</label>
+        <input class="cloudfld" id="cloud-url" placeholder="https://script.google.com/macros/s/…/exec"></div>
+      <div class="cloudrow"><label>โทเคน (SECRET จาก Apps Script)</label>
+        <input class="cloudfld" id="cloud-token" placeholder="tp-xxxxxxxx"></div>
+      <div class="cloudrow"><label>ชื่อเครื่องนี้ (ใช้ระบุตอนซิงก์หลายเครื่อง)</label>
+        <input class="cloudfld" id="cloud-device"></div>
+      <div class="cloudrow"><label>ลิงก์เปิด Sheet โดยตรง (ไม่บังคับ — เก็บไว้เปิดง่าย ๆ)</label>
+        <input class="cloudfld" id="cloud-sheet" placeholder="https://docs.google.com/spreadsheets/d/…"></div>
+      <label class="chainlbl" style="margin-bottom:6px;">
+        <input type="checkbox" id="cloud-auto" checked> ซิงก์อัตโนมัติ (ฝากขึ้นหลังแก้ ~4 วิ · ดึงลงตอนเปิดแอป)
+      </label>
+      <div class="ops" style="justify-content:space-between;">
+        <button class="tbtn" id="cloud-open-sheet" title="เปิด Google Sheet ในแท็บใหม่">📊 เปิด Sheet</button>
+        <span style="display:flex; gap:8px;">
+          <button class="tbtn" id="cloud-pull">⬇️ ดึงเดี๋ยวนี้</button>
+          <button class="tbtn" id="cloud-push">⬆️ ฝากเดี๋ยวนี้</button>
+          <button class="tbtn primary" id="cloud-save">บันทึกการตั้งค่า</button>
+        </span>
+      </div>
+      <p class="note">วิธีติดตั้งฝั่ง Google: เปิดไฟล์ <b>cloud/SETUP.md</b> ใน repo (5 ขั้น ~5 นาที) · ข้อมูลในเครื่อง (localStorage) ยังใช้ตอนออฟไลน์ได้เป็นหลัก — คลาวด์คือมิเรอร์</p>
+    </div>
+  </div>
+</div>
+
 <script>
 // ================= STATE =================
 let S=tpLoad();
@@ -292,7 +329,7 @@ let undoSnap=null;       // 1-level undo for structural mutations (drop / ↑↓
 function pushUndo(){ undoSnap=JSON.parse(JSON.stringify(S)); }
 function doUndo(){ if(!undoSnap) return; S=undoSnap; undoSnap=null; persist(); renderSheet(); renderSummary(); renderIdeasPanel(); APP.toast('ย้อนกลับแล้ว'); }
 const autoChain=()=>document.getElementById('chain').checked;
-function persist(){ tpSave(S); updateSyncInfo(); }
+function persist(){ tpSave(S); updateSyncInfo(); if(!cloudApplying){ cloudDirtyFlag=true; schedulePush(); } }
 function rowsOf(d){ return d.variants[d.activeVariant].rows; }
 
 function updateSyncInfo(){
@@ -702,7 +739,8 @@ function refreshTrips(){
   const sel=document.getElementById('trip-sel');
   const reg=Trips.get();
   sel.innerHTML=reg.trips.map(t=>`<option value="${t.id}" ${t.id===reg.activeId?'selected':''}>${esc(t.name)}</option>`).join('')
-    +'<option value="__new">＋ ทริปใหม่…</option>';
+    +'<option value="__new">＋ ทริปใหม่…</option>'
+    +'<option value="__cloud">☁️ ทริปจากคลาวด์…</option>';
 }
 async function importExcel(buf,filename){
   const res=await APP.importFlow(buf,filename);
@@ -742,6 +780,11 @@ function wireFiles(){
     if(tsel.value==='__new'){
       tsel.value=Trips.get().activeId;
       openTemplatePicker();
+      return;
+    }
+    if(tsel.value==='__cloud'){
+      tsel.value=Trips.get().activeId;
+      openCloudTrips();
       return;
     }
     Trips.setActive(tsel.value); rebuildAll();
@@ -784,6 +827,119 @@ function renderIdeasPanel(){
     }
   });
 }
+
+// ================= ☁️ CLOUD SYNC (Google Sheets) =================
+let cloudTimer=null, cloudBusy=false, cloudPulling=false, cloudDirtyFlag=false, cloudApplying=false;
+function cloudStatus(st, extra){
+  const b=document.getElementById('btn-cloud'); if(!b) return;
+  b.classList.remove('cloud-ok','cloud-wait','cloud-err');
+  if(st==='ok'){ b.textContent='☁️'; b.classList.add('cloud-ok'); }
+  else if(st==='wait'){ b.textContent='☁️…'; b.classList.add('cloud-wait'); }
+  else if(st==='err'){ b.textContent='☁️!'; b.classList.add('cloud-err'); }
+  else { b.textContent='☁️'; }
+  const m=APP.cloudMeta(Trips.get().activeId);
+  if(m.at) b.title='☁️ ซิงก์ล่าสุด '+new Date(m.at).toLocaleTimeString('th-TH')+(extra?' — '+extra:'');
+  const box=document.getElementById('cloud-status');
+  if(box && document.getElementById('cloudwrap').classList.contains('show')) cloudRenderStatus();
+}
+function cloudRenderStatus(){
+  const box=document.getElementById('cloud-status'); if(!box) return;
+  const c=APP.cloudCfg();
+  if(!APP.cloudReady()){ box.innerHTML='ยังไม่ได้ตั้งค่า — กรอก URL + โทเคน แล้วกด "บันทึกการตั้งค่า" (ดูวิธีที่ cloud/SETUP.md)'; return; }
+  const m=APP.cloudMeta(Trips.get().activeId);
+  box.innerHTML='เชื่อมต่อแล้ว · เครื่องนี้: <b>'+esc(APP.cloudDevice())+'</b>'
+    +(cloudDirtyFlag?' · <span style="color:var(--straw)">มีแก้ไขรอฝากขึ้น</span>':' · <span style="color:var(--pine2)">ซิงก์แล้ว</span>')
+    +(m.updatedAt?'<br>บนคลาวด์อัปเดต: '+new Date(m.updatedAt).toLocaleString('th-TH'):'<br>ยังไม่เคยฝากทริปนี้ขึ้นคลาวด์');
+}
+function schedulePush(){
+  if(!APP.cloudReady() || APP.cloudCfg().auto===false) return;
+  clearTimeout(cloudTimer);
+  cloudTimer=setTimeout(()=>doPush(), 4000);
+  cloudStatus('wait');
+}
+async function doPush(force){
+  if(cloudBusy || !APP.cloudReady()) return; cloudBusy=true;
+  try{
+    const r=await APP.cloudPush(null,null,null,force);
+    if(r&&r.conflict){
+      cloudStatus('err');
+      const s=r.conflict;
+      const v=await APP.modal({title:'☁️ อีกเครื่องแก้แผนใหม่กว่า',
+        body:'บนคลาวด์ถูกแก้โดย <b>'+esc(s.device)+'</b> เมื่อ '+new Date(s.updatedAt).toLocaleString('th-TH')+'<br>จะเอาเวอร์ชันไหนไว้?',
+        buttons:[{label:'⬇️ เอาของบนคลาวด์ทับเครื่องนี้', cls:'primary', val:'pull'},
+                 {label:'⬆️ ฝากเครื่องนี้ทับบนคลาวด์', val:'push'},
+                 {label:'ไว้ก่อน', val:null}]});
+      // setTimeout = รอคลาย cloudBusy ของรอบนี้ก่อน ไม่งั้น guard กลืน action เงียบๆ
+      if(v==='pull') setTimeout(()=>doPull(true),0);
+      else if(v==='push') setTimeout(()=>doPush(true),0);
+      return;
+    }
+    cloudDirtyFlag=false; cloudStatus('ok');
+  }catch(e){ cloudStatus('err', e.message); }
+  finally{ cloudBusy=false; }
+}
+async function doPull(force){
+  if(cloudPulling || !APP.cloudReady()) return; cloudPulling=true;
+  try{
+    const r=await APP.cloudPull();
+    if(r&&r.state){
+      if(cloudDirtyFlag && !force){
+        const v=await APP.modal({title:'☁️ บนคลาวด์ใหม่กว่า แต่เครื่องนี้ก็มีแก้ไขที่ยังไม่ได้ฝาก',
+          body:'มาจากเครื่อง <b>'+esc(r.device)+'</b> เมื่อ '+new Date(r.updatedAt).toLocaleString('th-TH'),
+          buttons:[{label:'⬇️ เอาของบนคลาวด์ (ทิ้งแก้ไขในเครื่อง)', cls:'primary', val:'pull'},
+                   {label:'⬆️ ฝากเครื่องนี้ทับก่อน', val:'push'},
+                   {label:'ไว้ก่อน', val:null}]});
+        if(v==='push'){ setTimeout(()=>doPush(true),0); return; }
+        if(v!=='pull'){ cloudPulling=false; return; }
+      }
+      pushUndo();
+      S=r.state;
+      cloudApplying=true; persist(); cloudApplying=false;
+      APP.cloudSetMeta(Trips.get().activeId,{updatedAt:r.updatedAt, at:Date.now()});
+      cloudDirtyFlag=false;
+      renderSheet(); renderSummary(); renderIdeasPanel(); updateSyncInfo();
+      APP.toast('☁️ ดึงแผนใหม่จากคลาวด์แล้ว (จาก '+r.device+')');
+    }
+    cloudStatus('ok');
+  }catch(e){ cloudStatus('err', e.message); }
+  finally{ cloudPulling=false; }
+}
+function openCloud(){
+  const c=APP.cloudCfg();
+  document.getElementById('cloud-url').value=c.url||'';
+  document.getElementById('cloud-token').value=c.token||'';
+  document.getElementById('cloud-device').value=APP.cloudDevice();
+  document.getElementById('cloud-sheet').value=c.sheetUrl||'';
+  document.getElementById('cloud-auto').checked=c.auto!==false;
+  document.getElementById('cloudwrap').classList.add('show');
+  cloudRenderStatus();
+}
+function cloudClose(){ document.getElementById('cloudwrap').classList.remove('show'); }
+function wireCloud(){
+  document.getElementById('btn-cloud').onclick=openCloud;
+  document.getElementById('cloudwrap').addEventListener('click',e=>{ if(e.target.id==='cloudwrap') cloudClose(); });
+  document.getElementById('cloud-save').onclick=()=>{
+    const url=document.getElementById('cloud-url').value.trim();
+    const token=document.getElementById('cloud-token').value.trim();
+    const device=document.getElementById('cloud-device').value.trim()||APP.cloudDevice();
+    const sheetUrl=document.getElementById('cloud-sheet').value.trim();
+    const auto=document.getElementById('cloud-auto').checked;
+    if(url && !/\/exec$/.test(url)){ APP.toast('URL ต้องลงท้ายด้วย /exec (จากปุ่ม Deploy ใน Apps Script)'); return; }
+    APP.cloudSaveCfg({url, token, device, sheetUrl, auto});
+    cloudStatus(APP.cloudReady()?'ok':'off');
+    cloudRenderStatus();
+    APP.toast('บันทึกการตั้งค่าคลาวด์แล้ว'+(auto?' — ซิงก์อัตโนมัติเปิด':''));
+    if(auto) doPull();
+  };
+  document.getElementById('cloud-pull').onclick=()=>doPull();
+  document.getElementById('cloud-push').onclick=()=>doPush();
+  document.getElementById('cloud-open-sheet').onclick=()=>{
+    const u=APP.cloudCfg().sheetUrl; if(u) window.open(u,'_blank'); else APP.toast('ยังไม่ได้ใส่ลิงก์ Sheet');
+  };
+  cloudStatus(APP.cloudReady()?'ok':'off');
+  if(APP.cloudReady() && APP.cloudCfg().auto!==false) doPull();   // ดึงเวอร์ชันใหม่ตอนเปิดแอป
+}
+
 
 // ================= AI HANDOFF (z.ai loop) =================
 let aiParsed=null;   // parsed new state waiting for the user to apply
@@ -910,9 +1066,50 @@ function openTemplatePicker(){
   });
 }
 
+// ================= ☁️ ดึงทริปจากคลาวด์ (เครื่องใหม่/มือถือ) =================
+async function openCloudTrips(){
+  if(!APP.cloudReady()){ APP.toast('ยังไม่ได้ตั้งค่าคลาวด์ — กดปุ่ม ☁️ ก่อน'); openCloud(); return; }
+  let trips;
+  try{ trips=await APP.cloudList(); }
+  catch(e){ APP.toast('☁️ ดึงรายชื่อทริปไม่ได้: '+e.message, 4000); return; }
+  const reg=Trips.get();
+  const have=new Set(reg.trips.map(t=>t.id));
+  const list=trips.filter(t=>!have.has(t.id));
+  let ov=document.getElementById('cloudtrips-overlay'); if(ov) ov.remove();
+  ov=document.createElement('div'); ov.id='cloudtrips-overlay';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(12,22,18,.55);z-index:1500;display:flex;align-items:center;justify-content:center;padding:16px;';
+  const card=t=>`<tr data-cid="${esc(t.id)}" style="cursor:pointer;background:#fff;">
+      <td style="padding:10px 12px; border-bottom:1px solid #E6E0D2;"><b>${esc(t.name)}</b><div style="font-size:11px;color:#69758A;">${t.acts} กิจกรรม · ${esc(t.device)} · ${new Date(t.updatedAt).toLocaleString('th-TH')}</div></td>
+      <td style="padding:10px 12px; border-bottom:1px solid #E6E0D2; font-family:Mitr; color:#12846A; white-space:nowrap;">⬇️ ดึงลงเครื่องนี้</td></tr>`;
+  ov.innerHTML=`<div style="background:#F5F2EA;border-radius:18px;padding:20px;max-width:560px;width:100%;max-height:80vh;overflow:auto;">
+    <div style="font-family:Mitr;font-weight:600;font-size:18px;">☁️ ทริปจากคลาวด์</div>
+    <div style="font-size:12.5px;color:#69758A;margin:4px 0 12px;">${list.length?('เลือกทริปที่ยังไม่มีในเครื่องนี้ ('+list.length+' จาก '+trips.length+')'):'ทุกทริปบนคลาวด์มีในเครื่องนี้แล้ว ✓'}</div>
+    <table style="border-collapse:collapse;width:100%;font-size:13px;">${list.map(card).join('')}</table>
+    <div style="text-align:right;margin-top:12px"><button id="ctx-x" style="border:0;background:#1B2430;color:#fff;font-family:Mitr;border-radius:8px;padding:8px 16px;cursor:pointer">ปิด</button></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  ov.addEventListener('click',async e=>{
+    if(e.target===ov || e.target.id==='ctx-x') return close();
+    const tr=e.target.closest('[data-cid]'); if(!tr) return;
+    const cid=tr.dataset.cid; close();
+    try{
+      const res=await APP.cloudReq('load',{trip:cid});
+      if(!res.ok) throw new Error(res.error);
+      reg.trips.push({id:cid, name:res.name||cid});
+      reg.activeId=cid; Trips.save(reg);
+      Trips.saveData(cid, res.state);
+      APP.cloudSetMeta(cid,{updatedAt:res.updatedAt, at:Date.now()});
+      rebuildAll();
+      APP.toast('☁️ ดึงทริป "'+(res.name||cid)+'" ลงเครื่องนี้แล้ว ✓');
+    }catch(err){ APP.toast('ดึงทริปไม่สำเร็จ: '+err.message, 4000); }
+  });
+}
+
 // ================= INIT =================
 initBudget();
 wireAI();
+wireCloud();
 renderDayjump();
 renderSheet();
 renderSummary();

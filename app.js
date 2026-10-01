@@ -457,6 +457,57 @@ function parseAIReturn(text, fallbackSettings){
     summary:{days:state.days.length, acts:state.days.reduce((a,d)=>a+d.variants[0].rows.length,0)}};
 }
 
+// ---------- ☁️ Cloud sync (Google Sheets via Apps Script — ตั้งค่าที่ปุ่ม ☁️ ในหน้าแผน) ----------
+// localStorage = working copy · คลาวด์ = มิเรอร์ (auto push หลังแก้ 4 วิ / pull ตอนเปิดแอป)
+const CLOUD_KEY='tp-cloud';
+function cloudCfg(){ try{ return JSON.parse(localStorage.getItem(CLOUD_KEY))||{}; }catch(e){ return {}; } }
+function cloudSaveCfg(c){ try{ localStorage.setItem(CLOUD_KEY, JSON.stringify(c)); }catch(e){} }
+function cloudReady(){ const c=cloudCfg(); return !!(c.url && c.token); }
+function cloudDevice(){
+  const c=cloudCfg(); if(c.device) return c.device;
+  const plat=(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||'device';
+  c.device=String(plat).slice(0,18)+'·'+Math.random().toString(36).slice(2,5);
+  cloudSaveCfg(c); return c.device;
+}
+function cloudMeta(id){ try{ return JSON.parse(localStorage.getItem('tp-cloudmeta-'+id))||{}; }catch(e){ return {}; } }
+function cloudSetMeta(id,m){ try{ localStorage.setItem('tp-cloudmeta-'+id, JSON.stringify(m)); }catch(e){} }
+async function cloudReq(action, opts){
+  const c=cloudCfg();
+  const url=c.url+(c.url.includes('?')?'&':'?')+'action='+encodeURIComponent(action)
+    +'&t='+encodeURIComponent(c.token)
+    +(opts&&opts.trip?('&trip='+encodeURIComponent(opts.trip)):'');
+  // POST แบบ body text/plain (ไม่ตั้ง Content-Type) = no CORS preflight → คุยกับ Apps Script ได้
+  const r=await fetch(url, opts&&opts.body?{method:'POST',body:JSON.stringify(opts.body)}:undefined);
+  return r.json();
+}
+// push แผนปัจจุบันขึ้นคลาวด์ — คืน {updatedAt} | {conflict:{updatedAt,device,name}} | throw
+async function cloudPush(state, tripId, tripName, force){
+  const reg=Trips.get();
+  const id=tripId||reg.activeId;
+  const meta=cloudMeta(id);
+  const res=await cloudReq('save',{body:{
+    token:cloudCfg().token, trip:id, name:tripName||((Trips.activeTrip(reg)||{}).name)||('ทริป '+id),
+    device:cloudDevice(), state:state||tpLoad(), base:meta.updatedAt||'', force:!!force
+  }});
+  if(res.conflict) return {conflict:res.server};
+  if(!res.ok) throw new Error(res.error||'save ล้มเหลว');
+  cloudSetMeta(id,{updatedAt:res.updatedAt, at:Date.now()});
+  return res;
+}
+// pull แผนปัจจุบัน — คืน {noop:true} ถ้าเท่าเดิม / {state,updatedAt,device} ถ้าบนคลาวด์ใหม่กว่า
+async function cloudPull(tripId){
+  const id=tripId||Trips.get().activeId;
+  const res=await cloudReq('load',{trip:id});
+  if(!res.ok){ if(res.error==='not found') return {noop:true, notFound:true}; throw new Error(res.error||'load ล้มเหลว'); }
+  if(res.updatedAt===(cloudMeta(id).updatedAt)) return {noop:true};
+  return {state:res.state, updatedAt:res.updatedAt, device:res.device};
+}
+async function cloudList(){
+  const res=await cloudReq('list');
+  if(!res.ok) throw new Error(res.error||'list ล้มเหลว');
+  return res.trips||[];
+}
+
 // ---------- AI handoff: diff แผนเดิม vs แผนใหม่ (เทียบชื่อกิจกรรม) ----------
 function diffPlan(oldS, newS){
   const key=r=>String(r.act||'').replace(/\s+/g,' ').trim().toLowerCase();
@@ -638,5 +689,7 @@ async function importFlow(buf, filename){
 return {FOOD_MULT, foodMultOf, dayTotalsOf, totalsOf, toast, modal,
         buildWorkbook, downloadExcel, parseExcelState, importFlow,
         tagChip, renderIdeas, shiftFollowing, reflowDay, mealPicks, showMealPicks,
-        qaCheck, buildAIPackage, parseAIReturn, diffPlan};
+        qaCheck, buildAIPackage, parseAIReturn, diffPlan,
+        cloudCfg, cloudSaveCfg, cloudReady, cloudDevice, cloudMeta, cloudSetMeta,
+        cloudReq, cloudPush, cloudPull, cloudList};
 })();
